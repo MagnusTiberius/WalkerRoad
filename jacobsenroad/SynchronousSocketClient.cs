@@ -16,11 +16,11 @@ namespace jacobsenroad
         public void StartClient() 
         {
             // Data buffer for incoming data.
-            byte[] bytes = new byte[1024];
+            byte[] bytes = new byte[1024*4];
 
             StringBuilder sb = new StringBuilder();
             List<string> msgList = new List<string>();
-
+            int bytesRec;
             // Connect to a remote device.
             try {
                 // Establish the remote endpoint for the socket.
@@ -33,6 +33,9 @@ namespace jacobsenroad
                 Socket sender = new Socket(AddressFamily.InterNetwork, 
                     SocketType.Stream, ProtocolType.Tcp );
 
+                sender.ReceiveTimeout = 3000;
+                sender.NoDelay = true;
+
                 // Connect the socket to the remote endpoint. Catch any errors.
                 try {
                     sender.Connect(remoteEP);
@@ -43,21 +46,37 @@ namespace jacobsenroad
                     // Encode the data string into a byte array.
                     byte[] msg = Encoding.ASCII.GetBytes("This is a test<EOF>\n");
 
-                    for (int j = 0; j < 10; j++)
+                    for (int j = 0; j < 1000; j++)
                     {
-                        for (int i = 0; i < 10; i++)
+                        for (int i = 0; i < 100; i++)
                         {
                             // Send the data through the socket.
                             int bytesSent = sender.Send(Encoding.ASCII.GetBytes(string.Format("{0}{1};", j, i)));
                         }
                         // Receive the response from the remote device.
-                        int bytesRec = sender.Receive(bytes);
-
+                        bytesRec = sender.Receive(bytes);
                         string msg1 = Encoding.ASCII.GetString(bytes, 0, bytesRec);
                         sb.Append(msg1);
                         msgList.Add(msg1);
                         Console.WriteLine("Echoed test = {0}",
                             Encoding.ASCII.GetString(bytes, 0, bytesRec));
+                    }
+                    try
+                    {
+                        bytesRec = sender.Receive(bytes);
+                        while (bytesRec > 0)
+                        {
+                            string msg1 = Encoding.ASCII.GetString(bytes, 0, bytesRec);
+                            sb.Append(msg1);
+                            msgList.Add(msg1);
+                            Console.WriteLine("Echoed test = {0}",
+                                Encoding.ASCII.GetString(bytes, 0, bytesRec));
+                            bytesRec = sender.Receive(bytes);
+                        }
+                    }
+                    catch (SocketException se)
+                    {
+
                     }
                     // Release the socket.
                     sender.Shutdown(SocketShutdown.Both);

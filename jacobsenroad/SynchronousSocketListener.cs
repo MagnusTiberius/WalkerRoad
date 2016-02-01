@@ -27,9 +27,11 @@ namespace jacobsenroad
             // An incoming connection needs to be processed.
             int n = 0;
             bool isLooping = true;
+            _socket.ReceiveTimeout = 2000;
+            _socket.NoDelay = true;
             while (isLooping)
             {
-                bytes = new byte[1024];
+                bytes = new byte[1024*4];
                 try
                 {
                     int bytesRec = _socket.Receive(bytes);
@@ -37,7 +39,6 @@ namespace jacobsenroad
                     {
                         data += Encoding.ASCII.GetString(bytes, 0, bytesRec);
                         string d = Encoding.ASCII.GetString(bytes, 0, bytesRec);
-
                         _socket.Send(Encoding.ASCII.GetBytes(string.Format("This is a reply {0}\n {1}", n++, d)));
                     }
                     else

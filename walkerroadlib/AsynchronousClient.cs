@@ -14,6 +14,7 @@ namespace walkerroadlib
 
     public class AsynchronousClient
     {
+        const int PORT_NUM = 8092;
         // The port number for the remote device.
         private const int port = 11000;
 
@@ -29,8 +30,7 @@ namespace walkerroadlib
         private  String response = String.Empty;
 
         private Socket client;
-        private IPEndPoint remoteEP;
-
+        
         public event OnReceiveCompleted OnReceiveCompleted;
 
         private void StartClient()
@@ -43,17 +43,17 @@ namespace walkerroadlib
                 // remote device is "host.contoso.com".
                 IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
                 IPAddress ipAddress = ipHostInfo.AddressList[0];
-                remoteEP = new IPEndPoint(ipAddress, Const.PORT_NUM);
+                IPEndPoint remoteEP = new IPEndPoint(ipAddress, PORT_NUM);
 
                 // Create a TCP/IP socket.
                 client = new Socket(AddressFamily.InterNetwork,
                     SocketType.Stream, ProtocolType.Tcp);
 
-
                 // Connect to the remote endpoint.
                 client.BeginConnect(remoteEP,
                     new AsyncCallback(ConnectCallback), client);
                 connectDone.WaitOne();
+
             }
             catch (Exception e)
             {
@@ -63,44 +63,14 @@ namespace walkerroadlib
 
         public void Send(string data)
         {
-            if (client.Connected == false)
-            {
-                client.BeginConnect(remoteEP,
-                    new AsyncCallback(ConnectCallback), client);
-                connectDone.WaitOne();
-            }
             // Send test data to the remote device.
             //Send(client, "This is a test<EOF>");
             Send(client, data);
             sendDone.WaitOne();
 
             // Receive the response from the remote device.
-            bool res = Receive(client);
+            Receive(client);
             receiveDone.WaitOne();
-
-            if (!res)
-            {
-                int a = 0;
-                if (client.Connected)
-                {
-                    a = 1;
-                }
-                else
-                {
-                    a = 2;
-                    // Create a TCP/IP socket.
-                    client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                    // Connect to the remote endpoint.
-                    client.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), client);
-                    connectDone.WaitOne();
-                    Send(client, data);
-                    sendDone.WaitOne();
-
-                    // Receive the response from the remote device.
-                    res = Receive(client);
-                    receiveDone.WaitOne();
-                }
-            }
         }
 
         public void CloseClient()
@@ -135,7 +105,7 @@ namespace walkerroadlib
             }
         }
 
-        private bool Receive(Socket client)
+        private void Receive(Socket client)
         {
             try
             {
@@ -146,13 +116,10 @@ namespace walkerroadlib
                 // Begin receiving the data from the remote device.
                 client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
                     new AsyncCallback(ReceiveCallback), state);
-                return true;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
-                receiveDone.Set();
-                return false;
             }
         }
 

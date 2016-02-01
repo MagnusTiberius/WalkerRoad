@@ -46,12 +46,9 @@
   <ItemGroup>
     <Compile Include="AsynchronousClient.cs" />
     <Compile Include="AsynchronousSocketListener.cs" />
-    <Compile Include="AsynchronousSocketListener2.cs" />
     <Compile Include="ClientBase.cs" />
-    <Compile Include="Controller\SocketManager.cs" />
     <Compile Include="model\Header.cs" />
     <Compile Include="model\Login.cs" />
-    <Compile Include="model\Presence.cs" />
     <Compile Include="ServerBase.cs" />
     <Compile Include="StateObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

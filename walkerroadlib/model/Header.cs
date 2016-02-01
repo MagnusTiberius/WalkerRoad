@@ -12,26 +12,15 @@ namespace walkerroadlib.model
         public string Source { get; set; }
         public object Body { get; set; }
         public string Status { get; set; }
-        public string Presence { get; set; }
     }
-
-    public delegate string OnReceiveData(string response);
 
     public class Status
     {
-        public enum Access
+        public enum Login
         {
-            REQUEST = 100001,
+            REQUEST = 800001,
             GRANTED,
             DENIED
         }
-
-        public enum Presence
-        {
-            UNKNOWN = 200001,
-            RECOGNIZED,
-            IGNORED
-        }
-
     }
 }

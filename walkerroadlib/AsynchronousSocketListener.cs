@@ -9,10 +9,12 @@ using System.Net.Sockets;
 
 namespace walkerroadlib
 {
+    public delegate string OnReceiveData(string response);
 
     public class AsynchronousSocketListener
     {
-        public event model.OnReceiveData OnReceiveData;
+        const int PORT_NUM = 8092;
+        public event OnReceiveData OnReceiveData;
 
         // Thread signal.
         public ManualResetEvent allDone = new ManualResetEvent(false);
@@ -31,7 +33,7 @@ namespace walkerroadlib
             // running the listener is "host.contoso.com".
             IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
             IPAddress ipAddress = ipHostInfo.AddressList[0];
-            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, Const.PORT_NUM);
+            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, PORT_NUM);
 
             // Create a TCP/IP socket.
             Socket listener = new Socket(AddressFamily.InterNetwork,
@@ -76,7 +78,6 @@ namespace walkerroadlib
 
             // Get the socket that handles the client request.
             Socket listener = (Socket)ar.AsyncState;
-            listener.NoDelay = true;
             Socket handler = listener.EndAccept(ar);
 
             // Create the state object.
@@ -157,10 +158,9 @@ namespace walkerroadlib
                 int bytesSent = handler.EndSend(ar);
                 Console.WriteLine("Sent {0} bytes to client.", bytesSent);
 
-                var a = handler.Available;
+                handler.Shutdown(SocketShutdown.Both);
+                handler.Close();
 
-                //handler.Shutdown(SocketShutdown.Both);
-                //handler.Close();
             }
             catch (Exception e)
             {

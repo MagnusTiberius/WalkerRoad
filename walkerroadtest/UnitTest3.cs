@@ -21,14 +21,24 @@ namespace walkerroadtest
         {
             SynchronousSocketListener listener = new SynchronousSocketListener();
             SynchronousSocketClient client = new SynchronousSocketClient();
+            SynchronousSocketClient client2 = new SynchronousSocketClient();
+            SynchronousSocketClient client3 = new SynchronousSocketClient();
 
             Thread threadServer = new Thread(new ThreadStart(listener.StartListening));
-            Thread threadClient = new Thread(new ThreadStart(client.StartClient));
+            Thread threadClient1 = new Thread(new ThreadStart(client.StartClient));
+            Thread threadClient2 = new Thread(new ThreadStart(client2.StartClient));
+            Thread threadClient3 = new Thread(new ThreadStart(client3.StartClient));
 
             threadServer.Start();
             Thread.Sleep(100);
-            threadClient.Start();
-            threadClient.Join();
+
+            threadClient1.Start();
+            threadClient2.Start();
+            threadClient3.Start();
+
+            threadClient1.Join();
+            threadClient2.Join();
+            threadClient3.Join();
             threadServer.Abort();
         }
     }

@@ -63,10 +63,10 @@ namespace jacobsenroad
             ClientName = Datagen.GetFirstName();
 
             double interval; 
-            interval = 2000;
+            interval = 100;
             _timer = new System.Timers.Timer(interval);
             _timer.Elapsed += new ElapsedEventHandler(_timer_Elapsed);
-            _timer.Enabled = true; // Enable it
+            _timer.Enabled = false; // Enable it
 
             rnd = new Random();
             guid = Guid.NewGuid();

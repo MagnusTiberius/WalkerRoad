@@ -12,7 +12,9 @@ namespace jacobsenroad
 {
     public class SynchronousSocketListener
     {
-        public string data = null;
+        public event OnReceiveData OnReceiveData;
+        public event OnSendData OnSendData;
+
         private Socket handler;
         private List<Thread> threadList;
 
@@ -53,12 +55,12 @@ namespace jacobsenroad
                     Console.WriteLine("Waiting for a connection...");
                     
                     handler = listener.Accept();
-                    data = null;
-
                     //var pool = ListenerHandlerPool.Instance;
                     //pool.Add(handler);
 
                     ListenerHandler t = new ListenerHandler(handler);
+                    t.OnReceiveData += OnReceiveDataHandler;
+                    t.OnSendData += OnSendDataHandler;
                     Thread thread = new Thread(new ThreadStart(t.Start));
                     thread.Start();
                     threadList.Add(thread);
@@ -75,5 +77,24 @@ namespace jacobsenroad
 
         }
 
+        private string OnReceiveDataHandler(string msg)
+        {
+            string msg2 = msg;
+            if (OnReceiveData != null)
+            {
+                msg2 = OnReceiveData(msg);
+            }
+            return msg2;
+        }
+
+        private string OnSendDataHandler(string msg)
+        {
+            string msg2 = msg;
+            if (OnSendData != null)
+            {
+                msg2 = OnSendData(msg);
+            }
+            return msg2;
+        }
     }
 }

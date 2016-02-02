@@ -19,7 +19,10 @@ namespace jacobsenroad
         private byte[] bytes = new Byte[1024];
         public WorldDimension WorldDimension { get; set; }
         public ChannelListing ChannelListing { get; set; }
-        
+
+        public event OnReceiveData OnReceiveData;
+        public event OnSendData OnSendData;
+
         public bool IsAvailable { get; set; }
 
         public ListenerHandler(Socket socket)
@@ -71,7 +74,13 @@ namespace jacobsenroad
         {
             if (_socket.Connected)
             {
-                _socket.Send(Encoding.ASCII.GetBytes("Notice: Hey this is the server ping.\n"));
+                string msg = "Notice: Hey this is the server ping.\n";
+                string msg2 = msg;
+                if (OnSendData != null)
+                {
+                    msg2 = OnSendData(msg);
+                }
+                _socket.Send(Encoding.ASCII.GetBytes(msg2));
             }
         }
 
@@ -79,7 +88,12 @@ namespace jacobsenroad
         {
             if (_socket.Connected)
             {
-                _socket.Send(Encoding.ASCII.GetBytes(msg));
+                string msg2 = msg;
+                if (OnSendData != null)
+                {
+                    msg2 = OnSendData(msg);
+                }
+                _socket.Send(Encoding.ASCII.GetBytes(msg2));
             }
         }
 
@@ -110,6 +124,7 @@ namespace jacobsenroad
                             WorldDimension.CurrentCommunicationChannel.Put(recvMsg);
                             System.Diagnostics.Debug.WriteLine(string.Format("ListenerHandler 22 Thread:{0} Send", Thread.CurrentThread.ManagedThreadId));
                             Console.WriteLine(string.Format("ListenerHandler 22 Thread:{0} Send", Thread.CurrentThread.ManagedThreadId));
+                            OnReceiveData(recvMsg);
                         }
                         else
                         {

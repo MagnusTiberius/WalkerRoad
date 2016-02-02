@@ -39,9 +39,13 @@ namespace jacobsenroad
 
         public void _timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            //Thread.Sleep(rnd.Next(1000, 10000));
-            string msg = string.Format("{0}:{1}", ClientName, Datagen.GetComment());
-            _socket.Send(Encoding.ASCII.GetBytes(msg));
+            string msg = string.Format("{0}--{1}", ClientName, Datagen.GetComment());
+            string sendMsg = msg;
+            if (OnSendData != null)
+            {
+                sendMsg = OnSendData(msg);
+            }
+            _socket.Send(Encoding.ASCII.GetBytes(sendMsg));
         }
 
         public void Send(string msg)
@@ -59,7 +63,7 @@ namespace jacobsenroad
             ClientName = Datagen.GetFirstName();
 
             double interval; 
-            interval = 5000;
+            interval = 2000;
             _timer = new System.Timers.Timer(interval);
             _timer.Elapsed += new ElapsedEventHandler(_timer_Elapsed);
             _timer.Enabled = true; // Enable it

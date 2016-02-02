@@ -15,9 +15,12 @@ namespace walkerroad_c
         static void Main(string[] args)
         {
             SynchronousSocketClient client = new SynchronousSocketClient();
-            Thread threadClient1 = new Thread(new ThreadStart(client.StartClient));
-            threadClient1.Start();
-            threadClient1.Join();
+            while (true)
+            {
+                Thread threadClient1 = new Thread(new ThreadStart(client.StartClient));
+                threadClient1.Start();
+                threadClient1.Join();
+            }
         }
     }
 }

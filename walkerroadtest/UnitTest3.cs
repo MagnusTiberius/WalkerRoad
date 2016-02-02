@@ -16,29 +16,31 @@ namespace walkerroadtest
     [TestClass]
     public class UnitTest3
     {
-        [TestMethod]
-        public void TestMethod1()
-        {
-            SynchronousSocketListener listener = new SynchronousSocketListener();
-            SynchronousSocketClient client = new SynchronousSocketClient();
-            SynchronousSocketClient client2 = new SynchronousSocketClient();
-            SynchronousSocketClient client3 = new SynchronousSocketClient();
+        const int SZ = 1;
 
+        [TestMethod]
+        public void TestMethod198()
+        {
+            List<Thread> list = new List<Thread>();
+
+            SynchronousSocketListener listener = new SynchronousSocketListener();
             Thread threadServer = new Thread(new ThreadStart(listener.StartListening));
-            Thread threadClient1 = new Thread(new ThreadStart(client.StartClient));
-            Thread threadClient2 = new Thread(new ThreadStart(client2.StartClient));
-            Thread threadClient3 = new Thread(new ThreadStart(client3.StartClient));
+
+            for (int i = 0; i < SZ; i++ )
+            {
+                SynchronousSocketClient client = new SynchronousSocketClient();
+                Thread threadClient1 = new Thread(new ThreadStart(client.StartClient));
+                threadClient1.Start();
+                list.Add(threadClient1);
+            }
 
             threadServer.Start();
             Thread.Sleep(100);
 
-            threadClient1.Start();
-            threadClient2.Start();
-            threadClient3.Start();
-
-            threadClient1.Join();
-            threadClient2.Join();
-            threadClient3.Join();
+            foreach(Thread t in list)
+            {
+                t.Join();
+            }
             threadServer.Abort();
         }
     }

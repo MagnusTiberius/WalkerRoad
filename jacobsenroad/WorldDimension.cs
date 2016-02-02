@@ -34,10 +34,13 @@ namespace jacobsenroad
 
         private void WorldDimensionInit()
         {
-            tid = Thread.CurrentThread.ManagedThreadId;
-            Console.WriteLine("WorldDimension ctor()");
-            Thread threadServer = new Thread(new ThreadStart(Looper));
-            threadServer.Start();
+            lock (this)
+            {
+                tid = Thread.CurrentThread.ManagedThreadId;
+                Console.WriteLine("WorldDimension ctor()");
+                Thread threadServer = new Thread(new ThreadStart(Looper));
+                threadServer.Start();
+            }
         }
 
         public CommunicationChannel CurrentCommunicationChannel 
@@ -65,11 +68,7 @@ namespace jacobsenroad
             {
                 lock (this)
                 {
-                    //if (listMessage.Count == 0)
-                    //{
-                    //    continue;
-                    //}
-                    string msg = CurrentCommunicationChannel.Pickup();  //listMessage.Pop();
+                    string msg = CurrentCommunicationChannel.Pickup();  
                     if (msg == null)
                     {
                         continue;
@@ -82,7 +81,6 @@ namespace jacobsenroad
                         {
                             try
                             {
-                                //h.Update(string.Format("{0}::{1}", msg, ctr1));
                                 h.Update(string.Format("{0}", msg));
                             }
                             catch (Exception ex)
@@ -93,14 +91,6 @@ namespace jacobsenroad
                     }
                     Console.WriteLine("==========================================");
                 }
-                //foreach (string msg in listMessage)
-                //{
-                //    foreach (ListenerHandler h in listConnection)
-                //    {
-                //        //h.Update(msg);
-                //        Console.WriteLine(string.Format("Update:{0}", msg));
-                //    }
-                //}
             }
         }
 
@@ -110,6 +100,7 @@ namespace jacobsenroad
             {
                 if (initv == 0)
                 {
+                    initv++;
                     WorldDimensionInit();
                 }
 

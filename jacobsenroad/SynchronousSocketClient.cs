@@ -26,7 +26,7 @@ namespace jacobsenroad
 
         public void _timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            Thread.Sleep(rnd.Next(6000, 10000));
+            Thread.Sleep(rnd.Next(1000, 10000));
 
             _socket.Send(Encoding.ASCII.GetBytes(guid.ToString()));
         }

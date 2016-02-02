@@ -43,9 +43,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ListenerHandler.cs" />
+    <Compile Include="ListenerHandlerPool.cs" />
     <Compile Include="SynchronousSocketClient.cs" />
     <Compile Include="SynchronousSocketListener.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TargetLocation.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

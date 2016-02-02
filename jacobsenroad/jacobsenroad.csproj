@@ -48,7 +48,7 @@
     <Compile Include="SynchronousSocketClient.cs" />
     <Compile Include="SynchronousSocketListener.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TargetLocation.cs" />
+    <Compile Include="WorldDimension.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

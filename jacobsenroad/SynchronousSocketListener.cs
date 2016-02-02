@@ -54,7 +54,7 @@ namespace jacobsenroad
 
                     
                     ListenerHandler t = new ListenerHandler(handler);
-                    t.Target = TargetLocation.Instance;
+                    t.WorldDimension = WorldDimension.Instance;
                     Thread thread = new Thread(new ThreadStart(t.Start));
                     thread.Start();
                     threadList.Add(thread);

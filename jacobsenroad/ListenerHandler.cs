@@ -11,13 +11,16 @@ using System.Timers;
 
 namespace jacobsenroad
 {
+
     public class ListenerHandler
     {
         private System.Timers.Timer _timer;
         private Socket _socket;
         private byte[] bytes = new Byte[1024];
         public static string data = null;
-        public TargetLocation Target { get; set; }
+        public WorldDimension WorldDimension { get; set; }
+        public ChannelListing ChannelListing { get; set; }
+        
         public bool IsAvailable { get; set; }
 
         public ListenerHandler(Socket socket)
@@ -54,7 +57,7 @@ namespace jacobsenroad
             _timer.Enabled = true; // Enable it
 
             //TargetLocation target = TargetLocation.Instance;
-            Target.Register(this);
+            WorldDimension.Register(this);
 
             // An incoming connection needs to be processed.
             IsAvailable = false;
@@ -74,7 +77,7 @@ namespace jacobsenroad
                         {
                             //data += Encoding.ASCII.GetString(bytes, 0, bytesRec);
                             string d = Encoding.ASCII.GetString(bytes, 0, bytesRec);
-                            Target.Put(d);
+                            WorldDimension.CurrentCommunicationChannel.Put(d);
                             //_socket.Send(Encoding.ASCII.GetBytes(string.Format("Server:{0}:{1}:{2}", n++, Thread.CurrentThread.ManagedThreadId, d)));
                             System.Diagnostics.Debug.WriteLine(string.Format("ListenerHandler 22 Thread:{0} Send", Thread.CurrentThread.ManagedThreadId));
                             Console.WriteLine(string.Format("ListenerHandler 22 Thread:{0} Send", Thread.CurrentThread.ManagedThreadId));

@@ -43,8 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Datagen.cs" />
     <Compile Include="ListenerHandler.cs" />
     <Compile Include="ListenerHandlerPool.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="SynchronousSocketClient.cs" />
     <Compile Include="SynchronousSocketListener.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

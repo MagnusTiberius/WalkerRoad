@@ -43,8 +43,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChannelListing.cs" />
-    <Compile Include="CommunicationChannel.cs" />
     <Compile Include="Datagen.cs" />
     <Compile Include="ListenerHandler.cs" />
     <Compile Include="ListenerHandlerPool.cs" />

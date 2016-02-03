@@ -10,7 +10,104 @@ using System.Timers;
 
 namespace jacobsenroad
 {
+    public class ChannelListing
+    {
+        static readonly ChannelListing _instance = new ChannelListing();
+        public string Name { get; set; }
+        public string Description { get; set; }
+        private Dictionary<string, CommunicationChannel> list = new Dictionary<string, CommunicationChannel>();
+        private int ctr1 = 0;
+        private int tid = Thread.CurrentThread.ManagedThreadId;
 
+        public static ChannelListing Instance
+        {
+            get
+            {
+                return _instance;
+            }
+        }
+
+        public void CreateChannel(string key)
+        {
+            lock (this)
+            {
+                CommunicationChannel ch = new CommunicationChannel();
+                list.Add(key, ch);
+            }
+        }
+
+        public void Add(string key, CommunicationChannel ch)
+        {
+            lock (this)
+            {
+                list.Add(key, ch);
+            }
+        }
+
+        public CommunicationChannel SwitchTo(string key)
+        {
+            lock (this)
+            {
+                if (key == null)
+                {
+                    if (list.ContainsKey("lobby"))
+                    {
+                        return list["lobby"];
+                    }
+                    else
+                    {
+                        CommunicationChannel ch = new CommunicationChannel();
+                        ch.Name = "lobby";
+                        list.Add("lobby", ch);
+                        return list["lobby"];
+                    }
+                }
+
+                if (!list.ContainsKey(key))
+                {
+                    return null;
+                }
+                return list[key]; 
+            }
+        }
+    }
+
+    public class CommunicationChannel
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+        private Stack<string> listMessage = new Stack<string>();
+        private int ctr1 = 0;
+        private int tid;
+
+        public CommunicationChannel()
+        {
+            tid = Thread.CurrentThread.ManagedThreadId;
+        }
+
+        public void Put(string msg)
+        {
+            lock (this)
+            {
+                int c = ctr1++;
+                Console.WriteLine(string.Format("{0}:Put:{1}:{2}", tid, msg, c));
+                listMessage.Push(string.Format("{0}::{1}", msg, c));
+            }
+        }
+
+        public string Pickup()
+        {
+            lock (this)
+            {
+                if (listMessage.Count == 0)
+                {
+                    return null;
+                }
+                string msg = listMessage.Pop();
+                return string.Format("[{0}] {1}", Name, msg);
+            }
+        }
+    }
 
     public class WorldDimension
     {
@@ -34,13 +131,10 @@ namespace jacobsenroad
 
         private void WorldDimensionInit()
         {
-            lock (this)
-            {
-                tid = Thread.CurrentThread.ManagedThreadId;
-                Console.WriteLine("WorldDimension ctor()");
-                Thread threadServer = new Thread(new ThreadStart(Looper));
-                threadServer.Start();
-            }
+            tid = Thread.CurrentThread.ManagedThreadId;
+            Console.WriteLine("WorldDimension ctor()");
+            Thread threadServer = new Thread(new ThreadStart(Looper));
+            threadServer.Start();
         }
 
         public CommunicationChannel CurrentCommunicationChannel 
@@ -68,7 +162,11 @@ namespace jacobsenroad
             {
                 lock (this)
                 {
-                    string msg = CurrentCommunicationChannel.Pickup();  
+                    //if (listMessage.Count == 0)
+                    //{
+                    //    continue;
+                    //}
+                    string msg = CurrentCommunicationChannel.Pickup();  //listMessage.Pop();
                     if (msg == null)
                     {
                         continue;
@@ -81,7 +179,7 @@ namespace jacobsenroad
                         {
                             try
                             {
-                                h.Update(string.Format("{0}", msg));
+                                h.Update(string.Format("{0}::{1}", msg, ctr1));
                             }
                             catch (Exception ex)
                             {
@@ -91,6 +189,14 @@ namespace jacobsenroad
                     }
                     Console.WriteLine("==========================================");
                 }
+                //foreach (string msg in listMessage)
+                //{
+                //    foreach (ListenerHandler h in listConnection)
+                //    {
+                //        //h.Update(msg);
+                //        Console.WriteLine(string.Format("Update:{0}", msg));
+                //    }
+                //}
             }
         }
 
@@ -100,7 +206,6 @@ namespace jacobsenroad
             {
                 if (initv == 0)
                 {
-                    initv++;
                     WorldDimensionInit();
                 }
 
@@ -114,8 +219,7 @@ namespace jacobsenroad
             {
                 int c = ctr1++;
                 Console.WriteLine(string.Format("{0}:Put:{1}:{2}", tid, msg, c));
-                //listMessage.Push(string.Format("{0}{1}", msg, c));
-                listMessage.Push(string.Format("{0}",msg));
+                listMessage.Push(string.Format("{0}{1}", msg, c));
             }
         }
     }

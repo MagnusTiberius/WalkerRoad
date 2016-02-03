@@ -67,68 +67,49 @@ namespace jacobsenroad
 
         public void SetSocket(Socket socket)
         {
-            lock (this)
-            {
-                _socket = socket;
-            }
+            _socket = socket;
         }
 
         public void _timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            lock (this)
+            if (_socket.Connected)
             {
-                if (_socket.Connected)
+                string msg = "Notice: Hey this is the server ping.\n";
+                string msg2 = msg;
+                if (OnSendData != null)
                 {
-                    string msg = "Notice: Hey this is the server ping.\n";
-                    string msg2 = msg;
-                    if (OnSendData != null)
-                    {
-                        msg2 = OnSendData(msg);
-                    }
-                    _socket.Send(Encoding.ASCII.GetBytes(msg2));
+                    msg2 = OnSendData(msg);
                 }
+                _socket.Send(Encoding.ASCII.GetBytes(msg2));
             }
         }
 
         public void Update(string msg)
         {
-            lock (this)
+            if (_socket.Connected)
             {
-                if (_socket.Connected)
+                string msg2 = msg;
+                if (OnSendData != null)
                 {
-                    string msg2 = msg;
-                    if (OnSendData != null)
-                    {
-                        msg2 = OnSendData(msg);
-                    }
-                    _socket.Send(Encoding.ASCII.GetBytes(msg2));
+                    msg2 = OnSendData(msg);
                 }
+                _socket.Send(Encoding.ASCII.GetBytes(msg2));
             }
         }
 
         public void Start()
         {
-            bool isLooping;
-            int n;
-
-            lock (this)
-            {
-                _timer = new System.Timers.Timer(10000);
-                _timer.Elapsed += new ElapsedEventHandler(_timer_Elapsed);
-                _timer.Enabled = true; // Enable it
-            }
+            _timer = new System.Timers.Timer(10000);
+            _timer.Elapsed += new ElapsedEventHandler(_timer_Elapsed);
+            _timer.Enabled = true; // Enable it
 
             WorldDimension.Register(this);
-            
-            lock (this)
-            {
-                IsAvailable = false;
-                n = 0;
-                isLooping = true;
-                _socket.ReceiveTimeout = 15000;
-                _socket.NoDelay = true;
-            }
 
+            IsAvailable = false;
+            int n = 0;
+            bool isLooping = true;
+            _socket.ReceiveTimeout = 15000;
+            _socket.NoDelay = true;
             while (isLooping)
             {
                 bytes = new byte[1024 * 4];

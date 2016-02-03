@@ -15,10 +15,10 @@ namespace walkerroad_d
     {
         static void Main(string[] args)
         {
-            SynchronousSocketListener w = new SynchronousSocketListener();
-            Thread t = new Thread(new ThreadStart(w.StartListening));
-            t.Start();
-            t.Join();
+            SynchronousSocketListener listener = new SynchronousSocketListener();
+            Thread threadServer = new Thread(new ThreadStart(listener.StartListening));
+            threadServer.Start();
+            threadServer.Join();
         }
     }
 }

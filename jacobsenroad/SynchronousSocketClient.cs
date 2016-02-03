@@ -103,6 +103,11 @@ namespace jacobsenroad
             }
         }
 
+        private void ClientLoop()
+        {
+
+        }
+
         public void StartClient() 
         {
             ClientName = Datagen.GetFirstName();
@@ -131,8 +136,8 @@ namespace jacobsenroad
                 IPAddress ipAddress = ipHostInfo.AddressList[0];
                 IPEndPoint remoteEP = new IPEndPoint(ipAddress, Settings.PORTNUM);
                 _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
-                _socket.ReceiveTimeout = 15000;
-                _socket.NoDelay = true;
+                //_socket.ReceiveTimeout = 15000;
+                //_socket.NoDelay = true;
                 int id = Thread.CurrentThread.ManagedThreadId;
 
                 System.Diagnostics.Debug.WriteLine(string.Format("Thread:{0} Send Start", id));

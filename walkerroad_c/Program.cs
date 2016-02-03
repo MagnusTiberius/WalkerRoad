@@ -35,7 +35,7 @@ namespace walkerroad_c
     public class Scheme2 : SynchronousSocketClient
     {
         private Scheme2 client;
-
+        private bool inLoop = true;
         public Scheme2()
         {
             OnReceiveData += OnReceiveDataHandler;
@@ -55,24 +55,63 @@ namespace walkerroad_c
 
         private string OnClientLoopHandler()
         {
-            //return Datagen.GetComment();
-            return "My own handler.";
+            return Datagen.GetComment();
+            //return "My own handler.";
         }
 
-        public Thread Start()
+        public void Start()
         {
+            string nm = Datagen.GetFirstName();
             client = new Scheme2();
-            client.EnableDataGenerator = true;
+            client.EnableDataGenerator = false;
             client.TimerInterval = 200;
-            while (true)
-            {
-                Thread t = new Thread(new ThreadStart(client.StartClient));
-                t.Start();
-                t.Join();
-            }
+            Thread t = new Thread(new ThreadStart(client.StartClient));
+            t.Start();
+            t.Join();
         }
     }
 
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class Scheme3 : SynchronousSocketClient
+    {
+        private Scheme3 client;
+        private bool inLoop = true;
+        public Scheme3()
+        {
+            OnReceiveData += OnReceiveDataHandler;
+            OnSendData += OnSendDataHandler;
+        }
+
+        private string OnReceiveDataHandler(string msg)
+        {
+            return msg;
+        }
+
+        private string OnSendDataHandler(string msg)
+        {
+            return msg;
+        }
+
+        public void Start()
+        {
+            string nm = Datagen.GetFirstName();
+            client = new Scheme3();
+            client.EnableDataGenerator = false;
+            client.TimerInterval = 200;
+            Thread t = new Thread(new ThreadStart(client.StartClient));
+            t.Start();
+            while (inLoop)
+            {
+                Thread.Sleep(100);
+                client.Send(string.Format("{0}==>{1}", nm, Datagen.GetComment()));
+            }
+            t.Join();
+        }
+    }
+    
     /// <summary>
     /// 
     /// </summary>
@@ -81,8 +120,24 @@ namespace walkerroad_c
 
         static void Main(string[] args)
         {
-            Scheme2 s = new Scheme2();
-            Thread t = s.Start();
+            int v = 3;
+
+            if (v == 1)
+            {
+                Scheme2 s = new Scheme2();
+                s.Start();
+            }
+            if (v == 2)
+            {
+                Scheme1 s = new Scheme1();
+                Thread t = s.Start();
+                t.Join();
+            }
+            if (v == 3)
+            {
+                Scheme3 s = new Scheme3();
+                s.Start();
+            }
         }
     }
 }

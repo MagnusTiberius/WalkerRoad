@@ -108,8 +108,8 @@ namespace jacobsenroad
             IsAvailable = false;
             int n = 0;
             bool isLooping = true;
-            _socket.ReceiveTimeout = 15000;
-            _socket.NoDelay = true;
+            //_socket.ReceiveTimeout = 15000;
+            //_socket.NoDelay = true;
             while (isLooping)
             {
                 bytes = new byte[1024 * 4];

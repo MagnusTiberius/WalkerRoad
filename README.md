@@ -12,5 +12,7 @@ Running the Demo:
 3) Run the client(s) after that. i.e. walkerroad_c.
 
 
+The two programs are set up to run in one machine. The client(s) will connect to the server right away and run ad infinitum.
+
 The demo is just used for that, demonstrating the concept. You can add handlers to both the Server and Client piece to define your own simulation.
 

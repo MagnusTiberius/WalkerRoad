@@ -17,12 +17,25 @@ namespace jacobsenroad
     {
         public event OnReceiveData OnReceiveData;
         public event OnSendData OnSendData;
+        public event OnClientLoop OnClientLoop;
 
         private System.Timers.Timer _timer;
         private Socket _socket;
         private Guid guid;
         private Random rnd;
         public string ClientName { get; set; }
+        public IPHostEntry ipHostInfo { get; set; }
+        public string HostName { get; set; }
+
+        public SynchronousSocketClient()
+        {
+            double interval;
+            interval = 200;
+
+            _timer = new System.Timers.Timer(interval);
+            _timer.Elapsed += new ElapsedEventHandler(_timer_Elapsed);
+            _timer.Enabled = false; // Enable it
+        }
 
         public bool EnableDataGenerator
         {
@@ -37,15 +50,41 @@ namespace jacobsenroad
             }
         }
 
-        public void _timer_Elapsed(object sender, ElapsedEventArgs e)
+        public double TimerInterval
         {
-            string msg = string.Format("{0}--{1}", ClientName, Datagen.GetComment());
+            get
+            {
+                return _timer.Interval;
+            }
+            set
+            {
+                _timer.Interval = value;
+            }
+        }
+
+        private void _timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            string msg;
+            if (OnClientLoop != null)
+            {
+                msg = string.Format("{0}--{1}", ClientName, OnClientLoop());
+            }
+            else
+            {
+                msg = string.Format("{0}--{1}", ClientName, Datagen.GetComment());
+            }
             string sendMsg = msg;
             if (OnSendData != null)
             {
                 sendMsg = OnSendData(msg);
             }
-            _socket.Send(Encoding.ASCII.GetBytes(sendMsg));
+            if (_socket != null)
+            {
+                if (_socket.Connected)
+                {
+                    _socket.Send(Encoding.ASCII.GetBytes(sendMsg));
+                }
+            }
         }
 
         public void Send(string msg)
@@ -55,18 +94,19 @@ namespace jacobsenroad
             {
                 sendMsg = OnSendData(msg);
             }
-            _socket.Send(Encoding.ASCII.GetBytes(sendMsg));
+            if (_socket != null)
+            {
+                if (_socket.Connected)
+                {
+                    _socket.Send(Encoding.ASCII.GetBytes(sendMsg));
+                }
+            }
         }
 
         public void StartClient() 
         {
             ClientName = Datagen.GetFirstName();
 
-            double interval; 
-            interval = 2000;
-            _timer = new System.Timers.Timer(interval);
-            _timer.Elapsed += new ElapsedEventHandler(_timer_Elapsed);
-            _timer.Enabled = true; // Enable it
 
             rnd = new Random();
             guid = Guid.NewGuid();
@@ -77,9 +117,17 @@ namespace jacobsenroad
             List<string> msgList = new List<string>();
             int bytesRec;
 
-            try {
-
-                IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
+            try 
+            {
+                if (HostName == null)
+                {
+                    ipHostInfo = Dns.Resolve(Dns.GetHostName());
+                    //ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
+                }
+                else
+                {
+                    ipHostInfo = Dns.Resolve(HostName);
+                }
                 IPAddress ipAddress = ipHostInfo.AddressList[0];
                 IPEndPoint remoteEP = new IPEndPoint(ipAddress, Settings.PORTNUM);
                 _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
@@ -135,7 +183,9 @@ namespace jacobsenroad
                     System.Diagnostics.Debug.WriteLine(string.Format("Error 14 Thread:{0} {1}", Thread.CurrentThread.ManagedThreadId, e.ToString()));
                 }
 
-            } catch (Exception e) {
+            } 
+            catch (Exception e) 
+            {
                 Console.WriteLine( e.ToString());
                 System.Diagnostics.Debug.WriteLine(string.Format("Error 14 Thread:{0} {1}", Thread.CurrentThread.ManagedThreadId, e.ToString()));
             }

@@ -99,7 +99,7 @@ namespace jacobsenroad
 
         public void Start()
         {
-            _timer = new System.Timers.Timer(10000);
+            _timer = new System.Timers.Timer(5000);
             _timer.Elapsed += new ElapsedEventHandler(_timer_Elapsed);
             _timer.Enabled = true; // Enable it
 

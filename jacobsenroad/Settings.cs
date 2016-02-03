@@ -8,6 +8,7 @@ namespace jacobsenroad
 {
     public delegate string OnReceiveData(string response);
     public delegate string OnSendData(string message);
+    public delegate string OnClientLoop();
 
     public class Settings
     {

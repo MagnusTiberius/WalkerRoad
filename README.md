@@ -6,8 +6,11 @@ Using the concept found in games, you try to frame the process of validation in 
 Running the Demo:
 
 1) Build the two executables.
+
 2) Run the server first.
+
 3) Run the client(s) after that.
+
 
 The demo is just used for that, demonstrating the concept. You can add handlers to both the Server and Client piece to define your own simulation.
 

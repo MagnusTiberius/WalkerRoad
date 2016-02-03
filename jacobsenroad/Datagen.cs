@@ -6,8 +6,21 @@ using System.Threading.Tasks;
 
 namespace jacobsenroad
 {
+    public class ProtocolCommand 
+    {
+        public string Name {get; set;}
+        public string Template {get; set;}
+    }
+
     static public class Datagen
     {
+
+        static public Dictionary<string, ProtocolCommand> CommandSet = new Dictionary<string, ProtocolCommand>
+        {
+            {"LOGIN", new ProtocolCommand {Name="LOGIN",Template="LOGIN {0}"} },
+            {"SAY", new ProtocolCommand {Name="SAY",Template="SAY {0}"} },
+            {"JOIN", new ProtocolCommand {Name="JOIN",Template="JOIN {0}"} },
+        };
 
         static public string[] FirstNames = { "John", "Ben", "An", "Casey", "Ryan", "Justin", "Michael", "Cherry", "Luke", "Leia", "Vader", "Artoo", "Threepio", "Chewie", "Han", "Jarjar" };
         static public string[] Comments = { "A long time ago, in a galaxy far, far, away...", 

@@ -1,11 +1,10 @@
 ========================================================================
-    CONSOLE APPLICATION : pinefarm_d Project Overview
+    STATIC LIBRARY : pinefarm_d Project Overview
 ========================================================================
 
-AppWizard has created this pinefarm_d application for you.
+AppWizard has created this pinefarm_d library project for you.
 
-This file contains a summary of what you will find in each of the files that
-make up your pinefarm_d application.
+No source files were created as part of your project.
 
 
 pinefarm_d.vcxproj
@@ -20,16 +19,6 @@ pinefarm_d.vcxproj.filters
     and the filters. This association is used in the IDE to show grouping of files with
     similar extensions under a specific node (for e.g. ".cpp" files are associated with the
     "Source Files" filter).
-
-pinefarm_d.cpp
-    This is the main application source file.
-
-/////////////////////////////////////////////////////////////////////////////
-Other standard files:
-
-StdAfx.h, StdAfx.cpp
-    These files are used to build a precompiled header (PCH) file
-    named pinefarm_d.pch and a precompiled types file named StdAfx.obj.
 
 /////////////////////////////////////////////////////////////////////////////
 Other notes:

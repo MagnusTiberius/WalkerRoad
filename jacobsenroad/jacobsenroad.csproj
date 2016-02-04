@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Datagen.cs" />
     <Compile Include="ListenerHandler.cs" />
+    <Compile Include="ListenerHandlerController.cs" />
     <Compile Include="ListenerHandlerPool.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SynchronousSocketClient.cs" />

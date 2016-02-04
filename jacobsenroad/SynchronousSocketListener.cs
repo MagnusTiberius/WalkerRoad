@@ -17,6 +17,8 @@ namespace jacobsenroad
 
         private Socket handler;
         private List<Thread> threadList;
+        public string HostName { get; set; }
+        private IPHostEntry ipHostInfo;
 
         public void Close()
         {
@@ -41,7 +43,18 @@ namespace jacobsenroad
             byte[] bytes = new Byte[1024];
             threadList = new List<Thread>();
 
-            IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
+            if (HostName == null)
+            {
+                ipHostInfo = Dns.Resolve(Dns.GetHostName());
+                //ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
+            }
+            else
+            {
+                ipHostInfo = Dns.Resolve(HostName);
+            }
+
+            Console.WriteLine(string.Format("Host={0}", HostName));
+            ipHostInfo = Dns.Resolve(HostName);
             IPAddress ipAddress = ipHostInfo.AddressList[0];
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, Settings.PORTNUM);
 
@@ -58,7 +71,7 @@ namespace jacobsenroad
                     //var pool = ListenerHandlerPool.Instance;
                     //pool.Add(handler);
 
-                    ListenerHandler t = new ListenerHandler(handler);
+                    ListenerHandler t = ListenerHandlerController.Next(handler);
                     t.OnReceiveData += OnReceiveDataHandler;
                     t.OnSendData += OnSendDataHandler;
                     Thread thread = new Thread(new ThreadStart(t.Start));

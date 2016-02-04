@@ -16,6 +16,7 @@ namespace walkerroad_d
         static void Main(string[] args)
         {
             SynchronousSocketListener listener = new SynchronousSocketListener();
+            listener.HostName = "127.0.0.1";
             Thread threadServer = new Thread(new ThreadStart(listener.StartListening));
             threadServer.Start();
             threadServer.Join();

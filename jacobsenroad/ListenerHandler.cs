@@ -137,6 +137,9 @@ namespace jacobsenroad
                     isLooping = false;
                     System.Diagnostics.Debug.WriteLine(string.Format("Error ListenerHandler 22 Thread:{0} {1}", Thread.CurrentThread.ManagedThreadId, e.ToString()));
                     _timer.Enabled = false;
+                    isLooping = false;
+                    //_socket.Close();
+                    _socket.Disconnect(true);
                 }
             }
             IsAvailable = true;

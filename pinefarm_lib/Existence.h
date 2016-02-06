@@ -1,4 +1,6 @@
 #pragma once
+
+
 #undef UNICODE
 
 #define WIN32_LEAN_AND_MEAN
@@ -11,88 +13,13 @@
 #include <stack>
 #include <vector>
 
+#include "Entity.h"
+#include "Cosmos.h"
+
 #define DEFAULT_BUFLEN 1024
 
 
 using namespace std;
-
-class Entity
-{
-public:
-	Entity(SOCKET socket)
-	{
-		_socket = socket;
-	}
-
-	~Entity();
-
-	SOCKET GetSocket()
-	{
-		return _socket;
-	}
-
-private:
-	SOCKET _socket;
-	string name;
-};
-
-
-
-
-
-class Cosmos
-{
-public:
-	Cosmos(string name);
-
-	~Cosmos();
-
-public:
-	string GetName()
-	{
-		return _name;
-	}
-
-	void Add(Entity* entity)
-	{
-		entityList.push_back(entity);
-	}
-
-	void Add(string m)
-	{
-		messageList.push(m);
-	}
-
-	void Update()
-	{
-		int iSendResult;
-
-		if (!messageList.empty())
-		{
-			string m = messageList.top();
-			for (itEntity = entityList.begin(); itEntity != entityList.end(); itEntity++)
-			{
-				Entity* e = *itEntity;
-				SOCKET s = e->GetSocket();
-				
-				iSendResult = send(s, m.c_str(), m.length(), 0);
-			}
-			messageList.pop();
-		}
-	}
-
-private:
-	string _name;
-	vector<Entity*> entityList;
-	vector<Entity*>::iterator itEntity;
-
-	stack<string> messageList;
-};
-
-Cosmos::Cosmos(string name)
-{
-	_name = name;
-}
 
 
 
@@ -113,31 +40,10 @@ private:
 
 public:
 
-	Entity* Add(Entity* entity)
-	{
-		Add(entity, mainLobby);
-		return entity;
-	}
+	Entity* Add(Entity* entity);
+	Entity* Add(Entity* entity, Cosmos* c);
+	Cosmos* Add(Cosmos* c);
 
-	Entity* Add(Entity* entity, Cosmos* c)
-	{
-		if (c == NULL)
-		{
-			mainLobby->Add(entity);
-		}
-		else
-		{
-			c->Add(entity);
-		}
-
-		return entity;
-	}
-
-	Cosmos* Add(Cosmos* c)
-	{
-		cosmosList.push_back(c);
-		return c;
-	}
 
 
 public:

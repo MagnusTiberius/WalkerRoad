@@ -37,7 +37,7 @@ private:
 	DWORD ThreadID;
 
 	Cosmos* mainLobby;
-
+	HANDLE ghHasMessageEvent;
 public:
 
 	Entity* Add(Entity* entity);

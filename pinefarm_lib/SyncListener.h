@@ -41,7 +41,7 @@ private:
 	int m_PortNum;
 
 	ExistenceEngine engine;
-
+	HANDLE ghHasMessageEvent;
 public:
 
 	int Init();

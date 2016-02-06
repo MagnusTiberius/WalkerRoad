@@ -29,10 +29,12 @@ public:
 	void AddMessage(string m);
 	void SetCosmosName(string nm);
 	string GetCosmosName();
+	void SetAliveStatus(bool bStat);
+	bool IsAlive();
 private:
 	SOCKET _socket;
 	string name;
-
+	bool _isAlive;
 public:
 	string _cosmosName;
 };

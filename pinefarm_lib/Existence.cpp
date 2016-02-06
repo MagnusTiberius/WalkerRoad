@@ -3,7 +3,7 @@
 
 ExistenceEngine::ExistenceEngine()
 {
-
+	ghHasMessageEvent = OpenEvent(EVENT_ALL_ACCESS | EVENT_MODIFY_STATE, FALSE, TEXT("HasMessageEvent"));
 }
 
 ExistenceEngine::~ExistenceEngine()
@@ -43,6 +43,7 @@ Cosmos* ExistenceEngine::Add(Cosmos* c)
 
 void ExistenceEngine::AddMessage(string cosmosName, const char* msg)
 {
+	ghHasMessageEvent = OpenEvent(EVENT_ALL_ACCESS | EVENT_MODIFY_STATE, FALSE, TEXT("HasMessageEvent"));
 	vector<Cosmos*>::iterator itCosmos;
 	for (itCosmos = cosmosList.begin(); itCosmos != cosmosList.end(); itCosmos++)
 	{
@@ -51,6 +52,7 @@ void ExistenceEngine::AddMessage(string cosmosName, const char* msg)
 		if (name == cosmosName)
 		{
 			cosmos->AddMessage(msg);
+			SetEvent(ghHasMessageEvent);
 		}
 	}
 
@@ -71,12 +73,16 @@ int ExistenceEngine::Start()
 
 DWORD WINAPI ExistenceEngine::ServerWorkerThread(LPVOID lpObject)
 {
+	HANDLE ghHasMessageEvent;
+	ghHasMessageEvent = OpenEvent(EVENT_ALL_ACCESS | EVENT_MODIFY_STATE, FALSE, TEXT("HasMessageEvent"));
+
 	vector<Cosmos*>::iterator itCosmos;
 
 	ExistenceEngine *obj = (ExistenceEngine*)lpObject;
 
 	bool isLooping = true;
 	do {
+		WaitForSingleObject(ghHasMessageEvent, INFINITE);
 		for (itCosmos = obj->cosmosList.begin(); itCosmos != obj->cosmosList.end(); itCosmos++)
 		{
 			Cosmos* cosmos = *itCosmos;

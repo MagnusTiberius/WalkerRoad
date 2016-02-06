@@ -3,6 +3,7 @@
 Entity::Entity(SOCKET socket)
 {
 	_socket = socket;
+	_isAlive = true;
 }
 
 
@@ -30,4 +31,14 @@ void Entity::SetCosmosName(string nm)
 string Entity::GetCosmosName()
 {
 	return _cosmosName;
+}
+
+void Entity::SetAliveStatus(bool bStat)
+{
+	_isAlive = bStat;
+}
+
+bool Entity::IsAlive()
+{
+	return _isAlive;
 }

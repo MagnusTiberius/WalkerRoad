@@ -39,7 +39,8 @@ private:
 	string _name;
 	vector<Entity*> entityList;
 	vector<Entity*>::iterator itEntity;
-
+	HANDLE ghHasMessageEvent;
 	stack<string> messageList;
+	DWORD dwThreadId;
 };
 

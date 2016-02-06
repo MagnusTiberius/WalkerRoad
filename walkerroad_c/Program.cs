@@ -99,15 +99,15 @@ namespace walkerroad_c
         {
             string nm = Datagen.GetFirstName();
             client = new Scheme3();
-            //client.HostName = "74.208.133.86";
-            client.HostName = "127.0.0.1";
+            client.HostName = "74.208.133.86";
+            //client.HostName = "127.0.0.1";
             client.EnableDataGenerator = false;
             client.TimerInterval = 200;
             Thread t = new Thread(new ThreadStart(client.StartClient));
             t.Start();
             while (inLoop)
             {
-                Thread.Sleep(3000);
+                Thread.Sleep(1000);
                 client.Send(string.Format("{0}==>{1}", nm, Datagen.GetComment()));
             }
             t.Join();

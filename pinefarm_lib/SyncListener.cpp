@@ -17,6 +17,19 @@ int SyncListener::Init()
 
 	DWORD Ret;
 
+	ghHasMessageEvent = CreateEvent(
+		NULL,					// default security attributes
+		TRUE,					// manual-reset event
+		FALSE,					// initial state is nonsignaled
+		TEXT("HasMessageEvent") // object name
+		);
+
+	if (ghHasMessageEvent == NULL)
+	{
+		printf("CreateEvent failed (%d)\n", GetLastError());
+		return 1;
+	}
+
 	engine.Start();
 
 	do
@@ -177,31 +190,25 @@ DWORD WINAPI SyncListener::ServerWorkerThread(LPVOID lpObject)
 
 	do {
 		ZeroMemory(recvbufloc, DEFAULT_BUFLEN);
+		::Sleep(10);
 		iResult = recv(socketloc, recvbufloc, obj->recvbuflen, 0);
-		if (iResult > 0) {
-			printf("Bytes received: %d\n", iResult);
+		if (iResult > 0) 
+		{
 			string str(recvbufloc);
+			printf("Bytes received: %d : %s\n", iResult, str.c_str());
 			string cosmosName = entity->GetCosmosName();
 			obj->engine.AddMessage(cosmosName, str.c_str());
-			/*
-			iSendResult = send(socketloc, recvbufloc, iResult, 0);
-			if (iSendResult == SOCKET_ERROR) {
-				printf("send failed with error: %d\n", WSAGetLastError());
-				shutdown(socketloc, SD_BOTH);
-				closesocket(socketloc);
-				WSACleanup();
-				return 1;
-			}
-			printf("Bytes sent: %d\n", iSendResult);
-			*/
 		}
 		else if (iResult == 0)
+		{
 			printf("Connection closing...\n");
-		else  {
+		}
+		else  
+		{
 			printf("recv failed with error: %d\n", WSAGetLastError());
 			shutdown(socketloc, SD_BOTH);
 			closesocket(socketloc);
-			WSACleanup();
+			//WSACleanup();
 			return 1;
 		}
 

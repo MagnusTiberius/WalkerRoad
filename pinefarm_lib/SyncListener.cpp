@@ -17,6 +17,7 @@ int SyncListener::Init()
 
 	DWORD Ret;
 
+	engine.Start();
 
 	do
 	{
@@ -174,7 +175,7 @@ DWORD WINAPI SyncListener::ServerWorkerThread(LPVOID lpObject)
 		iResult = recv(socketloc, recvbufloc, obj->recvbuflen, 0);
 		if (iResult > 0) {
 			printf("Bytes received: %d\n", iResult);
-
+			/*
 			iSendResult = send(socketloc, recvbufloc, iResult, 0);
 			if (iSendResult == SOCKET_ERROR) {
 				printf("send failed with error: %d\n", WSAGetLastError());
@@ -184,6 +185,7 @@ DWORD WINAPI SyncListener::ServerWorkerThread(LPVOID lpObject)
 				return 1;
 			}
 			printf("Bytes sent: %d\n", iSendResult);
+			*/
 		}
 		else if (iResult == 0)
 			printf("Connection closing...\n");

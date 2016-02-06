@@ -20,17 +20,11 @@ using namespace std;
 class Entity
 {
 public:
-	Entity(SOCKET socket)
-	{
-		_socket = socket;
-	}
+	Entity(SOCKET socket);
 
 	~Entity();
 
-	SOCKET GetSocket()
-	{
-		return _socket;
-	}
+	SOCKET GetSocket();
 
 private:
 	SOCKET _socket;

@@ -47,36 +47,10 @@ public:
 
 
 public:
-	int Start()
-	{
-		DWORD dwThreadId = GetCurrentThreadId();
-
-		mainLobby = Add(new Cosmos("lobby"));
-
-		if ((ThreadHandle = CreateThread(NULL, 0, ServerWorkerThread, this, 0, &ThreadID)) == NULL)
-		{
-			fprintf(stderr, "%d::CreateThread() failed with error %d\n", dwThreadId, GetLastError());
-			return 1;
-		}
-	}
+	int Start();
 
 private:
-	static DWORD WINAPI ExistenceEngine::ServerWorkerThread(LPVOID lpObject)
-	{
-		vector<Cosmos*>::iterator itCosmos;
-
-		ExistenceEngine *obj = (ExistenceEngine*)lpObject;
-
-		bool isLooping = true;
-		do {
-			for (itCosmos = obj->cosmosList.begin(); itCosmos != obj->cosmosList.end(); itCosmos++)
-			{
-				Cosmos* cosmos = *itCosmos;
-				cosmos->Update();
-			}
-		} while (isLooping);
-		return 1;
-	}
+	static DWORD WINAPI ExistenceEngine::ServerWorkerThread(LPVOID lpObject);
 
 };
 

@@ -101,6 +101,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Cosmos.cpp" />
+    <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Existence.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="SyncListener.cpp" />

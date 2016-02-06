@@ -25,8 +25,14 @@ public:
 	~Entity();
 
 	SOCKET GetSocket();
-
+	//void SetCosmos(Cosmos* cosmos);
+	void AddMessage(string m);
+	void SetCosmosName(string nm);
+	string GetCosmosName();
 private:
 	SOCKET _socket;
 	string name;
+
+public:
+	string _cosmosName;
 };

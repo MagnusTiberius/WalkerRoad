@@ -14,6 +14,7 @@ ExistenceEngine::~ExistenceEngine()
 Entity* ExistenceEngine::Add(Entity* entity)
 {
 	Add(entity, mainLobby);
+	//entity->SetCosmos(mainLobby);
 	return entity;
 }
 
@@ -22,10 +23,13 @@ Entity* ExistenceEngine::Add(Entity* entity, Cosmos* c)
 	if (c == NULL)
 	{
 		mainLobby->Add(entity);
+		entity->SetCosmosName(mainLobby->GetName());
 	}
 	else
 	{
 		c->Add(entity);
+		string nm = c->GetName();
+		entity->SetCosmosName(nm);
 	}
 
 	return entity;
@@ -35,6 +39,21 @@ Cosmos* ExistenceEngine::Add(Cosmos* c)
 {
 	cosmosList.push_back(c);
 	return c;
+}
+
+void ExistenceEngine::AddMessage(string cosmosName, const char* msg)
+{
+	vector<Cosmos*>::iterator itCosmos;
+	for (itCosmos = cosmosList.begin(); itCosmos != cosmosList.end(); itCosmos++)
+	{
+		Cosmos* cosmos = *itCosmos;
+		string name = cosmos->GetName();
+		if (name == cosmosName)
+		{
+			cosmos->AddMessage(msg);
+		}
+	}
+
 }
 
 int ExistenceEngine::Start()

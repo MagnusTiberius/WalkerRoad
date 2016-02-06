@@ -31,7 +31,7 @@ public:
 
 	void Add(Entity* entity);
 
-	void Add(string m);
+	void AddMessage(string m);
 
 	void Update();
 

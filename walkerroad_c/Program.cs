@@ -99,8 +99,8 @@ namespace walkerroad_c
         {
             string nm = Datagen.GetFirstName();
             client = new Scheme3();
-            client.HostName = "74.208.133.86";
-            //client.HostName = "127.0.0.1";
+            //client.HostName = "74.208.133.86";
+            client.HostName = "127.0.0.1";
             client.EnableDataGenerator = false;
             client.TimerInterval = 200;
             Thread t = new Thread(new ThreadStart(client.StartClient));

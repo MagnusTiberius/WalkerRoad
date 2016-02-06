@@ -169,12 +169,20 @@ DWORD WINAPI SyncListener::ServerWorkerThread(LPVOID lpObject)
 	int iSendResult;
 	char recvbufloc[DEFAULT_BUFLEN];
 	SyncListener *obj = (SyncListener*)lpObject;
-	SOCKET socketloc = obj->ClientSocket;
-	do {
 
+
+	SOCKET socketloc = obj->ClientSocket;
+	Entity* entity = new Entity(socketloc);
+	obj->engine.Add(entity);
+
+	do {
+		ZeroMemory(recvbufloc, DEFAULT_BUFLEN);
 		iResult = recv(socketloc, recvbufloc, obj->recvbuflen, 0);
 		if (iResult > 0) {
 			printf("Bytes received: %d\n", iResult);
+			string str(recvbufloc);
+			string cosmosName = entity->GetCosmosName();
+			obj->engine.AddMessage(cosmosName, str.c_str());
 			/*
 			iSendResult = send(socketloc, recvbufloc, iResult, 0);
 			if (iSendResult == SOCKET_ERROR) {

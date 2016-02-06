@@ -43,7 +43,7 @@ public:
 	Entity* Add(Entity* entity);
 	Entity* Add(Entity* entity, Cosmos* c);
 	Cosmos* Add(Cosmos* c);
-
+	void AddMessage(string cosmosName, const char* msg);
 
 
 public:

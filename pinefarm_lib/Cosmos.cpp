@@ -34,7 +34,7 @@ void Cosmos::Add(Entity* entity)
 	entityList.push_back(entity);
 }
 
-void Cosmos::Add(string m)
+void Cosmos::AddMessage(string m)
 {
 	messageList.push(m);
 }

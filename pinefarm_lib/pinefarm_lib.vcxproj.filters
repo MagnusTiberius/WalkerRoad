@@ -21,9 +21,15 @@
     <ClInclude Include="SyncListener.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Existence.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SyncListener.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Existence.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -17,6 +17,7 @@ int SyncListener::Init()
 
 	DWORD Ret;
 
+
 	do
 	{
 
@@ -140,6 +141,8 @@ int SyncListener::Loop()
 				WSACleanup();
 				return 1;
 			}
+
+			//engine.Add(new Entity(ClientSocket));
 
 			if ((ThreadHandle = CreateThread(NULL, 0, ServerWorkerThread, this, 0, &ThreadID)) == NULL)
 			{

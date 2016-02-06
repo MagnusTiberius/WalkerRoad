@@ -9,6 +9,7 @@
 #include <ws2tcpip.h>
 #include <stdlib.h>
 #include <stdio.h>
+//#include "Existence.h"
 
 #define DEFAULT_BUFLEN 1024
 #define DEFAULT_PORT "11000"
@@ -38,6 +39,8 @@ private:
 
 	SOCKADDR_IN InternetAddr;
 	int m_PortNum;
+
+	//ExistenceEngine engine;
 
 public:
 

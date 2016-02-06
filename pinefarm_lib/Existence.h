@@ -65,9 +65,7 @@ public:
 
 	void Update()
 	{
-		int iResult;
 		int iSendResult;
-		char recvbufloc[DEFAULT_BUFLEN];
 
 		if (!messageList.empty())
 		{
@@ -76,7 +74,8 @@ public:
 			{
 				Entity* e = *itEntity;
 				SOCKET s = e->GetSocket();
-				iSendResult = send(s, recvbufloc, iResult, 0);
+				
+				iSendResult = send(s, m.c_str(), m.length(), 0);
 			}
 			messageList.pop();
 		}
@@ -170,6 +169,7 @@ private:
 				cosmos->Update();
 			}
 		} while (isLooping);
+		return 1;
 	}
 
 };

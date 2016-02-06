@@ -92,9 +92,11 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Existence.h" />
     <ClInclude Include="SyncListener.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Existence.cpp" />
     <ClCompile Include="SyncListener.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

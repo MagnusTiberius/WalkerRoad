@@ -15,51 +15,6 @@ int SyncListener::Init()
 	DWORD dwThreadId = GetCurrentThreadId();
 	m_PortNum = DEFAULT_PORT_INT;
 
-	//ZeroMemory(&hints, sizeof(hints));
-	//hints.ai_family = AF_INET;
-	//hints.ai_socktype = SOCK_STREAM;
-	//hints.ai_protocol = IPPROTO_TCP;
-	//hints.ai_flags = AI_PASSIVE;
-
-
-	//// Resolve the server address and port
-	//iResult = getaddrinfo(NULL, DEFAULT_PORT, &hints, &result);
-	//if (iResult != 0) {
-	//	printf("getaddrinfo failed with error: %d\n", iResult);
-	//	WSACleanup();
-	//	return 1;
-	//}
-
-	//// Create a SOCKET for connecting to server
-	//ListenSocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
-	//if (ListenSocket == INVALID_SOCKET) {
-	//	printf("socket failed with error: %ld\n", WSAGetLastError());
-	//	freeaddrinfo(result);
-	//	WSACleanup();
-	//	return 1;
-	//}
-
-	//// Setup the TCP listening socket
-	//iResult = bind(ListenSocket, result->ai_addr, (int)result->ai_addrlen);
-	//if (iResult == SOCKET_ERROR) {
-	//	printf("bind failed with error: %d\n", WSAGetLastError());
-	//	freeaddrinfo(result);
-	//	closesocket(ListenSocket);
-	//	WSACleanup();
-	//	return 1;
-	//}
-
-	//freeaddrinfo(result);
-
-
-
-	//iResult = listen(ListenSocket, SOMAXCONN);
-	//if (iResult == SOCKET_ERROR) {
-	//	printf("listen failed with error: %d\n", WSAGetLastError());
-	//	closesocket(ListenSocket);
-	//	WSACleanup();
-	//	return 1;
-	//}
 	DWORD Ret;
 
 	do
@@ -96,7 +51,6 @@ int SyncListener::Init()
 		}
 		fprintf(stderr, "%d::bind() is fine! Port number at  %d\n", dwThreadId, m_PortNum);
 
-		// Prepare socket for listening
 		if (listen(ListenSocket, 5) == SOCKET_ERROR)
 		{
 			fprintf(stderr, "%d::listen() failed with error %d\n", dwThreadId, WSAGetLastError());
@@ -115,7 +69,6 @@ int SyncListener::Init()
 		}
 	} while (true);
 
-	// No longer need server socket
 	closesocket(ListenSocket);
 }
 
@@ -129,7 +82,6 @@ int SyncListener::Loop()
 	try
 	{
 		do {
-			// Accept a client socket
 			ClientSocket = accept(ListenSocket, NULL, NULL);
 			if (ClientSocket == INVALID_SOCKET) {
 				printf("accept failed with error: %d\n", WSAGetLastError());
@@ -186,9 +138,6 @@ int SyncListener::Loop()
 				shutdown(ListenSocket, SD_BOTH);
 				closesocket(ListenSocket);
 				WSACleanup();
-				//WSAStartup((2, 2), &wsaData);
-				//ListenSocket = WSASocket(AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
-				//continue;
 				return 1;
 			}
 
@@ -217,20 +166,18 @@ DWORD WINAPI SyncListener::ServerWorkerThread(LPVOID lpObject)
 	char recvbufloc[DEFAULT_BUFLEN];
 	SyncListener *obj = (SyncListener*)lpObject;
 	SOCKET socketloc = obj->ClientSocket;
-	// Receive until the peer shuts down the connection
 	do {
 
 		iResult = recv(socketloc, recvbufloc, obj->recvbuflen, 0);
 		if (iResult > 0) {
 			printf("Bytes received: %d\n", iResult);
 
-			// Echo the buffer back to the sender
 			iSendResult = send(socketloc, recvbufloc, iResult, 0);
 			if (iSendResult == SOCKET_ERROR) {
 				printf("send failed with error: %d\n", WSAGetLastError());
 				shutdown(socketloc, SD_BOTH);
 				closesocket(socketloc);
-				//WSACleanup();
+				WSACleanup();
 				return 1;
 			}
 			printf("Bytes sent: %d\n", iSendResult);
@@ -241,7 +188,7 @@ DWORD WINAPI SyncListener::ServerWorkerThread(LPVOID lpObject)
 			printf("recv failed with error: %d\n", WSAGetLastError());
 			shutdown(socketloc, SD_BOTH);
 			closesocket(socketloc);
-			//WSACleanup();
+			WSACleanup();
 			return 1;
 		}
 

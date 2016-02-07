@@ -18,6 +18,7 @@
 
 
 
+
 class SyncListener
 {
 public:
@@ -41,7 +42,7 @@ private:
 	SOCKADDR_IN InternetAddr;
 	int m_PortNum;
 
-	ExistenceEngine engine;
+	ExistenceEngine* engine;
 	HANDLE ghHasMessageEvent;
 
 

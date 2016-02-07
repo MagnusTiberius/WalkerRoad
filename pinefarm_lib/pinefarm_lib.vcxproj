@@ -92,6 +92,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ChatParseTree.h" />
     <ClInclude Include="Cosmos.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Existence.h" />
@@ -104,6 +105,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ChatParseTree.cpp" />
     <ClCompile Include="Cosmos.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Existence.cpp" />

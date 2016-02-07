@@ -11,11 +11,12 @@
 #include <stack>
 #include <vector>
 #include "ProtocolChat.h"
+#include "ChatParseTree.h"
 
 #define DEFAULT_BUFLEN 1024
 
-
 using namespace std;
+
 
 class Entity
 {
@@ -42,6 +43,7 @@ private:
 	DWORD ThreadID;
 	HANDLE ThreadHandle;
 	stack<string> messageList;
+	
 public:
 	string _cosmosName;
 };

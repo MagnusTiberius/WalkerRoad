@@ -1,4 +1,5 @@
 #include "Entity.h"
+#include "Existence.h"
 
 Entity::Entity(SOCKET socket)
 {
@@ -61,6 +62,8 @@ DWORD WINAPI Entity::ServerWorkerThread(LPVOID lpObject)
 	HANDLE ghEntityHasMessageEvent;
 	Entity *obj = (Entity*)lpObject;
 
+	ExistenceEngine* engine = &ExistenceEngine::GetInstance();
+
 	ghEntityHasMessageEvent = obj->ghEntityHasMessageEvent;
 
 	bool isLooping = true;
@@ -70,7 +73,21 @@ DWORD WINAPI Entity::ServerWorkerThread(LPVOID lpObject)
 		obj->messageList.pop();
 		ResetEvent(ghEntityHasMessageEvent);
 		obj->protocolChat.AddMessage(msg);
-		obj->protocolChat.Evaluate();
+		ChatParseTree* tree = obj->protocolChat.Evaluate();
+		if (tree != NULL)
+		{
+			if (tree->method == "LOGIN")
+			{
+			}
+			if (tree->method == "SAY")
+			{
+				string buf;
+				buf.assign(tree->name);
+				buf.append(" : ");
+				buf.append(tree->content);
+				engine->AddMessage(obj->GetCosmosName(), buf.c_str());
+			}
+		}
 	} while (isLooping);
 	return 1;
 }

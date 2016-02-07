@@ -16,19 +16,19 @@ void ProtocolChatParser::Input(string msg)
 	_msg = msg;
 }
 
-void ProtocolChatParser::Parse(string msg)
+ChatParseTree* ProtocolChatParser::Parse(string msg)
 {
 	Input(msg);
 	scanner.Input(msg.c_str());
 	CHAR* token;
 	CHAR* contentLen = "0";
-	CHAR* name = "0";
-	string content;
+
 	const CHAR* c;
 
 	token = scanner.AcceptRun("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
-	if (strcmp(token, "SAY") == 0)
+	if (strcmp(token, "SAY") == 0 || strcmp(token, "LOGIN") == 0)
 	{
+		method.assign(token);
 		scanner.SkipEmpty();
 		token = scanner.AcceptRun("\/ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz._");
 
@@ -48,7 +48,7 @@ void ProtocolChatParser::Parse(string msg)
 			{
 				token = scanner.AcceptRun("=:");
 				token = scanner.AcceptRun("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-01234567890");
-				name = _strdup(token);
+				name.assign(token);
 			}
 			if (strcmp(token, "content-length") == 0)
 			{
@@ -67,7 +67,13 @@ void ProtocolChatParser::Parse(string msg)
 				token = scanner.AcceptRun("\n");
 				if (strcmp(token, "\n\n") == 0)
 				{
-					return;
+					printf("method=%s; name=%s\n", method.c_str(), name.c_str());
+					//printf("method=%s\n", method.c_str());
+					ChatParseTree* tree = new ChatParseTree();
+					tree->method = method;
+					tree->name = name;
+					tree->content = content;
+					return tree;
 				}
 			}
 			token = scanner.AcceptRun("\nABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-");

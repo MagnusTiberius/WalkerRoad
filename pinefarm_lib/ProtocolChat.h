@@ -30,7 +30,7 @@ public:
 	virtual void Connect();
 
 	void AddMessage(string msg);
-	void Evaluate();
+	ChatParseTree* Evaluate();
 private:
 	stack<string> messageList;
 	string inputData;

@@ -15,6 +15,7 @@ int SyncListener::Init()
 	DWORD dwThreadId = GetCurrentThreadId();
 	m_PortNum = DEFAULT_PORT_INT;
 
+
 	DWORD Ret;
 
 	ghHasMessageEvent = CreateEvent(NULL, TRUE,	FALSE,	TEXT("HasMessageEvent") );
@@ -25,7 +26,8 @@ int SyncListener::Init()
 		return 1;
 	}
 
-	engine.Start();
+	engine = &ExistenceEngine::GetInstance();
+	engine->Start();
 
 	do
 	{
@@ -177,10 +179,11 @@ DWORD WINAPI SyncListener::ServerWorkerThread(LPVOID lpObject)
 	char recvbufloc[DEFAULT_BUFLEN];
 	SyncListener *obj = (SyncListener*)lpObject;
 
+	
 
 	SOCKET socketloc = obj->ClientSocket;
 	Entity* entity = new Entity(socketloc);
-	obj->engine.Add(entity);
+	obj->engine->Add(entity);
 
 	do {
 		ZeroMemory(recvbufloc, DEFAULT_BUFLEN);
@@ -190,9 +193,9 @@ DWORD WINAPI SyncListener::ServerWorkerThread(LPVOID lpObject)
 		{
 			string str(recvbufloc);
 
-			printf("Bytes received: %d : %s\n", iResult, str.c_str());
+			//printf("Bytes received: %d : %s\n", iResult, str.c_str());
 			string cosmosName = entity->GetCosmosName();
-			obj->engine.AddMessage(cosmosName, str.c_str());
+			//obj->engine->AddMessage(cosmosName, str.c_str());
 			entity->AddMessage(str);
 		}
 		else if (iResult == 0)

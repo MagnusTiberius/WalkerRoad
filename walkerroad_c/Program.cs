@@ -98,6 +98,7 @@ namespace walkerroad_c
         public void Start()
         {
             string nm = Datagen.GetFirstName();
+            string msg = "";
             client = new Scheme3();
             //client.HostName = "74.208.133.86";
             client.HostName = "127.0.0.1";
@@ -105,11 +106,15 @@ namespace walkerroad_c
             client.TimerInterval = 200;
             Thread t = new Thread(new ThreadStart(client.StartClient));
             t.Start();
+            msg = nm;
+            Thread.Sleep(1000);
+            string sendmsg = string.Format("LOGIN . CHAT/1.0\nname={0}\ncontent-length:{1}\n\n{2}\n\n", nm, msg.Length, msg);
+            client.Send(sendmsg);
             while (inLoop)
             {
                 Thread.Sleep(1000);
-                string msg = Datagen.GetComment();
-                client.Send(string.Format("SAY . CHAT/1.0\nname={0}\ncontent-length:{1}\n\n{2}\n\t\n\t", nm, msg.Length ,msg));
+                msg = Datagen.GetComment();
+                client.Send(string.Format("SAY . CHAT/1.0\nname={0}\ncontent-length:{1}\n\n{2}\n\n", nm, msg.Length ,msg));
             }
             t.Join();
         }

@@ -26,10 +26,12 @@ using namespace std;
 class ExistenceEngine
 {
 public:
-	ExistenceEngine();
+	static ExistenceEngine& GetInstance();
 	~ExistenceEngine();
 
 private:
+	ExistenceEngine();
+
 	SOCKET currentSocket;
 	vector<Cosmos*> cosmosList;
 

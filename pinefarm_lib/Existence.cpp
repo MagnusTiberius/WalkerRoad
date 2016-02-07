@@ -11,6 +11,12 @@ ExistenceEngine::~ExistenceEngine()
 
 }
 
+ExistenceEngine& ExistenceEngine::GetInstance()
+{
+	static ExistenceEngine instance;
+	return instance;
+}
+
 Entity* ExistenceEngine::Add(Entity* entity)
 {
 	Add(entity, mainLobby);

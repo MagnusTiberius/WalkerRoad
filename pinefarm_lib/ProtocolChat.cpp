@@ -20,11 +20,11 @@ void ProtocolChat::AddMessage(string msg)
 	messageList.push(msg);
 }
 
-void ProtocolChat::Evaluate()
+ChatParseTree* ProtocolChat::Evaluate()
 {
 	string s = messageList.top();
 	messageList.pop();
-	inputData.append(s);
+	inputData.assign(s);
 	protocolChatParser.Input(inputData);
-	protocolChatParser.Parse(inputData);
+	return( protocolChatParser.Parse(inputData) );
 }

@@ -108,14 +108,14 @@ CHAR* ScannerA::AcceptUntil(CHAR *str)
 		chr = strchr(str, *m_c);
 	}
 	m_end = m_pos;
-	strncpy_s(m_token, BUFSIZMIN, p, m_end - m_start + 1);
+	strncpy_s(m_token, DEFAULT_BUFLEN, p, m_end - m_start + 1);
 	return m_token;
 }
 
 CHAR* ScannerA::AcceptRun(CHAR *str)
 {
 	bool inLoop = false;
-	memset(m_token, '\0', BUFSIZMIN);
+	memset(m_token, '\0', DEFAULT_BUFLEN);
 
 	m_start = m_pos;
 	const CHAR *p = &m_str[m_start];
@@ -140,7 +140,7 @@ CHAR* ScannerA::AcceptRun(CHAR *str)
 	}
 
 	m_end = m_pos;
-	strncpy_s(m_token, BUFSIZMIN, p, m_end - m_start + 1);
+	strncpy_s(m_token, DEFAULT_BUFLEN, p, m_end - m_start + 1);
 	p = NULL;
 	Next();
 	return m_token;

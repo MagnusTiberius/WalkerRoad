@@ -18,6 +18,7 @@
 using namespace std;
 
 #include "IProtocol.h"
+#include "ProtocolChatParser.h"
 
 class ProtocolChat : public IProtocol
 {
@@ -33,5 +34,6 @@ public:
 private:
 	stack<string> messageList;
 	string inputData;
+	ProtocolChatParser protocolChatParser;
 };
 

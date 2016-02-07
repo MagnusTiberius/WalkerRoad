@@ -17,10 +17,21 @@
 
 using namespace std;
 
-class ProtocolChatParser
+#include "ScannerA.h"
+
+class ProtocolChatParser 
 {
 public:
 	ProtocolChatParser();
 	~ProtocolChatParser();
+
+private:
+	string _msg;
+
+	ScannerA scanner;
+
+public:
+	void Input(string msg);
+	void Parse(string msg);
 };
 

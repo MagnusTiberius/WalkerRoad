@@ -25,4 +25,6 @@ void ProtocolChat::Evaluate()
 	string s = messageList.top();
 	messageList.pop();
 	inputData.append(s);
+	protocolChatParser.Input(inputData);
+	protocolChatParser.Parse(inputData);
 }

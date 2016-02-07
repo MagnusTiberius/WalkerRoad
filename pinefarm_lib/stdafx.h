@@ -26,6 +26,10 @@
 
 #define DEFAULT_BUFLEN 1024
 
+#define BUFSIZMAX		8*1024
+#define BUFSIZMIN		1024
+#define DATA_BUFSIZE	8192
+#define DATASIZMIN		128
 
 using namespace std;
 

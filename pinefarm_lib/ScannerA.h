@@ -1,5 +1,22 @@
 #pragma once
-#include "stdafx.h"
+
+#undef UNICODE
+
+#define WIN32_LEAN_AND_MEAN
+
+#include <windows.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <stack>
+#include <vector>
+
+#define DEFAULT_BUFLEN 1024
+
+using namespace std;
+
+//#include "stdafx.h"
 
 
 class ScannerA
@@ -28,7 +45,7 @@ protected:
 	int m_end;
 	int m_pos;
 	const CHAR *m_c;
-	CHAR m_token[BUFSIZMIN];
+	CHAR m_token[DEFAULT_BUFLEN];
 };
 
 /*

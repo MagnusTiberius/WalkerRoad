@@ -38,7 +38,7 @@ public:
 	void SkipEmpty();
 	CHAR* AcceptUntil(CHAR *str);
 	bool IsEOS();
-
+	int GetCurrentPosition();
 protected:
 	const CHAR* m_str;
 	int m_start;

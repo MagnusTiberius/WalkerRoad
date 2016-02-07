@@ -183,3 +183,8 @@ bool ScannerA::IsAlphanumeric()
 	}
 	return false;
 }
+
+int ScannerA::GetCurrentPosition()
+{
+	return m_pos;
+}

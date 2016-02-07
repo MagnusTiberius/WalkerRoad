@@ -39,6 +39,7 @@ public:
 	CHAR* AcceptUntil(CHAR *str);
 	bool IsEOS();
 	int GetCurrentPosition();
+	string GetByContentLength(int length);
 protected:
 	const CHAR* m_str;
 	int m_start;

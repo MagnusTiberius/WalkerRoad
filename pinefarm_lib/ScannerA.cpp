@@ -87,8 +87,15 @@ bool ScannerA::Accept(CHAR *str)
 {
 	if (m_c == NULL)
 		return false;
+	if (m_c == "")
+		return false;
 
 	char c = *m_c;
+	if (c == '\0')
+	{
+		return false;
+	}
+
 	auto chr = strchr(str, c);
 	if (chr != NULL)
 	{
@@ -187,4 +194,18 @@ bool ScannerA::IsAlphanumeric()
 int ScannerA::GetCurrentPosition()
 {
 	return m_pos;
+}
+
+string ScannerA::GetByContentLength(int length)
+{
+	string str;
+	for (int i = 0; i < length; i++)
+	{
+		char c = *m_c;
+		str.push_back(c);
+		Next();
+	}
+	//Backup();
+
+	return str.c_str();
 }

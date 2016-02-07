@@ -109,7 +109,7 @@ namespace walkerroad_c
             {
                 Thread.Sleep(1000);
                 string msg = Datagen.GetComment();
-                client.Send(string.Format("SAY . CHAT/1.0\nname={0}\ncontent-length:{1}\n\n{2}\n\n", nm, msg.Length ,msg));
+                client.Send(string.Format("SAY . CHAT/1.0\nname={0}\ncontent-length:{1}\n\n{2}\n\t\n\t", nm, msg.Length ,msg));
             }
             t.Join();
         }

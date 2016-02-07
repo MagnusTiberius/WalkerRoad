@@ -17,21 +17,10 @@
 
 using namespace std;
 
-#include "IProtocol.h"
-
-class ProtocolChat : public IProtocol
+class ProtocolChatParser
 {
 public:
-	ProtocolChat();
-	~ProtocolChat();
-
-public:
-	virtual void Connect();
-
-	void AddMessage(string msg);
-	void Evaluate();
-private:
-	stack<string> messageList;
-	string inputData;
+	ProtocolChatParser();
+	~ProtocolChatParser();
 };
 

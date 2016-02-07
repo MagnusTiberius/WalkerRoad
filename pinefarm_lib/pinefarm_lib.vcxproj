@@ -97,6 +97,8 @@
     <ClInclude Include="Existence.h" />
     <ClInclude Include="IProtocol.h" />
     <ClInclude Include="ProtocolChat.h" />
+    <ClInclude Include="ProtocolChatParser.h" />
+    <ClInclude Include="ScannerA.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SyncListener.h" />
     <ClInclude Include="targetver.h" />
@@ -107,6 +109,8 @@
     <ClCompile Include="Existence.cpp" />
     <ClCompile Include="IProtocol.cpp" />
     <ClCompile Include="ProtocolChat.cpp" />
+    <ClCompile Include="ProtocolChatParser.cpp" />
+    <ClCompile Include="ScannerA.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="SyncListener.cpp" />
   </ItemGroup>

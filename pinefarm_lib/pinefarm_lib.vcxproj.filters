@@ -42,6 +42,12 @@
     <ClInclude Include="ProtocolChat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ScannerA.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProtocolChatParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SyncListener.cpp">
@@ -63,6 +69,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ProtocolChat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ScannerA.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProtocolChatParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

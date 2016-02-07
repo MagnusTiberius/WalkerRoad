@@ -22,5 +22,7 @@ void ProtocolChat::AddMessage(string msg)
 
 void ProtocolChat::Evaluate()
 {
-
+	string s = messageList.top();
+	messageList.pop();
+	inputData.append(s);
 }

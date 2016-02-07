@@ -32,5 +32,6 @@ public:
 	void Evaluate();
 private:
 	stack<string> messageList;
+	string inputData;
 };
 

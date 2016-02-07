@@ -17,12 +17,7 @@ int SyncListener::Init()
 
 	DWORD Ret;
 
-	ghHasMessageEvent = CreateEvent(
-		NULL,					// default security attributes
-		TRUE,					// manual-reset event
-		FALSE,					// initial state is nonsignaled
-		TEXT("HasMessageEvent") // object name
-		);
+	ghHasMessageEvent = CreateEvent(NULL, TRUE,	FALSE,	TEXT("HasMessageEvent") );
 
 	if (ghHasMessageEvent == NULL)
 	{
@@ -179,7 +174,6 @@ int SyncListener::Loop()
 DWORD WINAPI SyncListener::ServerWorkerThread(LPVOID lpObject)
 {
 	int iResult;
-	int iSendResult;
 	char recvbufloc[DEFAULT_BUFLEN];
 	SyncListener *obj = (SyncListener*)lpObject;
 
@@ -195,9 +189,11 @@ DWORD WINAPI SyncListener::ServerWorkerThread(LPVOID lpObject)
 		if (iResult > 0) 
 		{
 			string str(recvbufloc);
+
 			printf("Bytes received: %d : %s\n", iResult, str.c_str());
 			string cosmosName = entity->GetCosmosName();
 			obj->engine.AddMessage(cosmosName, str.c_str());
+			entity->AddMessage(str);
 		}
 		else if (iResult == 0)
 		{
@@ -213,6 +209,7 @@ DWORD WINAPI SyncListener::ServerWorkerThread(LPVOID lpObject)
 		}
 
 	} while (iResult > 0);
+	return 1;
 }
 
 
@@ -259,4 +256,5 @@ int SyncListener::Start()
 	// cleanup
 	closesocket(ClientSocket);
 	WSACleanup();
+	return 1;
 }

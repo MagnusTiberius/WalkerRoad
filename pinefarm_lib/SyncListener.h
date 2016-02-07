@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "Existence.h"
+#include "ProtocolChat.h"
 
 #define DEFAULT_BUFLEN 1024
 #define DEFAULT_PORT "11000"
@@ -42,6 +43,8 @@ private:
 
 	ExistenceEngine engine;
 	HANDLE ghHasMessageEvent;
+
+
 public:
 
 	int Init();

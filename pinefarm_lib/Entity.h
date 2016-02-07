@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <stack>
 #include <vector>
-
+#include "ProtocolChat.h"
 
 #define DEFAULT_BUFLEN 1024
 
@@ -31,10 +31,17 @@ public:
 	string GetCosmosName();
 	void SetAliveStatus(bool bStat);
 	bool IsAlive();
+
 private:
 	SOCKET _socket;
 	string name;
 	bool _isAlive;
+	ProtocolChat protocolChat;
+	static DWORD WINAPI ServerWorkerThread(LPVOID lpObject);
+	HANDLE ghEntityHasMessageEvent;
+	DWORD ThreadID;
+	HANDLE ThreadHandle;
+	stack<string> messageList;
 public:
 	string _cosmosName;
 };

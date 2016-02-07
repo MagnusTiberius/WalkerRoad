@@ -4,6 +4,18 @@ Entity::Entity(SOCKET socket)
 {
 	_socket = socket;
 	_isAlive = true;
+	ghEntityHasMessageEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+
+	DWORD dwThreadId = GetCurrentThreadId();
+	if ((ThreadHandle = CreateThread(NULL, 0, ServerWorkerThread, this, 0, &ThreadID)) == NULL)
+	{
+		fprintf(stderr, "%d::CreateThread() failed with error %d\n", dwThreadId, GetLastError());
+		return;
+	}
+	else
+		fprintf(stderr, "%d::CreateThread() is OK!\n", dwThreadId);
+
+	return;
 }
 
 
@@ -19,7 +31,8 @@ SOCKET Entity::GetSocket()
 
 void Entity::AddMessage(string m)
 {
-	int a = 1;
+	messageList.push(m);
+	SetEvent(ghEntityHasMessageEvent);
 }
 
 
@@ -41,4 +54,23 @@ void Entity::SetAliveStatus(bool bStat)
 bool Entity::IsAlive()
 {
 	return _isAlive;
+}
+
+DWORD WINAPI Entity::ServerWorkerThread(LPVOID lpObject)
+{
+	HANDLE ghEntityHasMessageEvent;
+	Entity *obj = (Entity*)lpObject;
+
+	ghEntityHasMessageEvent = obj->ghEntityHasMessageEvent;
+
+	bool isLooping = true;
+	do {
+		WaitForSingleObject(ghEntityHasMessageEvent, INFINITE);
+		string msg = obj->messageList.top();
+		obj->messageList.pop();
+		ResetEvent(ghEntityHasMessageEvent);
+		obj->protocolChat.AddMessage(msg);
+		obj->protocolChat.Evaluate();
+	} while (isLooping);
+	return 1;
 }

@@ -83,7 +83,7 @@ DWORD WINAPI Entity::ServerWorkerThread(LPVOID lpObject)
 			if (tree->method == "SAY")
 			{
 				string buf;
-				buf.assign(obj->name);
+				buf.assign(tree->name);
 				buf.append(" : ");
 				buf.append(tree->content);
 				engine->AddMessage(obj->GetCosmosName(), buf.c_str());

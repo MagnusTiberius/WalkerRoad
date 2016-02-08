@@ -78,11 +78,12 @@ DWORD WINAPI Entity::ServerWorkerThread(LPVOID lpObject)
 		{
 			if (tree->method == "LOGIN")
 			{
+				obj->name.assign(tree->name);
 			}
 			if (tree->method == "SAY")
 			{
 				string buf;
-				buf.assign(tree->name);
+				buf.assign(obj->name);
 				buf.append(" : ");
 				buf.append(tree->content);
 				engine->AddMessage(obj->GetCosmosName(), buf.c_str());

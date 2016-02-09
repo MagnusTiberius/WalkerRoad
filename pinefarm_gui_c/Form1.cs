@@ -34,6 +34,10 @@ namespace pinefarm_gui_c
 
         private string OnReceiveDataHandler(string msg)
         {
+            if (txtChat.TextLength > 8000)
+            {
+                txtChat.Clear();
+            }
             txtChat.AppendText( string.Format("{0}{1}{1}", msg, Environment.NewLine, Environment.NewLine));
             txtChat.Refresh();
             return msg;

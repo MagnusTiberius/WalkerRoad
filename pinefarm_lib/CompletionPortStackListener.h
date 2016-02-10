@@ -21,6 +21,9 @@
 
 #include "Existence.h"
 #include "ProtocolChat.h"
+#include "Parser.h"
+#include "Protocol.h"
+#include "structs.h"
 
 #define DEFAULT_BUFLEN 1024
 #define DEFAULT_PORT "11000"
@@ -28,6 +31,9 @@
 #define DEFAULT_PORT "11000"
 #define DEFAULT_PORT_INT 11000
 #define DATA_BUFSIZE 8192
+#define THREAD_COUNT 5
+
+using namespace std;
 
 class CompletionPortStackListener
 {
@@ -35,21 +41,36 @@ public:
 	CompletionPortStackListener();
 	~CompletionPortStackListener();
 
-	typedef struct
-	{
-		SOCKET socket;
-		const char* data;
-		DWORD len;
-	} JOBREQUEST, *LP_JOBREQUEST;
+	//typedef struct
+	//{
+	//	char* method;
+	//	char* contentType;
+	//	map<char*, char*> properties;
+	//} HEADER, *LP_HEADER;
+
+	//typedef struct
+	//{
+	//	SOCKET socket;
+	//	HEADER header;
+	//	const char* data;
+	//	DWORD len;
+	//} JOBREQUEST, *LP_JOBREQUEST;
 
 private:
-	static stack<LP_JOBREQUEST> jobList;
+	stack<Structs::LP_JOBREQUEST> jobList;
 	HANDLE ghHasMessageEvent;
+	int nThreads;
+	HANDLE ghMutex;
 public:
 	void AddJobRequest(SOCKET s, const char* data, DWORD len);
-
+	void Start();
+	void SetParserHandler(Parser* p);
+	void SetProtocol(Protocol* p);
 private:
 	static DWORD WINAPI CompletionPortStackListener::WorkerThread(LPVOID obj);
-
+	HANDLE ThreadHandle;
+	DWORD ThreadID;
+	Parser* _parser;
+	Protocol* _protocol;
 };
 

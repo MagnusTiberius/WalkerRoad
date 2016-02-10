@@ -179,8 +179,6 @@ DWORD WINAPI SyncListener::ServerWorkerThread(LPVOID lpObject)
 	char recvbufloc[DEFAULT_BUFLEN];
 	SyncListener *obj = (SyncListener*)lpObject;
 
-	
-
 	SOCKET socketloc = obj->ClientSocket;
 	Entity* entity = new Entity(socketloc);
 	obj->engine->Add(entity);
@@ -192,11 +190,11 @@ DWORD WINAPI SyncListener::ServerWorkerThread(LPVOID lpObject)
 		if (iResult > 0) 
 		{
 			string str(recvbufloc);
-
+			const CHAR* inputbuf = _strdup(recvbufloc);
 			//printf("Bytes received: %d : %s\n", iResult, str.c_str());
 			string cosmosName = entity->GetCosmosName();
 			//obj->engine->AddMessage(cosmosName, str.c_str());
-			entity->AddMessage(str);
+			entity->AddMessage(inputbuf);
 		}
 		else if (iResult == 0)
 		{

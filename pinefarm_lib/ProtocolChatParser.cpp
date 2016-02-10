@@ -1,5 +1,5 @@
 #include "ProtocolChatParser.h"
-
+#include "structs.h"
 
 ProtocolChatParser::ProtocolChatParser()
 {
@@ -11,24 +11,28 @@ ProtocolChatParser::~ProtocolChatParser()
 }
 
 
-void ProtocolChatParser::Input(string msg)
+void ProtocolChatParser::Input(const CHAR* msg)
 {
 	_msg = msg;
 }
 
-ChatParseTree* ProtocolChatParser::Parse(string msg)
+LPVOID ProtocolChatParser::Parse(const CHAR* msg)
 {
 	Input(msg);
-	scanner.Input(msg.c_str());
+	scanner.Input(msg);
 	CHAR* token;
 	CHAR* contentLen = "0";
 
 	const CHAR* c;
 
+	Structs::LP_JOBREQUEST jobreq = new Structs::JOBREQUEST();
+
+
 	token = scanner.AcceptRun("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
 	if (strcmp(token, "SAY") == 0 || strcmp(token, "LOGIN") == 0)
 	{
-		method.assign(token);
+		method = _strdup(token);
+		jobreq->header.method = _strdup(token);
 		scanner.SkipEmpty();
 		token = scanner.AcceptRun("\/ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz._");
 
@@ -48,13 +52,16 @@ ChatParseTree* ProtocolChatParser::Parse(string msg)
 			{
 				token = scanner.AcceptRun("=:");
 				token = scanner.AcceptRun("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-01234567890");
-				name.assign(token);
+				name = _strdup(token);
+				jobreq->header.name = _strdup(token);
 			}
 			if (strcmp(token, "content-length") == 0)
 			{
 				token = scanner.AcceptRun("=:");
 				token = scanner.AcceptRun("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-01234567890");
 				contentLen = _strdup(token);
+				jobreq->header.contentLen = _strdup(token);
+				jobreq->len = atoi(contentLen);
 			}
 			token = scanner.AcceptRun("\n");
 			if (strcmp(token, "\n") == 0)
@@ -63,21 +70,19 @@ ChatParseTree* ProtocolChatParser::Parse(string msg)
 			}
 			if (strcmp(token, "\n\n") == 0)
 			{
-				content = scanner.GetByContentLength(atoi(contentLen));
+				string cl = scanner.GetByContentLength(atoi(contentLen));
+				content = cl.c_str();
+				jobreq->data = _strdup(content);
 				token = scanner.AcceptRun("\n");
 				if (strcmp(token, "\n\n") == 0)
 				{
-					printf("method=%s; name=%s\n", method.c_str(), name.c_str());
-					//printf("method=%s\n", method.c_str());
-					ChatParseTree* tree = new ChatParseTree();
-					tree->method = method;
-					tree->name = name;
-					tree->content = content;
-					return tree;
+					printf("method=%s; name=%s\n", method, name);
+					return jobreq;
 				}
 			}
 			token = scanner.AcceptRun("\nABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-");
 		}
 		
 	}
+	return NULL;
 }

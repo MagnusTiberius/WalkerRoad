@@ -75,6 +75,7 @@ int ExistenceEngine::Start()
 		fprintf(stderr, "%d::CreateThread() failed with error %d\n", dwThreadId, GetLastError());
 		return 1;
 	}
+	return 1;
 }
 
 DWORD WINAPI ExistenceEngine::ServerWorkerThread(LPVOID lpObject)

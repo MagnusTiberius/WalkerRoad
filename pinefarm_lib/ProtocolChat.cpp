@@ -1,8 +1,9 @@
 #include "ProtocolChat.h"
-
+#include "structs.h"
 
 ProtocolChat::ProtocolChat()
 {
+	protocolChatParser = (Parser*)(new ProtocolChatParser());
 }
 
 
@@ -15,16 +16,33 @@ void ProtocolChat::Connect()
 
 }
 
-void ProtocolChat::AddMessage(string msg)
+void ProtocolChat::AddMessage(const CHAR* msg)
 {
-	messageList.push(msg);
+	messageList.push(_strdup(msg));
 }
 
-ChatParseTree* ProtocolChat::Evaluate()
+LPVOID ProtocolChat::Evaluate(LPVOID refdata)
 {
-	string s = messageList.top();
+	Structs::LP_JOBREQUEST req = (Structs::LP_JOBREQUEST)refdata;
+	return req;
+}
+
+
+LPVOID ProtocolChat::Parse()
+{
+	const CHAR* data = messageList.top();
 	messageList.pop();
-	inputData.assign(s);
-	protocolChatParser.Input(inputData);
-	return( protocolChatParser.Parse(inputData) );
+	protocolChatParser->Input(data);
+	LPVOID rv = protocolChatParser->Parse(data);
+	return(rv);
+}
+
+int ProtocolChat::Send(SOCKET socket)
+{
+	return 0;
+}
+
+void ProtocolChat::SetSocket(SOCKET socket)
+{
+	_socket = socket;
 }

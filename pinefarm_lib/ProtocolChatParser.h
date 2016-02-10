@@ -19,23 +19,25 @@ using namespace std;
 
 #include "ScannerA.h"
 #include "ChatParseTree.h"
+#include "IParser.h"
+#include "Parser.h"
 
-class ProtocolChatParser 
+class ProtocolChatParser : public IParser
 {
 public:
 	ProtocolChatParser();
 	~ProtocolChatParser();
 
 private:
-	string _msg;
+	const CHAR* _msg;
 
 	ScannerA scanner;
-	string  name;
-	string content;
-	string method;
+	const CHAR*  name;
+	const CHAR* content;
+	const CHAR* method;
 
 public:
-	void Input(string msg);
-	ChatParseTree* Parse(string msg);
+	void Input(const CHAR* msg);
+	LPVOID Parse(const CHAR* msg);
 };
 

@@ -19,6 +19,7 @@ using namespace std;
 
 #include "IProtocol.h"
 #include "ProtocolChatParser.h"
+#include "Parser.h"
 
 class ProtocolChat : public IProtocol
 {
@@ -29,11 +30,15 @@ public:
 public:
 	virtual void Connect();
 
-	void AddMessage(string msg);
-	ChatParseTree* Evaluate();
+	void AddMessage(const CHAR* msg);
+	virtual LPVOID Evaluate(LPVOID refdata);
+	virtual LPVOID Parse();
+	virtual int Send(SOCKET socket);
+	virtual void SetSocket(SOCKET socket);
 private:
-	stack<string> messageList;
+	stack<const CHAR*> messageList;
 	string inputData;
-	ProtocolChatParser protocolChatParser;
+	Parser* protocolChatParser;
+	SOCKET _socket;
 };
 

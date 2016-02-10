@@ -71,7 +71,7 @@ private:
 	WSADATA wsaData;
 	DWORD Ret;
 
-	static CompletionPortStackListener completionPortStackListener;
+	CompletionPortStackListener completionPortStackListener;
 
 public:
 	int Start();

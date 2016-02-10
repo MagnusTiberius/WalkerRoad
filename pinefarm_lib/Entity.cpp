@@ -30,7 +30,7 @@ SOCKET Entity::GetSocket()
 //	_cosmos = cosmos;
 //}
 
-void Entity::AddMessage(string m)
+void Entity::AddMessage(const CHAR* m)
 {
 	messageList.push(m);
 	SetEvent(ghEntityHasMessageEvent);
@@ -69,11 +69,11 @@ DWORD WINAPI Entity::ServerWorkerThread(LPVOID lpObject)
 	bool isLooping = true;
 	do {
 		WaitForSingleObject(ghEntityHasMessageEvent, INFINITE);
-		string msg = obj->messageList.top();
+		const CHAR* msg = obj->messageList.top();
 		obj->messageList.pop();
 		ResetEvent(ghEntityHasMessageEvent);
-		obj->protocolChat.AddMessage(msg);
-		ChatParseTree* tree = obj->protocolChat.Evaluate();
+		obj->protocolChat->AddMessage(msg);
+		ChatParseTree* tree = (ChatParseTree*)obj->protocolChat->Parse();
 		if (tree != NULL)
 		{
 			if (tree->method == "LOGIN")

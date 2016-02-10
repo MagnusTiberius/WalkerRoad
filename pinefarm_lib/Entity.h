@@ -27,7 +27,7 @@ public:
 
 	SOCKET GetSocket();
 	//void SetCosmos(Cosmos* cosmos);
-	void AddMessage(string m);
+	void AddMessage(const CHAR* m);
 	void SetCosmosName(string nm);
 	string GetCosmosName();
 	void SetAliveStatus(bool bStat);
@@ -37,12 +37,12 @@ private:
 	SOCKET _socket;
 	string name;
 	bool _isAlive;
-	ProtocolChat protocolChat;
+	ProtocolChat* protocolChat;
 	static DWORD WINAPI ServerWorkerThread(LPVOID lpObject);
 	HANDLE ghEntityHasMessageEvent;
 	DWORD ThreadID;
 	HANDLE ThreadHandle;
-	stack<string> messageList;
+	stack<const CHAR*> messageList;
 	
 public:
 	string _cosmosName;

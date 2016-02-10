@@ -3,7 +3,13 @@
 
 CompletionPortStackListener::CompletionPortStackListener()
 {
-	ghHasMessageEvent = CreateEvent(NULL, TRUE, FALSE, TEXT("HasMessageEvent_CompletionPortStackListener"));
+	ghMutex = CreateMutex(
+		NULL,              // default security attributes
+		FALSE,             // initially not owned
+		NULL);
+
+	ghHasMessageEvent = CreateEvent(NULL, TRUE, FALSE, TEXT("CompletionPortStackListener"));
+	nThreads = THREAD_COUNT;
 }
 
 
@@ -11,14 +17,34 @@ CompletionPortStackListener::~CompletionPortStackListener()
 {
 }
 
+void CompletionPortStackListener::Start()
+{
+	for (int i = 0; i < nThreads; i++)
+	{
+		if ((ThreadHandle = CreateThread(NULL, 0, WorkerThread, this, 0, &ThreadID)) == NULL)
+		{
+			printf("CreateThread() failed with error %d\n", GetLastError());
+			return;
+		}
+		else
+			printf("CreateThread() is OK!\n");
+	}
+}
+
 
 void CompletionPortStackListener::AddJobRequest(SOCKET s, const char* d, DWORD n)
 {
-	LP_JOBREQUEST job = new JOBREQUEST;
+	Structs::LP_JOBREQUEST job = new Structs::JOBREQUEST;
 	job->socket = s;
-	job->data = d;
-	job->len = n;
+
+	string data(d);
+	int dataLen = data.length();
+
+	job->data = _strdup(data.c_str());
+	job->len = dataLen;
 	jobList.push(job);
+
+
 	SetEvent(ghHasMessageEvent);
 }
 
@@ -26,20 +52,49 @@ DWORD WINAPI CompletionPortStackListener::WorkerThread(LPVOID obj)
 {
 	CompletionPortStackListener* instance = (CompletionPortStackListener*)obj;
 
-	stack<LP_JOBREQUEST> _jobList = instance->jobList;
-
+	stack<Structs::LP_JOBREQUEST> _jobList = instance->jobList;
+	SOCKET _socket;
 	while (true)
 	{
-		WaitForSingleObject(instance->ghHasMessageEvent, INFINITE);
-		if (_jobList.size() > 0)
+		::WaitForSingleObject(instance->ghHasMessageEvent, INFINITE);
+		::WaitForSingleObject(instance->ghMutex, INFINITE);
+		if (instance->jobList.size() > 0)
 		{
-			LP_JOBREQUEST job = _jobList.top();
-			jobList.pop();
+			Structs::LP_JOBREQUEST job = instance->jobList.top();
+			instance->jobList.pop();
+			::ReleaseMutex(instance->ghMutex);
+			//
+			//
+			_socket = job->socket;
+			instance->_protocol->SetSocket(_socket);
+			instance->_protocol->AddMessage(job->data);
+			LPVOID res = instance->_protocol->Parse();
+			Structs::LP_JOBREQUEST jr = (Structs::LP_JOBREQUEST)res;
+			job = (Structs::LP_JOBREQUEST)instance->_protocol->Evaluate(res);
+			int bRes = send(_socket, job->data, job->len, 0);
+			if (bRes == SOCKET_ERROR)
+			{
+				printf("SOCKET_ERROR\n");
+			}
+			continue;
 		}
-		else
+
+		if (instance->jobList.size() == 0)
 		{
-			ResetEvent(instance->ghHasMessageEvent);
+			::ResetEvent(instance->ghHasMessageEvent);
 		}
+		::ReleaseMutex(instance->ghMutex);
+
 	}
 	return 1;
+}
+
+void CompletionPortStackListener::SetParserHandler(Parser* p)
+{
+	_parser = p;
+}
+
+void CompletionPortStackListener::SetProtocol(Protocol* p)
+{
+	_protocol = p;
 }

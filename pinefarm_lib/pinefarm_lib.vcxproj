@@ -99,11 +99,16 @@
     <ClInclude Include="Cosmos.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Existence.h" />
+    <ClInclude Include="IParser.h" />
     <ClInclude Include="IProtocol.h" />
+    <ClInclude Include="Parser.h" />
+    <ClInclude Include="Protocol.h" />
     <ClInclude Include="ProtocolChat.h" />
     <ClInclude Include="ProtocolChatParser.h" />
     <ClInclude Include="ScannerA.h" />
+    <ClInclude Include="SocketClient.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="structs.h" />
     <ClInclude Include="SyncListener.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -115,10 +120,14 @@
     <ClCompile Include="Cosmos.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Existence.cpp" />
+    <ClCompile Include="IParser.cpp" />
     <ClCompile Include="IProtocol.cpp" />
+    <ClCompile Include="Parser.cpp" />
+    <ClCompile Include="Protocol.cpp" />
     <ClCompile Include="ProtocolChat.cpp" />
     <ClCompile Include="ProtocolChatParser.cpp" />
     <ClCompile Include="ScannerA.cpp" />
+    <ClCompile Include="SocketClient.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="SyncListener.cpp" />
   </ItemGroup>

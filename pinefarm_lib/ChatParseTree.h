@@ -25,8 +25,8 @@ public:
 	~ChatParseTree();
 
 public:
-	string name;
-	string content;
-	string method;
+	const CHAR* name;
+	const CHAR* content;
+	const CHAR* method;
 };
 

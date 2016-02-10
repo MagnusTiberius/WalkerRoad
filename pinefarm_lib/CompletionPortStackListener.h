@@ -16,6 +16,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <list>
 #include "Shlwapi.h"
 
 
@@ -58,6 +59,8 @@ public:
 
 private:
 	stack<Structs::LP_JOBREQUEST> jobList;
+	vector<Protocol*> protocolList;
+	vector<Protocol*>::iterator itrProtocolList;
 	HANDLE ghHasMessageEvent;
 	int nThreads;
 	HANDLE ghMutex;
@@ -66,6 +69,7 @@ public:
 	void Start();
 	void SetParserHandler(Parser* p);
 	void SetProtocol(Protocol* p);
+	void AddProtocol(Protocol* p);
 private:
 	static DWORD WINAPI CompletionPortStackListener::WorkerThread(LPVOID obj);
 	HANDLE ThreadHandle;

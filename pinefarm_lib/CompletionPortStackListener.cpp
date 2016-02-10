@@ -79,6 +79,22 @@ DWORD WINAPI CompletionPortStackListener::WorkerThread(LPVOID obj)
 					printf("SOCKET_ERROR\n");
 				}
 			}
+			for (instance->itrProtocolList = instance->protocolList.begin(); instance->itrProtocolList != instance->protocolList.end(); instance->itrProtocolList++)
+			{
+				Protocol* p = *instance->itrProtocolList;
+				p->AddMessage(job->data);
+				LPVOID res = p->Parse();
+				Structs::LP_JOBREQUEST jr = (Structs::LP_JOBREQUEST)res;
+				job = (Structs::LP_JOBREQUEST)p->Evaluate(res);
+				if (job->sendResponse)
+				{
+					int bRes = send(_socket, job->data, job->len, 0);
+					if (bRes == SOCKET_ERROR)
+					{
+						printf("SOCKET_ERROR\n");
+					}
+				}
+			}
 			continue;
 		}
 
@@ -100,4 +116,9 @@ void CompletionPortStackListener::SetParserHandler(Parser* p)
 void CompletionPortStackListener::SetProtocol(Protocol* p)
 {
 	_protocol = p;
+}
+
+void CompletionPortStackListener::AddProtocol(Protocol* p)
+{
+	protocolList.push_back(p);
 }

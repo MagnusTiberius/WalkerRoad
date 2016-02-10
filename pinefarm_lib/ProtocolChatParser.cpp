@@ -36,6 +36,15 @@ LPVOID ProtocolChatParser::Parse(const CHAR* msg)
 		scanner.SkipEmpty();
 		token = scanner.AcceptRun("\/ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz._");
 
+		if (strcmp(method, "LOGIN") == 0)
+		{
+			jobreq->sendResponse = false;
+		}
+		if (strcmp(method, "SAY") == 0)
+		{
+			jobreq->sendResponse = true;
+		}
+
 		if (strlen(token) > 0)
 		{
 			scanner.SkipEmpty();

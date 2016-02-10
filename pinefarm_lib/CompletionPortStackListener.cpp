@@ -71,10 +71,13 @@ DWORD WINAPI CompletionPortStackListener::WorkerThread(LPVOID obj)
 			LPVOID res = instance->_protocol->Parse();
 			Structs::LP_JOBREQUEST jr = (Structs::LP_JOBREQUEST)res;
 			job = (Structs::LP_JOBREQUEST)instance->_protocol->Evaluate(res);
-			int bRes = send(_socket, job->data, job->len, 0);
-			if (bRes == SOCKET_ERROR)
+			if (job->sendResponse)
 			{
-				printf("SOCKET_ERROR\n");
+				int bRes = send(_socket, job->data, job->len, 0);
+				if (bRes == SOCKET_ERROR)
+				{
+					printf("SOCKET_ERROR\n");
+				}
 			}
 			continue;
 		}

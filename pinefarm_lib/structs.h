@@ -38,6 +38,7 @@ public:
 		HEADER header;
 		const char* data;
 		DWORD len;
+		bool sendResponse;
 	} JOBREQUEST, *LP_JOBREQUEST;
 
 };

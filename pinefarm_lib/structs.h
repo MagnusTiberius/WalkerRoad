@@ -39,6 +39,6 @@ public:
 		const char* data;
 		DWORD len;
 		bool sendResponse;
-	} JOBREQUEST, *LP_JOBREQUEST;
+	} JOBREQUEST, *LP_JOBREQUEST, JOBRESPONSE, *LP_JOBRESPONSE;
 
 };

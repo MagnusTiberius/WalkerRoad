@@ -31,10 +31,14 @@ LPVOID ProtocolChat::Evaluate(LPVOID refdata)
 LPVOID ProtocolChat::Parse()
 {
 	const CHAR* data = messageList.top();
-	messageList.pop();
-	protocolChatParser->Input(data);
-	LPVOID rv = protocolChatParser->Parse(data);
-	return(rv);
+	if (data != NULL)
+	{
+		messageList.pop();
+		protocolChatParser->Input(data);
+		LPVOID rv = protocolChatParser->Parse(data);
+		return(rv);
+	}
+	return NULL;
 }
 
 int ProtocolChat::Send(SOCKET socket)

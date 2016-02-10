@@ -180,7 +180,8 @@ DWORD WINAPI CompletionPortListener::ServerWorkerThread(LPVOID obj)
 			continue;
 		}
 
-		instance->completionPortStackListener.SetProtocol((Protocol*)new ProtocolChat());
+		instance->completionPortStackListener.AddProtocol((Protocol*)new ProtocolChat());
+		instance->completionPortStackListener.AddProtocol((Protocol*)new ProtocolGame());
 		instance->completionPortStackListener.AddJobRequest(PerHandleData->Socket, PerIoData->DataBuf.buf, PerIoData->DataBuf.len);
 
 		ZeroMemory(PerIoData->Buffer, DATA_BUFSIZE);

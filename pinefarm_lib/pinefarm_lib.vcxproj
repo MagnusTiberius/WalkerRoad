@@ -105,6 +105,8 @@
     <ClInclude Include="Protocol.h" />
     <ClInclude Include="ProtocolChat.h" />
     <ClInclude Include="ProtocolChatParser.h" />
+    <ClInclude Include="ProtocolGame.h" />
+    <ClInclude Include="ProtocolGameParser.h" />
     <ClInclude Include="ScannerA.h" />
     <ClInclude Include="SocketClient.h" />
     <ClInclude Include="stdafx.h" />
@@ -126,6 +128,8 @@
     <ClCompile Include="Protocol.cpp" />
     <ClCompile Include="ProtocolChat.cpp" />
     <ClCompile Include="ProtocolChatParser.cpp" />
+    <ClCompile Include="ProtocolGame.cpp" />
+    <ClCompile Include="ProtocolGameParser.cpp" />
     <ClCompile Include="ScannerA.cpp" />
     <ClCompile Include="SocketClient.cpp" />
     <ClCompile Include="stdafx.cpp" />

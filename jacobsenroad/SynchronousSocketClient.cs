@@ -159,7 +159,7 @@ namespace jacobsenroad
                                 {
                                     OnReceiveData(recvMsg);
                                 }
-                                Console.WriteLine(string.Format("{0}\n",recvMsg));
+                                //Console.WriteLine(string.Format("{0}\n",recvMsg));
                                 bytesRec = _socket.Receive(bytes);
                             }
                         }

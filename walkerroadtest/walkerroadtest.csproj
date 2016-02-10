@@ -62,10 +62,6 @@
       <Project>{48c7925b-7014-488d-b5cf-5b195020664c}</Project>
       <Name>jacobsenroad</Name>
     </ProjectReference>
-    <ProjectReference Include="..\util_email\util_email.csproj">
-      <Project>{0b575d39-f686-4476-9959-75640d98fedc}</Project>
-      <Name>util_email</Name>
-    </ProjectReference>
     <ProjectReference Include="..\walkerroadlib\walkerroadlib.csproj">
       <Project>{bc627f8a-57e5-40c6-b30c-7e29beea063b}</Project>
       <Name>walkerroadlib</Name>

@@ -26,6 +26,7 @@ public:
 	typedef struct
 	{
 		char* method;
+		char* url;
 		char* contentType;
 		char* contentLen;
 		char* name;
@@ -36,7 +37,7 @@ public:
 	{
 		SOCKET socket;
 		HEADER header;
-		const char* data;
+		char* data;
 		DWORD len;
 		bool sendResponse;
 	} JOBREQUEST, *LP_JOBREQUEST, JOBRESPONSE, *LP_JOBRESPONSE;

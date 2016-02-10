@@ -35,11 +35,13 @@ void CompletionPortStackListener::Start()
 void CompletionPortStackListener::AddJobRequest(SOCKET s, const char* d, DWORD n)
 {
 	Structs::LP_JOBREQUEST job = new Structs::JOBREQUEST;
+	ZeroMemory(job, sizeof(Structs::JOBREQUEST));
 	job->socket = s;
 
 	string data(d);
 	int dataLen = data.length();
 
+	char* str = _strdup(data.c_str());
 	job->data = _strdup(data.c_str());
 	job->len = dataLen;
 	jobList.push(job);
@@ -51,13 +53,15 @@ void CompletionPortStackListener::AddJobRequest(SOCKET s, const char* d, DWORD n
 DWORD WINAPI CompletionPortStackListener::WorkerThread(LPVOID obj)
 {
 	CompletionPortStackListener* instance = (CompletionPortStackListener*)obj;
-
+	int loopCtr1 = 0;
 	stack<Structs::LP_JOBREQUEST> _jobList = instance->jobList;
 	SOCKET _socket;
 	while (true)
 	{
 		::WaitForSingleObject(instance->ghHasMessageEvent, INFINITE);
 		::WaitForSingleObject(instance->ghMutex, INFINITE);
+		loopCtr1++;
+		
 		if (instance->jobList.size() > 0)
 		{
 			Structs::LP_JOBREQUEST job = instance->jobList.top();
@@ -66,36 +70,39 @@ DWORD WINAPI CompletionPortStackListener::WorkerThread(LPVOID obj)
 			//
 			//
 			_socket = job->socket;
-			instance->_protocol->SetSocket(_socket);
-			instance->_protocol->AddMessage(job->data);
-			LPVOID res = instance->_protocol->Parse();
-			Structs::LP_JOBREQUEST jr = (Structs::LP_JOBREQUEST)res;
-			job = (Structs::LP_JOBREQUEST)instance->_protocol->Evaluate(res);
-			if (job->sendResponse)
-			{
-				int bRes = send(_socket, job->data, job->len, 0);
-				if (bRes == SOCKET_ERROR)
-				{
-					printf("SOCKET_ERROR\n");
-				}
-			}
+
 			for (instance->itrProtocolList = instance->protocolList.begin(); instance->itrProtocolList != instance->protocolList.end(); instance->itrProtocolList++)
 			{
 				Protocol* p = *instance->itrProtocolList;
-				p->AddMessage(job->data);
+				Structs::LP_JOBREQUEST jobresp = new Structs::JOBREQUEST();
+				jobresp->data = job->data;
+				jobresp->len = job->len;
+				jobresp->socket = job->socket;
+
+				p->AddMessage(jobresp->data);
 				LPVOID res = p->Parse();
-				Structs::LP_JOBREQUEST jr = (Structs::LP_JOBREQUEST)res;
-				job = (Structs::LP_JOBREQUEST)p->Evaluate(res);
-				if (job->sendResponse)
+				if (res != NULL)
 				{
-					int bRes = send(_socket, job->data, job->len, 0);
-					if (bRes == SOCKET_ERROR)
+					Structs::LP_JOBREQUEST jr = (Structs::LP_JOBREQUEST)res;
+					jobresp = (Structs::LP_JOBREQUEST)p->Evaluate(res);
+					if (job->sendResponse == job->sendResponse)
 					{
-						printf("SOCKET_ERROR\n");
+						int bRes = send(_socket, jobresp->data, jobresp->len, 0);
+						printf("Loop counter:===> %d; data=%s; len=%d; sent=%d\n", loopCtr1, jobresp->data, jobresp->len, bRes);
+						if (bRes == SOCKET_ERROR)
+						{
+							printf("SOCKET_ERROR\n");
+						}
 					}
+					::ReleaseMutex(instance->ghMutex);
+					ZeroMemory(job, sizeof(Structs::JOBREQUEST));
+					ZeroMemory(jobresp, sizeof(Structs::JOBREQUEST));
+
+					free(job);
+					free(jobresp);
+					break;
 				}
 			}
-			continue;
 		}
 
 		if (instance->jobList.size() == 0)

@@ -30,6 +30,7 @@
 #define DATA_BUFSIZE 8192
 
 #include "CompletionPortStackListener.h"
+#include "ProtocolGame.h"
 
 class CompletionPortListener
 {

@@ -87,6 +87,8 @@ namespace walkerroad_c
 
         private string OnReceiveDataHandler(string msg)
         {
+            Console.WriteLine(string.Format("\n\n{0}\n-----------------\n\n", msg));
+            Thread.Sleep(500);
             return msg;
         }
 
@@ -97,6 +99,7 @@ namespace walkerroad_c
 
         public void Start()
         {
+            int stepCtr1 = 0;
             string nm = Datagen.GetFirstName();
             string msg = "";
             client = new Scheme3();
@@ -112,11 +115,33 @@ namespace walkerroad_c
             client.Send(sendmsg);
             while (inLoop)
             {
-                Thread.Sleep(1000);
+                Thread.Sleep(100);
                 msg = Datagen.GetComment();
                 client.Send(string.Format("SAY . CHAT/1.0\nname={0}\ncontent-length:{1}\n\n{2}\n\n", nm, msg.Length ,msg));
+                Thread.Sleep(100);
+                string msg2 = GameStep(stepCtr1, nm);
+                //Console.WriteLine(string.Format("=========================\nSending===>{0}\n\n", msg2));
+                client.Send(msg2);
+                stepCtr1++;
             }
             t.Join();
+        }
+
+        private string GameStep(int n, string nm)
+        {
+            string msg;
+            string sendmsg = ""; ;
+            if (n == 0)
+            {
+                msg = string.Format("SPAWNING {0}", nm);
+                sendmsg = string.Format("SPAWN . GAME/1.0\nname={0}\ncontent-length:{1}\n\n{2}\n\n", nm, msg.Length, msg);
+            }
+            else
+            {
+                msg = string.Format("MOVING {0} X COORD : {1}", nm, n);
+                sendmsg = string.Format("MOVE . GAME/1.0\nname={0}\ncontent-length:{1}\ncoord-x:{2}\n\n{3}\n\n", nm, msg.Length, n, msg);
+            }
+            return sendmsg;
         }
     }
     

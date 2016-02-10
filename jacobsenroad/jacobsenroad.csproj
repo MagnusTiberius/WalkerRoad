@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataGameGen.cs" />
     <Compile Include="Datagen.cs" />
     <Compile Include="ListenerHandler.cs" />
     <Compile Include="ListenerHandlerController.cs" />

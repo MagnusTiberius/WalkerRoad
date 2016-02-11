@@ -32,6 +32,7 @@ namespace pinefarm_test
 			while (item != NULL)
 			{
 				item = (Structs::LP_JOBREQUEST)p->Next();
+				free(item);
 			}
 			delete(p);
 		}

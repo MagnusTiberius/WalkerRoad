@@ -17,3 +17,7 @@ The three programs are set up to run in one machine. The client(s) will connect 
 The demo is just used for that, demonstrating the concept. You can add handlers to both the Server and Client piece to define your own simulation.
 
 For example, you can roll your own protocol using structured data, making your simulation of test cases very specific.
+
+Continuous Integration:
+
+https://ci.appveyor.com/project/MagnusTiberius/walkerroad

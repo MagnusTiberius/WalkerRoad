@@ -71,7 +71,7 @@ public:
 	void SetProtocol(Protocol* p);
 	void AddProtocol(Protocol* p);
 private:
-	static DWORD WINAPI CompletionPortStackListener::WorkerThread(LPVOID obj);
+	static DWORD WINAPI WorkerThread(LPVOID obj);
 	HANDLE ThreadHandle;
 	DWORD ThreadID;
 	Parser* _parser;

@@ -16,6 +16,11 @@ void ProtocolChatParser::Input(const CHAR* msg)
 	_msg = msg;
 }
 
+LPVOID ProtocolChatParser::Next()
+{
+	return NULL;
+}
+
 LPVOID ProtocolChatParser::Parse(const CHAR* msg)
 {
 	Input(msg);

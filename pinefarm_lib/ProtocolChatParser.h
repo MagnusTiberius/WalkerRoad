@@ -39,5 +39,6 @@ private:
 public:
 	void Input(const CHAR* msg);
 	LPVOID Parse(const CHAR* msg);
+	virtual LPVOID Next();
 };
 

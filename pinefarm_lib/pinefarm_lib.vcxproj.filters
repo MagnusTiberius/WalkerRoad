@@ -81,6 +81,9 @@
     <ClInclude Include="ProtocolGameParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BaseParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SyncListener.cpp">
@@ -138,6 +141,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ProtocolGameParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

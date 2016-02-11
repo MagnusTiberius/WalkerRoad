@@ -1,26 +1,33 @@
-#include "ProtocolGameParser.h"
+#include "BaseParser.h"
 
 
-ProtocolGameParser::ProtocolGameParser()
+BaseParser::BaseParser()
 {
 }
 
 
-ProtocolGameParser::~ProtocolGameParser()
+BaseParser::~BaseParser()
 {
 }
 
-void ProtocolGameParser::Input(const CHAR* msg)
+
+void BaseParser::Input(const CHAR* msg)
 {
 	_msg = msg;
 }
 
-LPVOID ProtocolGameParser::Next()
+LPVOID BaseParser::Next()
 {
-	return NULL;
+	Structs::JOBREQUEST* item = NULL;
+	if (jobreqList.size() > 0)
+	{
+		item = jobreqList.top();
+		jobreqList.pop();
+	}
+	return (item);
 }
 
-LPVOID ProtocolGameParser::Parse(const CHAR* msg)
+LPVOID BaseParser::Parse(const CHAR* msg)
 {
 	Input(msg);
 	scanner.Input(msg);
@@ -29,34 +36,36 @@ LPVOID ProtocolGameParser::Parse(const CHAR* msg)
 	CHAR* contentType = "0";
 	CHAR* url;
 	CHAR* app;
-	CHAR* coordx = "";
+	CHAR* protocol;
+	CHAR* version;
+	CHAR* propertyName;
+	CHAR* propertyValue;
 	const CHAR* c;
 
-	Structs::LP_JOBREQUEST jobreq = new Structs::JOBREQUEST();
+	
+	Structs::LP_JOBREQUEST jobreq;
 
 
-	token = scanner.AcceptRun("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
-	if (strcmp(token, "SPAWN") == 0 || strcmp(token, "MOVE") == 0)
+
+	while (true)
 	{
+		scanner.SkipEmpty();
+		token = scanner.AcceptRun("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
+
+		if (token == NULL)
+		{
+			break;
+		}
+
+		jobreq = new Structs::JOBREQUEST();
+		ZeroMemory(jobreq, sizeof(Structs::JOBREQUEST));
 		method = _strdup(token);
 		jobreq->header.method = _strdup(token);
 
-		if (strcmp(method, "SPAWN") == 0)
-		{
-			jobreq->sendResponse = true;
-		}
-		else if (strcmp(method, "MOVE") == 0)
-		{
-			jobreq->sendResponse = true;
-		}
-		else
-		{
-			return NULL;
-		}
 
 		scanner.SkipEmpty();
 		token = scanner.AcceptRun("\/ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz._");
-		if (strlen(token) == 0)	return NULL;
+		if (strlen(token) == 0)	break;;
 		url = token;
 		jobreq->header.url = _strdup(url);
 
@@ -64,19 +73,26 @@ LPVOID ProtocolGameParser::Parse(const CHAR* msg)
 		{
 			scanner.SkipEmpty();
 			token = scanner.AcceptRun("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
-			if (strlen(token) == 0)	return NULL;
-			if (strcmp(token, "GAME") == 0)
+			if (strlen(token) == 0)	break;;
+			if (strlen(token) > 0)
 			{
-				app = _strdup(token);
+				protocol = _strdup(token);
+				jobreq->header.protocol = _strdup(protocol);
 			}
 			else
 			{
-				return NULL;
+				break;
 			}
-			token = scanner.AcceptRun("\/0123456789.");
-			if (strlen(token) == 0)	return NULL;
+			scanner.SkipEmpty();
+			token = scanner.AcceptRun("\/");
+			if (strlen(token) == 0)	break;
+			scanner.SkipEmpty();
+			token = scanner.AcceptRun("0123456789.");
+			if (strlen(token) == 0)	break;
+			version = _strdup(token);
+			jobreq->header.version = _strdup(version);
 			token = scanner.AcceptRun("\n");
-			if (strlen(token) == 0)	return NULL;
+			if (strlen(token) == 0)	break;
 		}
 
 
@@ -85,41 +101,40 @@ LPVOID ProtocolGameParser::Parse(const CHAR* msg)
 		{
 			if (strcmp(token, "name") == 0)
 			{
-				token = scanner.AcceptRun("=:");
-				if (strlen(token) == 0)	return NULL;
+				token = scanner.AcceptRun("=: ");
+				if (strlen(token) == 0)	break;
 				token = scanner.AcceptRun("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-01234567890");
-				if (strlen(token) == 0)	return NULL;
+				if (strlen(token) == 0)	break;
 				name = _strdup(token);
 				jobreq->header.name = _strdup(token);
 			}
 			else if (strcmp(token, "content-length") == 0)
 			{
-				token = scanner.AcceptRun("=:");
-				if (strlen(token) == 0)	return NULL;
+				token = scanner.AcceptRun("=: ");
+				if (strlen(token) == 0)	break;
 				token = scanner.AcceptRun("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-01234567890");
-				if (strlen(token) == 0)	return NULL;
+				if (strlen(token) == 0)	break;
 				contentLen = _strdup(token);
 				jobreq->header.contentLen = _strdup(token);
 				jobreq->len = atoi(contentLen);
 			}
 			else if (strcmp(token, "content-type") == 0)
 			{
-				token = scanner.AcceptRun("=:");
-				if (strlen(token) == 0)	return NULL;
+				token = scanner.AcceptRun("=: ");
+				if (strlen(token) == 0)	break;
 				token = scanner.AcceptRun("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-01234567890");
-				if (strlen(token) == 0)	return NULL;
+				if (strlen(token) == 0)	break;
 				contentType = _strdup(token);
 				jobreq->header.contentType = _strdup(contentType);
 			}
-			else if (strcmp(token, "coord-x") == 0)
+			else
 			{
-				token = scanner.AcceptRun("=:");
-				if (strlen(token) == 0)	return NULL;
+				propertyName = _strdup(token);
+				token = scanner.AcceptRun("=: ");
+				if (strlen(token) == 0)	break;
 				token = scanner.AcceptRun("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-01234567890");
-				if (strlen(token) == 0)	return NULL;
-				coordx = _strdup(token);
-				//printf("method=%s; coordx=%s\n", method, coordx);
-				//jobreq->header.contentType = _strdup(contentType);
+				if (strlen(token) == 0)	break;
+				propertyValue = _strdup(token);
 			}
 			token = scanner.AcceptRun("\n");
 			if (strcmp(token, "\n") == 0)
@@ -131,16 +146,11 @@ LPVOID ProtocolGameParser::Parse(const CHAR* msg)
 				string cl = scanner.GetByContentLength(atoi(contentLen));
 				content = cl.c_str();
 				jobreq->data = _strdup(content);
-				token = scanner.AcceptRun("\n");
-				if (strcmp(token, "\n\n") == 0)
-				{
-					printf("method=%s; name=%s; coordx=%s\n", method, name, coordx);
-					return jobreq;
-				}
+				jobreqList.push(jobreq);
+				break;
 			}
 			token = scanner.AcceptRun("\nABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-");
 		}
-
 	}
 	return NULL;
 }

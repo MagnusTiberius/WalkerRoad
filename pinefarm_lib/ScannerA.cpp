@@ -69,7 +69,7 @@ void ScannerA::SkipEmpty()
 
 	while (IsEmpty())
 	{
-		Next();
+		if (Next() == NULL) return;
 		inLoop = true;
 	}
 

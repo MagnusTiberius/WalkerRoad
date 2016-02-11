@@ -21,3 +21,8 @@ LPVOID Parser::Parse(const CHAR* msg)
 	LPVOID rv = NULL;
 	return rv;
 }
+
+LPVOID Parser::Next()
+{
+	return NULL;
+}

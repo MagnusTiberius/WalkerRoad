@@ -23,11 +23,12 @@ using namespace std;
 #include "Parser.h"
 #include "structs.h"
 
-class ProtocolGameParser : public IParser
+
+class BaseParser : public IParser
 {
 public:
-	ProtocolGameParser();
-	~ProtocolGameParser();
+	BaseParser();
+	~BaseParser();
 
 private:
 	const CHAR* _msg;
@@ -36,7 +37,7 @@ private:
 	const CHAR*  name;
 	const CHAR* content;
 	const CHAR* method;
-
+	stack<Structs::LP_JOBREQUEST> jobreqList;
 public:
 	void Input(const CHAR* msg);
 	LPVOID Parse(const CHAR* msg);

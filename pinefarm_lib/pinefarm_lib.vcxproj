@@ -93,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AsyncListener.h" />
+    <ClInclude Include="BaseParser.h" />
     <ClInclude Include="ChatParseTree.h" />
     <ClInclude Include="CompletionPortListener.h" />
     <ClInclude Include="CompletionPortStackListener.h" />
@@ -116,6 +117,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AsyncListener.cpp" />
+    <ClCompile Include="BaseParser.cpp" />
     <ClCompile Include="ChatParseTree.cpp" />
     <ClCompile Include="CompletionPortListener.cpp" />
     <ClCompile Include="CompletionPortStackListener.cpp" />

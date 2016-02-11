@@ -97,7 +97,6 @@ DWORD WINAPI CompletionPortStackListener::WorkerThread(LPVOID obj)
 					::ReleaseMutex(instance->ghMutex);
 					ZeroMemory(job, sizeof(Structs::JOBREQUEST));
 					ZeroMemory(jobresp, sizeof(Structs::JOBREQUEST));
-
 					free(job);
 					free(jobresp);
 					break;

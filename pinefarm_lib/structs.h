@@ -25,6 +25,8 @@ class Structs
 public:
 	typedef struct
 	{
+		char* protocol;
+		char* version;
 		char* method;
 		char* url;
 		char* contentType;

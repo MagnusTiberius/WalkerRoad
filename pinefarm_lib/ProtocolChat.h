@@ -20,6 +20,7 @@ using namespace std;
 #include "IProtocol.h"
 #include "ProtocolChatParser.h"
 #include "Parser.h"
+#include "BaseParser.h"
 #include "Protocol.h"
 
 class ProtocolChat : public IProtocol

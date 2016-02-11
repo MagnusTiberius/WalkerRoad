@@ -60,7 +60,7 @@ public:
 private:
 	stack<Structs::LP_JOBREQUEST> jobList;
 	vector<Protocol*> protocolList;
-	vector<Protocol*>::iterator itrProtocolList;
+	//vector<Protocol*>::iterator itrProtocolList;
 	HANDLE ghHasMessageEvent;
 	int nThreads;
 	HANDLE ghMutex;

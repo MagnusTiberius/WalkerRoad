@@ -84,6 +84,9 @@
     <ClInclude Include="BaseParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ProtocolBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SyncListener.cpp">
@@ -144,6 +147,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BaseParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProtocolBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

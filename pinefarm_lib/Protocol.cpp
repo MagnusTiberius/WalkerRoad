@@ -31,3 +31,8 @@ int Protocol::Send(SOCKET socket)
 {
 	return 0;
 }
+
+LPVOID Protocol::Next()
+{
+	return NULL;
+}

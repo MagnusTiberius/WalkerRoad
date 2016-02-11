@@ -14,23 +14,35 @@
 
 #define DEFAULT_BUFLEN 1024
 
-#include "IProtocol.h"
 
 using namespace std;
 
-class Protocol : public IProtocol
+#include "IProtocol.h"
+#include "ProtocolChatParser.h"
+#include "Parser.h"
+#include "BaseParser.h"
+#include "Protocol.h"
+
+class ProtocolBase : public IProtocol
 {
 public:
-	Protocol();
-	~Protocol();
+	ProtocolBase();
+	~ProtocolBase();
 
 public:
 	virtual void Connect();
+
+	void AddMessage(const CHAR* msg);
 	virtual LPVOID Evaluate(LPVOID refdata);
 	virtual LPVOID Parse();
-	virtual void AddMessage(const CHAR* msg);
 	virtual int Send(SOCKET socket);
 	virtual void SetSocket(SOCKET socket);
 	virtual LPVOID Next();
+private:
+	stack<const CHAR*> messageList;
+	string inputData;
+	Parser* protocolChatParser;
+	SOCKET _socket;
+	stack<Structs::LP_JOBREQUEST> jobreqList;
 };
 

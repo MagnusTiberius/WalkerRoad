@@ -104,6 +104,7 @@
     <ClInclude Include="IProtocol.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Protocol.h" />
+    <ClInclude Include="ProtocolBase.h" />
     <ClInclude Include="ProtocolChat.h" />
     <ClInclude Include="ProtocolChatParser.h" />
     <ClInclude Include="ProtocolGame.h" />
@@ -128,6 +129,7 @@
     <ClCompile Include="IProtocol.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="Protocol.cpp" />
+    <ClCompile Include="ProtocolBase.cpp" />
     <ClCompile Include="ProtocolChat.cpp" />
     <ClCompile Include="ProtocolChatParser.cpp" />
     <ClCompile Include="ProtocolGame.cpp" />

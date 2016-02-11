@@ -56,6 +56,7 @@ DWORD WINAPI CompletionPortStackListener::WorkerThread(LPVOID obj)
 	int loopCtr1 = 0;
 	stack<Structs::LP_JOBREQUEST> _jobList = instance->jobList;
 	SOCKET _socket;
+	
 	while (true)
 	{
 		::WaitForSingleObject(instance->ghHasMessageEvent, INFINITE);
@@ -66,42 +67,52 @@ DWORD WINAPI CompletionPortStackListener::WorkerThread(LPVOID obj)
 		{
 			Structs::LP_JOBREQUEST job = instance->jobList.top();
 			instance->jobList.pop();
-			::ReleaseMutex(instance->ghMutex);
 			//
 			//
+			if (job == NULL)
+			{
+				continue;
+			}
 			_socket = job->socket;
 
-			for (instance->itrProtocolList = instance->protocolList.begin(); instance->itrProtocolList != instance->protocolList.end(); instance->itrProtocolList++)
 			{
-				Protocol* p = *instance->itrProtocolList;
-				Structs::LP_JOBREQUEST jobresp = new Structs::JOBREQUEST();
-				jobresp->data = job->data;
-				jobresp->len = job->len;
-				jobresp->socket = job->socket;
-
-				p->AddMessage(jobresp->data);
-				LPVOID res = p->Parse();
-				if (res != NULL)
+				try
 				{
-					Structs::LP_JOBREQUEST jr = (Structs::LP_JOBREQUEST)res;
-					jobresp = (Structs::LP_JOBREQUEST)p->Evaluate(res);
-					if (job->sendResponse == job->sendResponse)
+					Protocol* p = instance->_protocol; //*itr;
+					if (p == NULL)
 					{
-						int bRes = send(_socket, jobresp->data, jobresp->len, 0);
-						printf("Loop counter:===> %d; data=%s; len=%d; sent=%d\n", loopCtr1, jobresp->data, jobresp->len, bRes);
+						continue;
+					}
+
+					Structs::LP_JOBREQUEST jobresp = new Structs::JOBREQUEST();
+					jobresp->data = job->data;
+					jobresp->len = job->len;
+					jobresp->socket = job->socket;
+
+					p->AddMessage(_strdup(jobresp->data));
+					LPVOID res = p->Parse();
+					Structs::LP_JOBREQUEST nextJob = (Structs::LP_JOBREQUEST)p->Next();
+					while (nextJob != NULL)
+					{
+						int bRes = send(_socket, nextJob->data, nextJob->len, 0);
+						printf("Loop counter:===> %d; data=%s; len=%d; sent=%d\n", loopCtr1, nextJob->data, nextJob->len, bRes);
 						if (bRes == SOCKET_ERROR)
 						{
 							printf("SOCKET_ERROR\n");
 						}
+						ZeroMemory(nextJob, sizeof(Structs::JOBREQUEST));
+						free(nextJob);
+						nextJob = (Structs::LP_JOBREQUEST)p->Next();
 					}
-					::ReleaseMutex(instance->ghMutex);
 					ZeroMemory(job, sizeof(Structs::JOBREQUEST));
-					ZeroMemory(jobresp, sizeof(Structs::JOBREQUEST));
 					free(job);
-					free(jobresp);
-					break;
+				}
+				catch (...)
+				{
+					int x = 1;
 				}
 			}
+			::ReleaseMutex(instance->ghMutex);
 		}
 
 		if (instance->jobList.size() == 0)

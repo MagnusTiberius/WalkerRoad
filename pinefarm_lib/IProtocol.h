@@ -34,5 +34,6 @@ public:
 	virtual void AddMessage(const CHAR* msg) = 0;
 	virtual int Send(SOCKET socket) = 0;
 	virtual void SetSocket(SOCKET socket) = 0;
+	virtual LPVOID Next() = 0;
 };
 

@@ -31,6 +31,7 @@
 
 #include "CompletionPortStackListener.h"
 #include "ProtocolGame.h"
+#include "ProtocolBase.h"
 
 class CompletionPortListener
 {

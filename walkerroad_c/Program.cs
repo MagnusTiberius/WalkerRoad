@@ -115,10 +115,10 @@ namespace walkerroad_c
             client.Send(sendmsg);
             while (inLoop)
             {
-                Thread.Sleep(100);
+                Thread.Sleep(1000);
                 msg = Datagen.GetComment();
                 client.Send(string.Format("SAY . CHAT/1.0\nname={0}\ncontent-length:{1}\n\n{2}\n\n", nm, msg.Length ,msg));
-                Thread.Sleep(100);
+                Thread.Sleep(1000);
                 string msg2 = GameStep(stepCtr1, nm);
                 //Console.WriteLine(string.Format("=========================\nSending===>{0}\n\n", msg2));
                 client.Send(msg2);

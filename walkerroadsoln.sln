@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "walkerroadlib", "walkerroadlib\walkerroadlib.csproj", "{BC627F8A-57E5-40C6-B30C-7E29BEEA063B}"
 EndProject
@@ -26,6 +26,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pinefarm_test", "pinefarm_t
 	ProjectSection(ProjectDependencies) = postProject
 		{B1A0C693-743B-4D44-B043-FC021CA6CAC7} = {B1A0C693-743B-4D44-B043-FC021CA6CAC7}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "chatlib", "chatlib\chatlib.vcxproj", "{1AC93E3D-3A5E-4212-8565-B29E6A389528}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gamelib", "gamelib\gamelib.vcxproj", "{5B893221-B35C-4E2A-97C4-AB3BD3459D7D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -127,6 +131,26 @@ Global
 		{489F91AE-B1B4-4BB0-B0DA-3AE47F01D026}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{489F91AE-B1B4-4BB0-B0DA-3AE47F01D026}.Release|Win32.ActiveCfg = Release|Win32
 		{489F91AE-B1B4-4BB0-B0DA-3AE47F01D026}.Release|Win32.Build.0 = Release|Win32
+		{1AC93E3D-3A5E-4212-8565-B29E6A389528}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{1AC93E3D-3A5E-4212-8565-B29E6A389528}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{1AC93E3D-3A5E-4212-8565-B29E6A389528}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{1AC93E3D-3A5E-4212-8565-B29E6A389528}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1AC93E3D-3A5E-4212-8565-B29E6A389528}.Debug|Win32.Build.0 = Debug|Win32
+		{1AC93E3D-3A5E-4212-8565-B29E6A389528}.Release|Any CPU.ActiveCfg = Release|Win32
+		{1AC93E3D-3A5E-4212-8565-B29E6A389528}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{1AC93E3D-3A5E-4212-8565-B29E6A389528}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{1AC93E3D-3A5E-4212-8565-B29E6A389528}.Release|Win32.ActiveCfg = Release|Win32
+		{1AC93E3D-3A5E-4212-8565-B29E6A389528}.Release|Win32.Build.0 = Release|Win32
+		{5B893221-B35C-4E2A-97C4-AB3BD3459D7D}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{5B893221-B35C-4E2A-97C4-AB3BD3459D7D}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{5B893221-B35C-4E2A-97C4-AB3BD3459D7D}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{5B893221-B35C-4E2A-97C4-AB3BD3459D7D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5B893221-B35C-4E2A-97C4-AB3BD3459D7D}.Debug|Win32.Build.0 = Debug|Win32
+		{5B893221-B35C-4E2A-97C4-AB3BD3459D7D}.Release|Any CPU.ActiveCfg = Release|Win32
+		{5B893221-B35C-4E2A-97C4-AB3BD3459D7D}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{5B893221-B35C-4E2A-97C4-AB3BD3459D7D}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{5B893221-B35C-4E2A-97C4-AB3BD3459D7D}.Release|Win32.ActiveCfg = Release|Win32
+		{5B893221-B35C-4E2A-97C4-AB3BD3459D7D}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

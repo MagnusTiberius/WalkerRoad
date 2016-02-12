@@ -30,9 +30,10 @@
 #define BUFSIZMIN		1024
 #define DATA_BUFSIZE	8192
 #define DATASIZMIN		128
+#define THREAD_COUNT 3
 
 using namespace std;
 
-
+#include "ChatEngine.h"
 
 // TODO: reference additional headers your program requires here

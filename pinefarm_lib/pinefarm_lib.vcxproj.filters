@@ -87,6 +87,9 @@
     <ClInclude Include="ProtocolBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="InputStage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SyncListener.cpp">
@@ -150,6 +153,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ProtocolBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputStage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

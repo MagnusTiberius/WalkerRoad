@@ -24,9 +24,6 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="InputStage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\pinefarm_lib\structs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -36,18 +33,21 @@
     <ClInclude Include="ResourceStructs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ChatEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="InputStage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ResourceTreeModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ResourceStructs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ChatEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

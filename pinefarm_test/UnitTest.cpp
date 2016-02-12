@@ -42,6 +42,7 @@ namespace pinefarm_test
 		TEST_METHOD(TestMethod2)
 		{
 			InputStage inputStage;
+			inputStage.EnableNextStage(false);
 			inputStage.Start();
 
 			BaseParser* p = new BaseParser();

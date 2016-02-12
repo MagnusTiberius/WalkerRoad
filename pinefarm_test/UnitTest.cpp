@@ -60,6 +60,26 @@ namespace pinefarm_test
 			inputStage.Stop();
 		}
 
+		TEST_METHOD(TestMethod3)
+		{
+			InputStage inputStage;
+			inputStage.EnableNextStage(true);
+			inputStage.Start();
+
+			BaseParser* p = new BaseParser();
+			p->Parse(gInput);
+			Structs::LP_JOBREQUEST item = (Structs::LP_JOBREQUEST)p->Next();
+			while (item != NULL)
+			{
+				item = (Structs::LP_JOBREQUEST)p->Next();
+				inputStage.AddMessage(item);
+				//free(item);
+			}
+			delete(p);
+			::Sleep(10000);
+			//inputStage.Join();
+			inputStage.Stop();
+		}
 
 	};
 }

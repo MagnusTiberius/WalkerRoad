@@ -24,6 +24,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pinefarm_gui_c", "pinefarm_
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pinefarm_test", "pinefarm_test\pinefarm_test.vcxproj", "{489F91AE-B1B4-4BB0-B0DA-3AE47F01D026}"
 	ProjectSection(ProjectDependencies) = postProject
+		{1AC93E3D-3A5E-4212-8565-B29E6A389528} = {1AC93E3D-3A5E-4212-8565-B29E6A389528}
 		{B1A0C693-743B-4D44-B043-FC021CA6CAC7} = {B1A0C693-743B-4D44-B043-FC021CA6CAC7}
 	EndProjectSection
 EndProject

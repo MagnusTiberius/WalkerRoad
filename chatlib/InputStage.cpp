@@ -12,6 +12,7 @@ InputStage::InputStage()
 
 	ghHasMessageEvent = CreateEvent(NULL, TRUE, FALSE, TEXT("InputStage"));
 	nThreads = THREAD_COUNT;
+	ctr = 0;
 }
 
 
@@ -29,14 +30,34 @@ void InputStage::Start()
 			return;
 		}
 		else
+		{
 			printf("CreateThread() is OK!\n");
+			ghEvents[i] = ThreadHandle;
+		}
 	}
+}
+
+void InputStage::Join()
+{
+	::WaitForMultipleObjects(THREAD_COUNT, ghEvents, TRUE, INFINITE);
+}
+
+void InputStage::Stop()
+{
+	DWORD dwCode = 0;
+
+	for (int i = 0; i < THREAD_COUNT; i++)
+	{
+		::TerminateThread(ghEvents[i], dwCode);
+	}
+	int total = ctr;
 }
 
 
 void InputStage::AddMessage(Structs::LP_JOBREQUEST job)
 {
 	jobList.push(job);
+	::SetEvent(ghHasMessageEvent);
 }
 
 DWORD WINAPI InputStage::WorkerThread(LPVOID obj)
@@ -51,12 +72,19 @@ DWORD WINAPI InputStage::WorkerThread(LPVOID obj)
 		{
 			Structs::LP_JOBREQUEST job = instance->jobList.top();
 			instance->jobList.pop();
-			//==================
+			if (job != NULL)
+			{
+				if (strcmp(job->header.protocol,"GAME") == 0)
+				{
+					int b = 1;
+				}
 
-
-
-
-			//==================
+				if (strcmp(job->header.protocol, "CHAT") == 0)
+				{
+					int b = 1;
+				}
+			}
+			instance->ctr++;
 			::ReleaseMutex(instance->ghMutex);
 		}
 		

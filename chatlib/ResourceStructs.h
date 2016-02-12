@@ -11,32 +11,32 @@ public:
 public:
 
 
-	typedef struct sIdentfier {
-		char* name;
-		int   type;
-		int   scope;
-		union value {
-			char* valueStr;
-			int   valueInt;
-			bool  valueBool;
-			double valueFloat;
-			float valueFloat;
-			LPVOID valueVoidPtr;
-			struct sClass* valueKlassPtr;
-		};
-	} IDENTIFIER, *LP_IDENTIFIER;
+	//typedef struct sIdentfier {
+	//	char* name;
+	//	int   type;
+	//	int   scope;
+	//	union value {
+	//		char* valueStr;
+	//		int   valueInt;
+	//		bool  valueBool;
+	//		double valueFloat;
+	//		float valueFloat;
+	//		LPVOID valueVoidPtr;
+	//		struct sClass* valueKlassPtr;
+	//	};
+	//} IDENTIFIER, *LP_IDENTIFIER;
 
-	struct sClass {
-		char* name;
-		int   scope;
-		vector<LP_IDENTIFIER> identifierList;
-	} KLASS, *LP_KLASS;
+	//struct sClass {
+	//	char* name;
+	//	int   scope;
+	//	vector<LP_IDENTIFIER> identifierList;
+	//} KLASS, *LP_KLASS;
 
 
-	struct sRuntime {
-		struct sClass* engine;
-		vector<struct sClass*> conversationList;
-	};
+	//struct sRuntime {
+	//	struct sClass* engine;
+	//	vector<struct sClass*> conversationList;
+	//};
 
 };
 

@@ -28,5 +28,6 @@ private:
 	stack<HANDLE> threadHandles;
 	bool enableNextStage;
 	ChatEngine *chatEngine;
+	GameEngine *gameEngine;
 };
 

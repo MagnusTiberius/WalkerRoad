@@ -32,7 +32,7 @@ public:
 		char* contentType;
 		char* contentLen;
 		char* name;
-		map<char*, char*> properties;
+		map<string, char*> *properties;
 	} HEADER, *LP_HEADER;
 
 	typedef struct

@@ -135,6 +135,18 @@ LPVOID BaseParser::Parse(const CHAR* msg)
 				token = scanner.AcceptRun("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-01234567890");
 				if (strlen(token) == 0)	break;
 				propertyValue = _strdup(token);
+				if (jobreq->header.properties == NULL)
+				{
+					jobreq->header.properties = new map<string, char*>();
+				}
+				map<string, char*> &prp = *jobreq->header.properties;
+				prp[string(propertyName)] = _strdup(propertyValue);
+				//jobreq->header.properties = &prp;
+				//map<string, char*> *prp = &jobreq->header.properties;
+				//prp->emplace(make_pair(string(propertyName), propertyValue));
+				//int sz = prp->size();
+				//*prp[string(propertyName)] = _strdup(propertyValue);
+				//jobreq->header.properties[_strdup(propertyName)] = _strdup(propertyValue);
 			}
 			token = scanner.AcceptRun("\n");
 			if (strcmp(token, "\n") == 0)

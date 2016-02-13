@@ -139,7 +139,7 @@ namespace walkerroad_c
             else
             {
                 msg = string.Format("MOVING {0} X COORD : {1}", nm, n);
-                sendmsg = string.Format("MOVE /portland GAME/1.0\nname={0}\ncontent-length:{1}\ncoord-x:{2}\n\n{3}\n\n", nm, msg.Length, n, msg);
+                sendmsg = string.Format("MOVE /portland GAME/1.0\nname={0}\ncontent-length:{1}\ncoord-x:{2}\ncoord-y:{3}\n\n{4}\n\n", nm, msg.Length, n, n, msg);
             }
             return sendmsg;
         }

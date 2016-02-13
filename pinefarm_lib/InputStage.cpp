@@ -43,6 +43,8 @@ void InputStage::Start()
 	}
 	chatEngine = new ChatEngine();
 	chatEngine->Start();
+	gameEngine = new GameEngine();
+	gameEngine->Start();
 }
 
 void InputStage::Join()
@@ -87,7 +89,7 @@ DWORD WINAPI InputStage::WorkerThread(LPVOID obj)
 				{
 					if (strcmp(job->header.protocol, "GAME") == 0)
 					{
-						int b = 1;
+						instance->gameEngine->AddMessage(job);
 					}
 
 					if (strcmp(job->header.protocol, "CHAT") == 0)

@@ -35,5 +35,6 @@
 using namespace std;
 
 #include "ChatEngine.h"
+#include "GameEngine.h"
 
 // TODO: reference additional headers your program requires here

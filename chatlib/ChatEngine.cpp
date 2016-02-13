@@ -12,6 +12,10 @@ ChatEngine::ChatEngine()
 		NULL,              // default security attributes
 		FALSE,             // initially not owned
 		NULL);
+	ghMutex3 = CreateMutex(
+		NULL,              // default security attributes
+		FALSE,             // initially not owned
+		NULL);
 
 	ghHasMessageEvent = CreateEvent(NULL, TRUE, FALSE, TEXT("ChatEngine"));
 	ghHasMessageEvent2 = CreateEvent(NULL, TRUE, FALSE, TEXT("ChatEngine2"));
@@ -90,8 +94,10 @@ void ChatEngine::SendJobMessage(Structs::LP_JOBREQUEST job)
 		conv = urlObject->conversation;
 		conversationList[url] = urlObject;
 	}
+	::WaitForSingleObject(ghMutex3, INFINITE);
 	conv->push(job);
 	urlObject->conversation = conv;
+	::ReleaseMutex(ghMutex3);
 	bool exists = false;
 	for (auto &item : *urlObject->memberList)
 	{
@@ -137,16 +143,17 @@ DWORD WINAPI ChatEngine::WorkerThread2(LPVOID obj)
 				break;
 			}
 		}
-		::ReleaseMutex(instance->ghMutex2);
 
-		::WaitForSingleObject(instance->ghMutex2, INFINITE);
 		stack<Structs::LP_JOBREQUEST>* stk = urlObject->conversation;
-		if (stk->size() > 0)
+		int sz = stk->size();
+		if (sz > 0)
 		{
+			::WaitForSingleObject(instance->ghMutex3, INFINITE);
 			Structs::LP_JOBREQUEST item = stk->top();
 			stk->pop();
+			::ReleaseMutex(instance->ghMutex3);
 			instance->ctr2--;
-			::ReleaseMutex(instance->ghMutex2);
+
 			char* msg = _strdup(item->data);
 			vector<SOCKET>* mbr = urlObject->memberList;
 			vector<SOCKET>::iterator it2;
@@ -154,6 +161,8 @@ DWORD WINAPI ChatEngine::WorkerThread2(LPVOID obj)
 			replyMsg.append(item->header.name);
 			replyMsg.append(": ");
 			replyMsg.append(item->data);
+
+			::WaitForSingleObject(instance->ghMutex3, INFINITE);
 			for (it2 = mbr->begin(); it2 != mbr->end(); it2++)
 			{
 				SOCKET _socket = *it2;
@@ -166,10 +175,9 @@ DWORD WINAPI ChatEngine::WorkerThread2(LPVOID obj)
 				}
 #endif
 			}
+			::ReleaseMutex(instance->ghMutex3);
 		}
-		::ReleaseMutex(instance->ghMutex2);
 
-		::WaitForSingleObject(instance->ghMutex2, INFINITE);
 		urlObject->isBusy = false;
 		if (instance->ctr2 <= 0)
 		{

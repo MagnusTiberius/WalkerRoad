@@ -7,7 +7,10 @@ CompletionPortStackListener::CompletionPortStackListener()
 		NULL,              // default security attributes
 		FALSE,             // initially not owned
 		NULL);
-
+	ghMutex2 = CreateMutex(
+		NULL,              // default security attributes
+		FALSE,             // initially not owned
+		NULL);
 	ghHasMessageEvent = CreateEvent(NULL, TRUE, FALSE, TEXT("CompletionPortStackListener"));
 	nThreads = THREAD_COUNT;
 }
@@ -47,8 +50,9 @@ void CompletionPortStackListener::AddJobRequest(SOCKET s, const char* d, DWORD n
 	char* str = _strdup(data.c_str());
 	job->data = _strdup(data.c_str());
 	job->len = dataLen;
+	::WaitForSingleObject(ghMutex2, INFINITE);
 	jobList.push(job);
-
+	::ReleaseMutex(ghMutex2);
 
 	SetEvent(ghHasMessageEvent);
 }
@@ -66,10 +70,14 @@ DWORD WINAPI CompletionPortStackListener::WorkerThread(LPVOID obj)
 		::WaitForSingleObject(instance->ghMutex, INFINITE);
 		loopCtr1++;
 		
-		if (instance->jobList.size() > 0)
+		::WaitForSingleObject(instance->ghMutex, INFINITE);
+		int sz = instance->jobList.size();
+		if (sz > 0)
 		{
+			::WaitForSingleObject(instance->ghMutex2, INFINITE);
 			Structs::LP_JOBREQUEST job = instance->jobList.top();
 			instance->jobList.pop();
+			::ReleaseMutex(instance->ghMutex2);
 			//
 			//
 			if (job == NULL)
@@ -100,15 +108,17 @@ DWORD WINAPI CompletionPortStackListener::WorkerThread(LPVOID obj)
 						nextJob->socket = jobresp->socket;
 						instance->inputStage->AddMessage(nextJob);
 					}
-					ZeroMemory(job, sizeof(Structs::JOBREQUEST));
-					free(job);
+					if (job != NULL)
+					{
+						//ZeroMemory(job, sizeof(Structs::JOBREQUEST));
+						//delete(job);
+					}
 				}
 				catch (...)
 				{
 					int x = 1;
 				}
 			}
-			::ReleaseMutex(instance->ghMutex);
 		}
 
 		if (instance->jobList.size() == 0)

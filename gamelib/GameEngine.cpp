@@ -12,6 +12,10 @@ GameEngine::GameEngine()
 		NULL,              // default security attributes
 		FALSE,             // initially not owned
 		NULL);
+	ghMutex3 = CreateMutex(
+		NULL,              // default security attributes
+		FALSE,             // initially not owned
+		NULL);
 
 	ghHasMessageEvent = CreateEvent(NULL, TRUE, FALSE, TEXT("GameEngine"));
 	ghHasMessageEvent2 = CreateEvent(NULL, TRUE, FALSE, TEXT("GameEngine2"));
@@ -92,8 +96,11 @@ void GameEngine::SendJobMessage(Structs::LP_JOBREQUEST job)
 		levelMap = urlObject->levelMap;
 		levelMapList[url] = urlObject;
 	}
+
+	::WaitForSingleObject(ghMutex3, INFINITE);
 	levelMap->push(job);
 	urlObject->levelMap = levelMap;
+	::ReleaseMutex(ghMutex3);
 
 	string name(job->header.name);
 	map<string, LP_PLAYER> &playerList = *urlObject->playerList;
@@ -150,8 +157,10 @@ void GameEngine::SendJobMessage(Structs::LP_JOBREQUEST job)
 	}
 	if (!exists)
 	{
+		::WaitForSingleObject(ghMutex3, INFINITE);
 		urlObject->memberList->push_back(job->socket);
 		levelMapList[url] = urlObject;
+		::ReleaseMutex(ghMutex3);
 	}
 	::WaitForSingleObject(ghMutex2, INFINITE);
 	ctr2++;
@@ -184,18 +193,16 @@ DWORD WINAPI GameEngine::WorkerThread2(LPVOID obj)
 				break;
 			}
 		}
-		::ReleaseMutex(instance->ghMutex2);
-
 		stack<Structs::LP_JOBREQUEST>* stk = urlObject->levelMap;
 		map<string, LP_PLAYER> &playerList = *urlObject->playerList;
 
-		::WaitForSingleObject(instance->ghMutex2, INFINITE);
 		if (stk->size() > 0)
 		{
+			::WaitForSingleObject(instance->ghMutex3, INFINITE);
 			Structs::LP_JOBREQUEST item = stk->top();
 			stk->pop();
+			::ReleaseMutex(instance->ghMutex3);
 			instance->ctr2--;
-			::ReleaseMutex(instance->ghMutex2);
 			char* msg = _strdup(item->data);
 			string sout;
 			map<string, LP_PLAYER>::iterator it;
@@ -222,6 +229,7 @@ DWORD WINAPI GameEngine::WorkerThread2(LPVOID obj)
 
 			vector<SOCKET> &memberList = *urlObject->memberList;
 			vector<SOCKET>::iterator it3;
+			::Sleep(10);
 			for (it3 = memberList.begin(); it3 != memberList.end(); it3++)
 			{
 				SOCKET _socket = *it3;
@@ -234,26 +242,7 @@ DWORD WINAPI GameEngine::WorkerThread2(LPVOID obj)
 				}
 #endif
 			}
-
-
-//			vector<SOCKET>* mbr = urlObject->memberList;
-//			vector<SOCKET>::iterator it2;
-//			for (it2 = mbr->begin(); it2 != mbr->end(); it2++)
-//			{
-//				SOCKET _socket = *it2;
-//#ifdef PRODUCTION
-//				int bRes = send(_socket, item->data, item->len, 0);
-//				//printf("Loop counter:===> %d; data=%s; len=%d; sent=%d\n", loopCtr1, nextJob->data, nextJob->len, bRes);
-//				if (bRes == SOCKET_ERROR)
-//				{
-//					printf("SOCKET_ERROR\n");
-//				}
-//#endif
-//			}
 		}
-		::ReleaseMutex(instance->ghMutex2);
-
-		::WaitForSingleObject(instance->ghMutex2, INFINITE);
 		urlObject->isBusy = false;
 		if (instance->ctr2 <= 0)
 		{

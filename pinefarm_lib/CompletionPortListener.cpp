@@ -158,8 +158,8 @@ DWORD WINAPI CompletionPortListener::ServerWorkerThread(LPVOID obj)
 			printf("GetQueuedCompletionStatus() failed with error %d\n", GetLastError());
 			return 0;
 		}
-		else
-			printf("GetQueuedCompletionStatus() is OK!\n");
+		//else
+		//	printf("GetQueuedCompletionStatus() is OK!\n");
 
 		// First check to see if an error has occurred on the socket and if so
 		// then close the socket and cleanup the SOCKET_INFORMATION structure
@@ -172,8 +172,8 @@ DWORD WINAPI CompletionPortListener::ServerWorkerThread(LPVOID obj)
 				printf("closesocket() failed with error %d\n", WSAGetLastError());
 				return 0;
 			}
-			else
-				printf("closesocket() is fine!\n");
+			//else
+			//	printf("closesocket() is fine!\n");
 
 			GlobalFree(PerHandleData);
 			GlobalFree(PerIoData);
@@ -202,8 +202,8 @@ DWORD WINAPI CompletionPortListener::ServerWorkerThread(LPVOID obj)
 				return 0;
 			}
 		}
-		else
-			printf("WSARecv() is OK!\n");
+		//else
+		//	printf("WSARecv() is OK!\n");
 
 
 		if (false)
@@ -239,8 +239,8 @@ DWORD WINAPI CompletionPortListener::ServerWorkerThread(LPVOID obj)
 						return 0;
 					}
 				}
-				else
-					printf("WSASend() is OK!\n");
+				//else
+				//	printf("WSASend() is OK!\n");
 			}
 			else
 			{

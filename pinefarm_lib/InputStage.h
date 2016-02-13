@@ -23,6 +23,7 @@ private:
 	HANDLE ghHasMessageEvent;
 	int nThreads;
 	HANDLE ghMutex;
+	HANDLE ghMutex2;
 	int ctr;
 	stack<Structs::LP_JOBREQUEST> jobList;
 	stack<HANDLE> threadHandles;

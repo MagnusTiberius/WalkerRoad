@@ -10,6 +10,11 @@ InputStage::InputStage()
 		FALSE,             // initially not owned
 		NULL);
 
+	ghMutex2 = CreateMutex(
+		NULL,              // default security attributes
+		FALSE,             // initially not owned
+		NULL);
+
 	ghHasMessageEvent = CreateEvent(NULL, TRUE, FALSE, TEXT("InputStage"));
 	nThreads = THREAD_COUNT;
 	ctr = 0;
@@ -67,7 +72,9 @@ void InputStage::Stop()
 
 void InputStage::AddMessage(Structs::LP_JOBREQUEST job)
 {
+	::WaitForSingleObject(ghMutex2, INFINITE);
 	jobList.push(job);
+	::ReleaseMutex(ghMutex2);
 	::SetEvent(ghHasMessageEvent);
 }
 
@@ -81,8 +88,10 @@ DWORD WINAPI InputStage::WorkerThread(LPVOID obj)
 		::WaitForSingleObject(instance->ghMutex, INFINITE);
 		if (instance->jobList.size() > 0)
 		{
+			::WaitForSingleObject(instance->ghMutex2, INFINITE);
 			Structs::LP_JOBREQUEST job = instance->jobList.top();
 			instance->jobList.pop();
+			::ReleaseMutex(instance->ghMutex2);
 			if (job != NULL)
 			{
 				if (instance->enableNextStage)

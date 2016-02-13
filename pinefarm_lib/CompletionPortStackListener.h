@@ -65,6 +65,7 @@ private:
 	HANDLE ghHasMessageEvent;
 	int nThreads;
 	HANDLE ghMutex;
+	HANDLE ghMutex2;
 public:
 	void AddJobRequest(SOCKET s, const char* data, DWORD len);
 	void Start();

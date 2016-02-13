@@ -22,7 +22,7 @@
 #include "structs.h"
 
 #define DEFAULT_BUFLEN 1024
-#define THREAD_COUNT 3
+#define THREAD_COUNT 5
 
 //CRITICAL_SECTION CriticalSection;
 

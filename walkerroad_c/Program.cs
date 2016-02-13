@@ -124,7 +124,7 @@ namespace walkerroad_c
                 client.Send(msg2);
                 stepCtr1++;
             }
-            t.Join();
+            //t.Join();
         }
 
         private string GameStep(int n, string nm)
@@ -169,7 +169,10 @@ namespace walkerroad_c
             if (v == 3)
             {
                 Scheme3 s = new Scheme3();
-                s.Start();
+                while (true)
+                {
+                    s.Start();
+                }
             }
         }
     }

@@ -122,77 +122,93 @@ namespace jacobsenroad
             List<string> msgList = new List<string>();
             int bytesRec;
 
-            try 
+
+            while (true)
             {
-                if (HostName == null)
-                {
-                    ipHostInfo = Dns.Resolve(Dns.GetHostName());
-                    //ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
-                }
-                else
-                {
-                    ipHostInfo = Dns.Resolve(HostName);
-                }
-                IPAddress ipAddress = ipHostInfo.AddressList[0];
-                IPEndPoint remoteEP = new IPEndPoint(ipAddress, Settings.PORTNUM);
-                _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
-                //_socket.ReceiveTimeout = 15000;
-                //_socket.NoDelay = true;
-                int id = Thread.CurrentThread.ManagedThreadId;
 
-                System.Diagnostics.Debug.WriteLine(string.Format("Thread:{0} Send Start", id));
+                try
+                {
+                    if (HostName == null)
+                    {
+                        ipHostInfo = Dns.Resolve(Dns.GetHostName());
+                        //ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
+                    }
+                    else
+                    {
+                        ipHostInfo = Dns.Resolve(HostName);
+                    }
+                    IPAddress ipAddress = ipHostInfo.AddressList[0];
+                    IPEndPoint remoteEP = new IPEndPoint(ipAddress, Settings.PORTNUM);
+                    _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                    //_socket.ReceiveTimeout = 15000;
+                    //_socket.NoDelay = true;
+                    int id = Thread.CurrentThread.ManagedThreadId;
 
-                try {
-                    _socket.Connect(remoteEP);
-                    Console.WriteLine("Socket connected to {0}",  _socket.RemoteEndPoint.ToString());
-                    byte[] msg = Encoding.ASCII.GetBytes("This is a test<EOF>\n");
-                    System.Diagnostics.Debug.WriteLine(string.Format("Thread:{0}", id));
+                    System.Diagnostics.Debug.WriteLine(string.Format("Thread:{0} Send Start", id));
+
                     try
                     {
-                        lock (this)
+                        _socket.Connect(remoteEP);
+                        Console.WriteLine("Socket connected to {0}", _socket.RemoteEndPoint.ToString());
+                        byte[] msg = Encoding.ASCII.GetBytes("This is a test<EOF>\n");
+                        System.Diagnostics.Debug.WriteLine(string.Format("Thread:{0}", id));
+                        try
                         {
-                            bytesRec = _socket.Receive(bytes);
-                            while (bytesRec > 0)
+                            lock (this)
                             {
-                                string recvMsg = Encoding.ASCII.GetString(bytes, 0, bytesRec);
-                                if (OnReceiveData != null)
-                                {
-                                    OnReceiveData(recvMsg);
-                                }
-                                //Console.WriteLine(string.Format("{0}\n",recvMsg));
                                 bytesRec = _socket.Receive(bytes);
+                                while (bytesRec > 0)
+                                {
+                                    string recvMsg = Encoding.ASCII.GetString(bytes, 0, bytesRec);
+                                    if (OnReceiveData != null)
+                                    {
+                                        OnReceiveData(recvMsg);
+                                    }
+                                    //Console.WriteLine(string.Format("{0}\n",recvMsg));
+                                    bytesRec = _socket.Receive(bytes);
+                                }
                             }
                         }
+                        catch (SocketException se)
+                        {
+                            System.Diagnostics.Debug.WriteLine(string.Format("Error 11 Thread:{0} {1}", Thread.CurrentThread.ManagedThreadId, se.ToString()));
+                        }
+                        System.Diagnostics.Debug.WriteLine(string.Format("Thread:{0}", Thread.CurrentThread.ManagedThreadId));
+                        _socket.Shutdown(SocketShutdown.Both);
+                        _socket.Close();
+                        //Thread.CurrentThread.Abort();
+                        //return;
+                    }
+                    catch (ArgumentNullException ane)
+                    {
+                        Console.WriteLine("ArgumentNullException : {0}", ane.ToString());
+                        System.Diagnostics.Debug.WriteLine(string.Format("Error 12 Thread:{0} {1}", Thread.CurrentThread.ManagedThreadId, ane.ToString()));
+                        //Thread.CurrentThread.Abort();
+                        //return;
                     }
                     catch (SocketException se)
                     {
-                        System.Diagnostics.Debug.WriteLine(string.Format("Error 11 Thread:{0} {1}", Thread.CurrentThread.ManagedThreadId, se.ToString()));
+                        Console.WriteLine("SocketException : {0}", se.ToString());
+                        System.Diagnostics.Debug.WriteLine(string.Format("Error 13 Thread:{0} {1}", Thread.CurrentThread.ManagedThreadId, se.ToString()));
+                        //Thread.CurrentThread.Abort();
+                        //return;
                     }
-                    System.Diagnostics.Debug.WriteLine(string.Format("Thread:{0}", Thread.CurrentThread.ManagedThreadId));
-                    _socket.Shutdown(SocketShutdown.Both);
-                    _socket.Close();
-                } 
-                catch (ArgumentNullException ane) 
-                {
-                    Console.WriteLine("ArgumentNullException : {0}",ane.ToString());
-                    System.Diagnostics.Debug.WriteLine(string.Format("Error 12 Thread:{0} {1}", Thread.CurrentThread.ManagedThreadId, ane.ToString()));
-                } 
-                catch (SocketException se) 
-                {
-                    Console.WriteLine("SocketException : {0}",se.ToString());
-                    System.Diagnostics.Debug.WriteLine(string.Format("Error 13 Thread:{0} {1}", Thread.CurrentThread.ManagedThreadId, se.ToString()));
-                } 
-                catch (Exception e) 
-                {
-                    Console.WriteLine("Unexpected exception : {0}", e.ToString());
-                    System.Diagnostics.Debug.WriteLine(string.Format("Error 14 Thread:{0} {1}", Thread.CurrentThread.ManagedThreadId, e.ToString()));
-                }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Unexpected exception : {0}", e.ToString());
+                        System.Diagnostics.Debug.WriteLine(string.Format("Error 14 Thread:{0} {1}", Thread.CurrentThread.ManagedThreadId, e.ToString()));
+                        //Thread.CurrentThread.Abort();
+                        //return;
+                    }
 
-            } 
-            catch (Exception e) 
-            {
-                Console.WriteLine( e.ToString());
-                System.Diagnostics.Debug.WriteLine(string.Format("Error 14 Thread:{0} {1}", Thread.CurrentThread.ManagedThreadId, e.ToString()));
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.ToString());
+                    System.Diagnostics.Debug.WriteLine(string.Format("Error 14 Thread:{0} {1}", Thread.CurrentThread.ManagedThreadId, e.ToString()));
+                    //Thread.CurrentThread.Abort();
+                    //return;
+                }
             }
         }
 

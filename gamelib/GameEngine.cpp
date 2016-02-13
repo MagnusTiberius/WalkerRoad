@@ -189,11 +189,13 @@ DWORD WINAPI GameEngine::WorkerThread2(LPVOID obj)
 		stack<Structs::LP_JOBREQUEST>* stk = urlObject->levelMap;
 		map<string, LP_PLAYER> &playerList = *urlObject->playerList;
 
+		::WaitForSingleObject(instance->ghMutex2, INFINITE);
 		if (stk->size() > 0)
 		{
 			Structs::LP_JOBREQUEST item = stk->top();
 			stk->pop();
 			instance->ctr2--;
+			::ReleaseMutex(instance->ghMutex2);
 			char* msg = _strdup(item->data);
 			string sout;
 			map<string, LP_PLAYER>::iterator it;
@@ -249,6 +251,7 @@ DWORD WINAPI GameEngine::WorkerThread2(LPVOID obj)
 //#endif
 //			}
 		}
+		::ReleaseMutex(instance->ghMutex2);
 
 		::WaitForSingleObject(instance->ghMutex2, INFINITE);
 		urlObject->isBusy = false;

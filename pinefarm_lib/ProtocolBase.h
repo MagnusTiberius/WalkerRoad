@@ -44,5 +44,6 @@ private:
 	Parser* protocolChatParser;
 	SOCKET _socket;
 	stack<Structs::LP_JOBREQUEST> jobreqList;
+	HANDLE ghMutex;
 };
 

@@ -4,6 +4,11 @@
 ProtocolBase::ProtocolBase()
 {
 	protocolChatParser = (Parser*)(new BaseParser());
+
+	ghMutex = CreateMutex(
+		NULL,              // default security attributes
+		FALSE,             // initially not owned
+		NULL);
 }
 
 
@@ -44,20 +49,26 @@ LPVOID ProtocolBase::Evaluate(LPVOID refdata)
 
 LPVOID ProtocolBase::Parse()
 {
-	const CHAR* data = messageList.top();
-	if (data != NULL)
+	::WaitForSingleObject(ghMutex, INFINITE);
+	if (messageList.size() > 0)
 	{
-		messageList.pop();
-		protocolChatParser->Input(data);
-		LPVOID rv = protocolChatParser->Parse(data);
-		Structs::LP_JOBREQUEST item = (Structs::LP_JOBREQUEST)protocolChatParser->Next();
-		while (item != NULL)
+		const CHAR* data = messageList.top();
+		if (data != NULL)
 		{
-			jobreqList.push(item);
-			item = (Structs::LP_JOBREQUEST)protocolChatParser->Next();
+			messageList.pop();
+			::ReleaseMutex(ghMutex);
+			protocolChatParser->Input(data);
+			LPVOID rv = protocolChatParser->Parse(data);
+			Structs::LP_JOBREQUEST item = (Structs::LP_JOBREQUEST)protocolChatParser->Next();
+			while (item != NULL)
+			{
+				jobreqList.push(item);
+				item = (Structs::LP_JOBREQUEST)protocolChatParser->Next();
+			}
+			return(rv);
 		}
-		return(rv);
 	}
+	::ReleaseMutex(ghMutex);
 	return NULL;
 }
 

@@ -16,6 +16,10 @@ GameEngine::GameEngine()
 		NULL,              // default security attributes
 		FALSE,             // initially not owned
 		NULL);
+	ghMutex4 = CreateMutex(
+		NULL,              // default security attributes
+		FALSE,             // initially not owned
+		NULL);
 
 	ghHasMessageEvent = CreateEvent(NULL, TRUE, FALSE, TEXT("GameEngine"));
 	ghHasMessageEvent2 = CreateEvent(NULL, TRUE, FALSE, TEXT("GameEngine2"));
@@ -170,7 +174,9 @@ void GameEngine::SendJobMessage(Structs::LP_JOBREQUEST job)
 
 void GameEngine::AddMessage(Structs::LP_JOBREQUEST job)
 {
+	::WaitForSingleObject(ghMutex4, INFINITE);
 	jobList.push(job);
+	::ReleaseMutex(ghMutex4);
 	::SetEvent(ghHasMessageEvent);
 }
 
@@ -263,8 +269,10 @@ DWORD WINAPI GameEngine::WorkerThread(LPVOID obj)
 		::WaitForSingleObject(instance->ghMutex, INFINITE);
 		if (instance->jobList.size() > 0)
 		{
+			::WaitForSingleObject(instance->ghMutex4, INFINITE);
 			Structs::LP_JOBREQUEST job = instance->jobList.top();
 			instance->jobList.pop();
+			::ReleaseMutex(instance->ghMutex4);
 			if (job != NULL)
 			{
 				instance->SendJobMessage(job);

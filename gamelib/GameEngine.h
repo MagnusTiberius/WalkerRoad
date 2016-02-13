@@ -34,6 +34,7 @@ private:
 	HANDLE ghHasMessageEvent2;
 	HANDLE ghMutex2;
 	HANDLE ghMutex3;
+	HANDLE ghMutex4;
 private:
 
 	typedef struct sPlayer {

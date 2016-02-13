@@ -4,18 +4,11 @@
 
 ChatEngine::ChatEngine()
 {
-	ghMutex = CreateMutex(
-		NULL,              // default security attributes
-		FALSE,             // initially not owned
-		NULL);
-	ghMutex2 = CreateMutex(
-		NULL,              // default security attributes
-		FALSE,             // initially not owned
-		NULL);
-	ghMutex3 = CreateMutex(
-		NULL,              // default security attributes
-		FALSE,             // initially not owned
-		NULL);
+	ghMutex = CreateMutex(NULL, FALSE,  NULL);
+	ghMutex2 = CreateMutex(NULL, FALSE, NULL);
+	ghMutex3 = CreateMutex(NULL, FALSE, NULL);
+	ghMutex4 = CreateMutex(NULL, FALSE, NULL);
+	ghMutex5 = CreateMutex(NULL, FALSE, NULL);
 
 	ghHasMessageEvent = CreateEvent(NULL, TRUE, FALSE, TEXT("ChatEngine"));
 	ghHasMessageEvent2 = CreateEvent(NULL, TRUE, FALSE, TEXT("ChatEngine2"));
@@ -109,8 +102,10 @@ void ChatEngine::SendJobMessage(Structs::LP_JOBREQUEST job)
 	}
 	if (!exists)
 	{
+		::WaitForSingleObject(ghMutex5, INFINITE);
 		urlObject->memberList->push_back(job->socket);
 		conversationList[url] = urlObject;
+		::ReleaseMutex(ghMutex5);
 	}
 	::WaitForSingleObject(ghMutex2, INFINITE);
 	ctr2++;
@@ -120,7 +115,9 @@ void ChatEngine::SendJobMessage(Structs::LP_JOBREQUEST job)
 
 void ChatEngine::AddMessage(Structs::LP_JOBREQUEST job)
 {
+	::WaitForSingleObject(ghMutex4, INFINITE);
 	jobList.push(job);
+	::ReleaseMutex(ghMutex4);
 	::SetEvent(ghHasMessageEvent);
 }
 
@@ -162,7 +159,7 @@ DWORD WINAPI ChatEngine::WorkerThread2(LPVOID obj)
 			replyMsg.append(": ");
 			replyMsg.append(item->data);
 
-			::WaitForSingleObject(instance->ghMutex3, INFINITE);
+			::WaitForSingleObject(instance->ghMutex5, INFINITE);
 			for (it2 = mbr->begin(); it2 != mbr->end(); it2++)
 			{
 				SOCKET _socket = *it2;
@@ -198,8 +195,10 @@ DWORD WINAPI ChatEngine::WorkerThread(LPVOID obj)
 		::WaitForSingleObject(instance->ghMutex, INFINITE);
 		if (instance->jobList.size() > 0)
 		{
+			::WaitForSingleObject(instance->ghMutex4, INFINITE);
 			Structs::LP_JOBREQUEST job = instance->jobList.top();
 			instance->jobList.pop();
+			::ReleaseMutex(instance->ghMutex4);
 			if (job != NULL)
 			{
 				instance->SendJobMessage(job);

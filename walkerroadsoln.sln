@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "walkerroadlib", "walkerroadlib\walkerroadlib.csproj", "{BC627F8A-57E5-40C6-B30C-7E29BEEA063B}"
 EndProject
@@ -14,6 +14,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "walkerroad_c", "walkerroad_c\walkerroad_c.csproj", "{9CC9B6D0-1765-4974-AA08-60E86E7A8338}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pinefarm_lib", "pinefarm_lib\pinefarm_lib.vcxproj", "{B1A0C693-743B-4D44-B043-FC021CA6CAC7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5B893221-B35C-4E2A-97C4-AB3BD3459D7D} = {5B893221-B35C-4E2A-97C4-AB3BD3459D7D}
+		{1AC93E3D-3A5E-4212-8565-B29E6A389528} = {1AC93E3D-3A5E-4212-8565-B29E6A389528}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pinefarm_d", "pinefarm_d\pinefarm_d.vcxproj", "{A03257B3-13B7-4533-8141-A91752F45F51}"
 	ProjectSection(ProjectDependencies) = postProject

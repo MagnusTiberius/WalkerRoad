@@ -1,4 +1,7 @@
 #pragma once
+#include "stdafx.h"
+
+
 class ChatEngine
 {
 public:
@@ -9,17 +12,37 @@ public:
 	void Stop();
 	void Join();
 	void AddMessage(Structs::LP_JOBREQUEST job);
+	void SendJobMessage(Structs::LP_JOBREQUEST job);
+
 
 private:
 	HANDLE ghEvents[THREAD_COUNT];
+	HANDLE ghEvents2[THREAD_COUNT];
 	static DWORD WINAPI WorkerThread(LPVOID obj);
+	static DWORD WINAPI WorkerThread2(LPVOID obj);
 	HANDLE ThreadHandle;
 	DWORD ThreadID;
 	HANDLE ghHasMessageEvent;
 	int nThreads;
 	HANDLE ghMutex;
 	int ctr;
+	int ctr2;
 	stack<Structs::LP_JOBREQUEST> jobList;
 	stack<HANDLE> threadHandles;
+
+	HANDLE ghHasMessageEvent2;
+	HANDLE ghMutex2;
+private:
+	typedef struct urlObject{
+		bool isBusy;
+		stack<Structs::LP_JOBREQUEST>* conversation;
+		vector<SOCKET>* memberList;
+	} URLOBJECT;
+
+private:
+	typedef stack<Structs::LP_JOBREQUEST> CONVERSATION, *LP_CONVERSATION;
+	map<string, URLOBJECT*> conversationList;
+
+
 };
 

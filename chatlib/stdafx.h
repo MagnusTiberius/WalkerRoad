@@ -24,4 +24,7 @@
 #define DEFAULT_BUFLEN 1024
 #define THREAD_COUNT 3
 
+//CRITICAL_SECTION CriticalSection;
+
+
 // TODO: reference additional headers your program requires here

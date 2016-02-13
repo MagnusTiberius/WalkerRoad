@@ -1,6 +1,7 @@
 #pragma once
 #include "stdafx.h"
 
+#define PRODUCTION
 
 class ChatEngine
 {

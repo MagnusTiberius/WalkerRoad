@@ -150,7 +150,15 @@ DWORD WINAPI ChatEngine::WorkerThread2(LPVOID obj)
 			vector<SOCKET>::iterator it2;
 			for (it2 = mbr->begin(); it2 != mbr->end(); it2++)
 			{
-				SOCKET value = *it2;
+				SOCKET _socket = *it2;
+#ifdef PRODUCTION
+				int bRes = send(_socket, item->data, item->len, 0);
+				//printf("Loop counter:===> %d; data=%s; len=%d; sent=%d\n", loopCtr1, nextJob->data, nextJob->len, bRes);
+				if (bRes == SOCKET_ERROR)
+				{
+					printf("SOCKET_ERROR\n");
+				}
+#endif
 			}
 		}
 

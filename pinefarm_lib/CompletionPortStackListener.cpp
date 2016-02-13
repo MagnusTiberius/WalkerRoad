@@ -19,6 +19,9 @@ CompletionPortStackListener::~CompletionPortStackListener()
 
 void CompletionPortStackListener::Start()
 {
+	inputStage = new InputStage();
+	inputStage->Start();
+
 	for (int i = 0; i < nThreads; i++)
 	{
 		if ((ThreadHandle = CreateThread(NULL, 0, WorkerThread, this, 0, &ThreadID)) == NULL)
@@ -92,18 +95,20 @@ DWORD WINAPI CompletionPortStackListener::WorkerThread(LPVOID obj)
 					p->AddMessage(_strdup(jobresp->data));
 					LPVOID res = p->Parse();
 					Structs::LP_JOBREQUEST nextJob = (Structs::LP_JOBREQUEST)p->Next();
-					while (nextJob != NULL)
-					{
-						int bRes = send(_socket, nextJob->data, nextJob->len, 0);
-						printf("Loop counter:===> %d; data=%s; len=%d; sent=%d\n", loopCtr1, nextJob->data, nextJob->len, bRes);
-						if (bRes == SOCKET_ERROR)
-						{
-							printf("SOCKET_ERROR\n");
-						}
-						ZeroMemory(nextJob, sizeof(Structs::JOBREQUEST));
-						free(nextJob);
-						nextJob = (Structs::LP_JOBREQUEST)p->Next();
-					}
+					nextJob->socket = jobresp->socket;
+					instance->inputStage->AddMessage(nextJob);
+					//while (nextJob != NULL)
+					//{
+					//	int bRes = send(_socket, nextJob->data, nextJob->len, 0);
+					//	printf("Loop counter:===> %d; data=%s; len=%d; sent=%d\n", loopCtr1, nextJob->data, nextJob->len, bRes);
+					//	if (bRes == SOCKET_ERROR)
+					//	{
+					//		printf("SOCKET_ERROR\n");
+					//	}
+					//	ZeroMemory(nextJob, sizeof(Structs::JOBREQUEST));
+					//	free(nextJob);
+					//	nextJob = (Structs::LP_JOBREQUEST)p->Next();
+					//}
 					ZeroMemory(job, sizeof(Structs::JOBREQUEST));
 					free(job);
 				}

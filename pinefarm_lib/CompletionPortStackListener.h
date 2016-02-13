@@ -25,6 +25,7 @@
 #include "Parser.h"
 #include "Protocol.h"
 #include "structs.h"
+#include "InputStage.h"
 
 #define DEFAULT_BUFLEN 1024
 #define DEFAULT_PORT "11000"
@@ -76,5 +77,6 @@ private:
 	DWORD ThreadID;
 	Parser* _parser;
 	Protocol* _protocol;
+	InputStage* inputStage;
 };
 

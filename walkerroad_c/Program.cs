@@ -111,13 +111,13 @@ namespace walkerroad_c
             t.Start();
             msg = nm;
             Thread.Sleep(1000);
-            string sendmsg = string.Format("LOGIN . CHAT/1.0\nname={0}\ncontent-length:{1}\n\n{2}\n\n", nm, msg.Length, msg);
+            string sendmsg = string.Format("LOGIN /lobby CHAT/1.0\nname={0}\ncontent-length:{1}\n\n{2}\n\n", nm, msg.Length, msg);
             client.Send(sendmsg);
             while (inLoop)
             {
                 Thread.Sleep(1000);
                 msg = Datagen.GetComment();
-                client.Send(string.Format("SAY . CHAT/1.0\nname={0}\ncontent-length:{1}\n\n{2}\n\n", nm, msg.Length ,msg));
+                client.Send(string.Format("SAY /lobby CHAT/1.0\nname={0}\ncontent-length:{1}\n\n{2}\n\n", nm, msg.Length ,msg));
                 Thread.Sleep(1000);
                 string msg2 = GameStep(stepCtr1, nm);
                 //Console.WriteLine(string.Format("=========================\nSending===>{0}\n\n", msg2));
@@ -134,12 +134,12 @@ namespace walkerroad_c
             if (n == 0)
             {
                 msg = string.Format("SPAWNING {0}", nm);
-                sendmsg = string.Format("SPAWN . GAME/1.0\nname={0}\ncontent-length:{1}\n\n{2}\n\n", nm, msg.Length, msg);
+                sendmsg = string.Format("SPAWN /portland GAME/1.0\nname={0}\ncontent-length:{1}\n\n{2}\n\n", nm, msg.Length, msg);
             }
             else
             {
                 msg = string.Format("MOVING {0} X COORD : {1}", nm, n);
-                sendmsg = string.Format("MOVE . GAME/1.0\nname={0}\ncontent-length:{1}\ncoord-x:{2}\n\n{3}\n\n", nm, msg.Length, n, msg);
+                sendmsg = string.Format("MOVE /portland GAME/1.0\nname={0}\ncontent-length:{1}\ncoord-x:{2}\n\n{3}\n\n", nm, msg.Length, n, msg);
             }
             return sendmsg;
         }

@@ -116,7 +116,7 @@ namespace jacobsenroad
             rnd = new Random();
             guid = Guid.NewGuid();
 
-            byte[] bytes = new byte[1024*4];
+            byte[] bytes = new byte[1024*16];
 
             StringBuilder sb = new StringBuilder();
             List<string> msgList = new List<string>();

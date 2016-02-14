@@ -19,3 +19,7 @@ For example, you can roll your own protocol using structured data, making your s
 Continuous Integration:
 
 https://ci.appveyor.com/project/MagnusTiberius/walkerroad
+
+News:
+
+2016 Feb 13 - Server (pinefarm_d) milestone reached. Chat engine can echo comments, while game engine can broadcast state of game object.

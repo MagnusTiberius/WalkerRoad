@@ -154,17 +154,16 @@ DWORD WINAPI ChatEngine::WorkerThread2(LPVOID obj)
 			char* msg = _strdup(item->data);
 			vector<SOCKET>* mbr = urlObject->memberList;
 			vector<SOCKET>::iterator it2;
-			string replyMsg;
-			replyMsg.append(item->header.name);
-			replyMsg.append(": ");
-			replyMsg.append(item->data);
+			char hdr[1024];
+			ZeroMemory(hdr, 1024);
+			sprintf(hdr, "SAY %s CHAT/1.0\ncontent-length:%d\ncontent-type:text\n\n%s\n\n", item->header.url, strlen(item->data), item->data);
 
 			::WaitForSingleObject(instance->ghMutex5, INFINITE);
 			for (it2 = mbr->begin(); it2 != mbr->end(); it2++)
 			{
 				SOCKET _socket = *it2;
 #ifdef PRODUCTION
-				int bRes = send(_socket, replyMsg.c_str(), replyMsg.length(), 0);
+				int bRes = send(_socket, hdr, strlen(hdr), 0);
 				//printf("Loop counter:===> %d; data=%s; len=%d; sent=%d\n", loopCtr1, nextJob->data, nextJob->len, bRes);
 				if (bRes == SOCKET_ERROR)
 				{
@@ -172,7 +171,7 @@ DWORD WINAPI ChatEngine::WorkerThread2(LPVOID obj)
 				}
 #endif
 			}
-			::ReleaseMutex(instance->ghMutex3);
+			::ReleaseMutex(instance->ghMutex5);
 		}
 
 		urlObject->isBusy = false;

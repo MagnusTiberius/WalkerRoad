@@ -233,6 +233,10 @@ DWORD WINAPI GameEngine::WorkerThread2(LPVOID obj)
 				sout.append("\n");
 			}
 
+			char hdr[1024];
+			ZeroMemory(hdr, 1024);
+			sprintf(hdr, "MOVE %s GAME/1.0\ncontent-length:%d\ncontent-type:text\n\n%s\n\n", item->header.url, sout.length(), sout.c_str());
+
 			vector<SOCKET> &memberList = *urlObject->memberList;
 			vector<SOCKET>::iterator it3;
 			::Sleep(10);
@@ -240,7 +244,7 @@ DWORD WINAPI GameEngine::WorkerThread2(LPVOID obj)
 			{
 				SOCKET _socket = *it3;
 #ifdef PRODUCTION
-				int bRes = send(_socket, sout.c_str(), sout.length(), 0);
+				int bRes = send(_socket, hdr, strlen(hdr), 0);
 				//printf("Loop counter:===> %d; data=%s; len=%d; sent=%d\n", loopCtr1, nextJob->data, nextJob->len, bRes);
 				if (bRes == SOCKET_ERROR)
 				{

@@ -87,7 +87,7 @@ namespace walkerroad_c
 
         private string OnReceiveDataHandler(string msg)
         {
-            Console.WriteLine(string.Format("\n\n{0}\n-----------------\n\n", msg));
+            Console.WriteLine(string.Format("{0}", msg));
             Thread.Sleep(500);
             return msg;
         }

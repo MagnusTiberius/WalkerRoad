@@ -5,6 +5,7 @@
 #include "TestListener1.h"
 #include "BaseParser.h"
 #include "InputStage.h"
+#include "StockEngine.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -91,5 +92,17 @@ namespace pinefarm_test
 			inputStage.Stop();
 		}
 
+
+		TEST_METHOD(TestStockEngine)
+		{
+			StockEngine stockEngine;
+			stockEngine.Start();
+			//"MOVE . GAME/1.0\nname = Casey\ncontent-length:24\ncoord-x : 1\n\nMOVING Casey X COORD : 1\n\n\";
+			Structs::LP_JOBREQUEST job = new Structs::JOBREQUEST();
+			job->header.method = "SUBSCRIBE";
+			job->header.protocol = "STOCK";
+			job->header.url = "INTC";
+			stockEngine.AddMessage(job);
+		}
 	};
 }

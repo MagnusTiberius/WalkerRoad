@@ -1,8 +1,8 @@
 #include "stdafx.h"
-#include "InputStage.h"
+#include "StockEngine.h"
 
 
-InputStage::InputStage()
+StockEngine::StockEngine()
 {
 
 	ghMutex = CreateMutex(
@@ -22,17 +22,19 @@ InputStage::InputStage()
 }
 
 
-InputStage::~InputStage()
+StockEngine::~StockEngine()
 {
 }
 
-void InputStage::EnableNextStage(bool v)
+void StockEngine::EnableNextStage(bool v)
 {
 	enableNextStage = v;
 }
 
-void InputStage::Start()
+void StockEngine::Start()
 {
+	stockListing = StockDef::Init();
+
 	for (int i = 0; i < nThreads; i++)
 	{
 		if ((ThreadHandle = CreateThread(NULL, 0, WorkerThread, this, 0, &ThreadID)) == NULL)
@@ -46,20 +48,14 @@ void InputStage::Start()
 			ghEvents[i] = ThreadHandle;
 		}
 	}
-	chatEngine = new ChatEngine();
-	chatEngine->Start();
-	gameEngine = new GameEngine();
-	gameEngine->Start();
-	stockEngine = new StockEngine();
-	stockEngine->Start();
 }
 
-void InputStage::Join()
+void StockEngine::Join()
 {
 	::WaitForMultipleObjects(THREAD_COUNT, ghEvents, TRUE, INFINITE);
 }
 
-void InputStage::Stop()
+void StockEngine::Stop()
 {
 	DWORD dwCode = 0;
 
@@ -68,12 +64,14 @@ void InputStage::Stop()
 		::TerminateThread(ghEvents[i], dwCode);
 	}
 	int total = ctr;
-	chatEngine->Stop();
-	stockEngine->Stop();
 }
 
+void StockEngine::Subscribe(Structs::LP_JOBREQUEST job)
+{
+	int a = 1;
+}
 
-void InputStage::AddMessage(Structs::LP_JOBREQUEST job)
+void StockEngine::AddMessage(Structs::LP_JOBREQUEST job)
 {
 	::WaitForSingleObject(ghMutex2, INFINITE);
 	jobList.push(job);
@@ -81,9 +79,9 @@ void InputStage::AddMessage(Structs::LP_JOBREQUEST job)
 	::SetEvent(ghHasMessageEvent);
 }
 
-DWORD WINAPI InputStage::WorkerThread(LPVOID obj)
+DWORD WINAPI StockEngine::WorkerThread(LPVOID obj)
 {
-	InputStage* instance = (InputStage*)obj;
+	StockEngine* instance = (StockEngine*)obj;
 
 	while (true)
 	{
@@ -99,21 +97,13 @@ DWORD WINAPI InputStage::WorkerThread(LPVOID obj)
 			{
 				if (instance->enableNextStage)
 				{
-					if (strcmp(job->header.protocol, "GAME") == 0)
-					{
-						instance->gameEngine->AddMessage(job);
-					}
-
-					if (strcmp(job->header.protocol, "CHAT") == 0)
-					{
-						instance->chatEngine->AddMessage(job);
-					}
-
 					if (strcmp(job->header.protocol, "STOCK") == 0)
 					{
-						instance->stockEngine->AddMessage(job);
+						if (strcmp(job->header.method, "SUBSCRIBE") == 0)
+						{
+							instance->Subscribe(job);
+						}
 					}
-
 				}
 			}
 			instance->ctr++;

@@ -1,12 +1,12 @@
 #pragma once
 #include "stdafx.h"
+#include "StocksDefinition.h"
 
-
-class InputStage
+class StockEngine
 {
 public:
-	InputStage();
-	~InputStage();
+	StockEngine();
+	~StockEngine();
 
 
 
@@ -28,8 +28,11 @@ private:
 	stack<Structs::LP_JOBREQUEST> jobList;
 	stack<HANDLE> threadHandles;
 	bool enableNextStage;
-	ChatEngine *chatEngine;
-	GameEngine *gameEngine;
-	StockEngine *stockEngine;
+
+	StockDef::LP_STOCKLISTING stockListing;
+
+private:
+	void Subscribe(Structs::LP_JOBREQUEST job);
+
 };
 

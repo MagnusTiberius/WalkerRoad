@@ -181,21 +181,21 @@ namespace jacobsenroad
                     }
                     catch (ArgumentNullException ane)
                     {
-                        Console.WriteLine("ArgumentNullException : {0}", ane.ToString());
+                        System.Diagnostics.Debug.WriteLine("ArgumentNullException : {0}", ane.ToString());
                         System.Diagnostics.Debug.WriteLine(string.Format("Error 12 Thread:{0} {1}", Thread.CurrentThread.ManagedThreadId, ane.ToString()));
                         //Thread.CurrentThread.Abort();
                         //return;
                     }
                     catch (SocketException se)
                     {
-                        Console.WriteLine("SocketException : {0}", se.ToString());
+                        System.Diagnostics.Debug.WriteLine("SocketException : {0}", se.ToString());
                         System.Diagnostics.Debug.WriteLine(string.Format("Error 13 Thread:{0} {1}", Thread.CurrentThread.ManagedThreadId, se.ToString()));
                         //Thread.CurrentThread.Abort();
                         //return;
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine("Unexpected exception : {0}", e.ToString());
+                        System.Diagnostics.Debug.WriteLine("Unexpected exception : {0}", e.ToString());
                         System.Diagnostics.Debug.WriteLine(string.Format("Error 14 Thread:{0} {1}", Thread.CurrentThread.ManagedThreadId, e.ToString()));
                         //Thread.CurrentThread.Abort();
                         //return;
@@ -204,7 +204,7 @@ namespace jacobsenroad
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.ToString());
+                    System.Diagnostics.Debug.WriteLine(e.ToString());
                     System.Diagnostics.Debug.WriteLine(string.Format("Error 14 Thread:{0} {1}", Thread.CurrentThread.ManagedThreadId, e.ToString()));
                     //Thread.CurrentThread.Abort();
                     //return;

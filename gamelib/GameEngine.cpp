@@ -235,7 +235,7 @@ DWORD WINAPI GameEngine::WorkerThread2(LPVOID obj)
 
 			char hdr[1024];
 			ZeroMemory(hdr, 1024);
-			sprintf(hdr, "MOVE %s GAME/1.0\ncontent-length:%d\ncontent-type:text\n\n%s\n\n", item->header.url, sout.length(), sout.c_str());
+			sprintf(hdr, "STATE %s GAME/1.0\ncontent-length:%d\ncontent-type:text\n\n%s\n\n", item->header.url, sout.length(), sout.c_str());
 
 			vector<SOCKET> &memberList = *urlObject->memberList;
 			vector<SOCKET>::iterator it3;

@@ -102,7 +102,9 @@ namespace pinefarm_test
 			job->header.method = "SUBSCRIBE";
 			job->header.protocol = "STOCK";
 			job->header.url = "INTC";
+			job->header.name = "SubscriberA";
 			stockEngine.AddMessage(job);
+			::Sleep(15000);
 		}
 	};
 }

@@ -37,9 +37,10 @@ private:
 	bool enableNextStage;
 
 	StockDef::LP_STOCKLISTING stockListing;
+	vector<string> disconnectedUsers;
 
-private:
+public:
 	void Subscribe(Structs::LP_JOBREQUEST job);
-
+	void PriceUpdate(Structs::LP_JOBREQUEST job);
 };
 

@@ -47,12 +47,12 @@ StockDef::LP_STOCKLISTING StockDef::Init()
 
 	// ==========
 	stock = new STOCK();
-	stock->code = "TSLA";
-	stock->name = "Tesla Motors";
+	stock->code = "MSFT";
+	stock->name = "Microsoft";
 
 	stockprice = new STOCKPRICE();
 	stockprice->stock = stock;
-	stockprice->currentPrice = "151.00";
+	stockprice->currentPrice = "50.50";
 	stockprice->subscriberList = new map<string, LP_SUBSCRIBER>();
 
 	sStock.assign(stockprice->stock->code);

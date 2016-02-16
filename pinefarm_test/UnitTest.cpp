@@ -104,6 +104,15 @@ namespace pinefarm_test
 			job->header.url = "INTC";
 			job->header.name = "SubscriberA";
 			stockEngine.AddMessage(job);
+
+			Structs::LP_JOBREQUEST job2 = new Structs::JOBREQUEST();
+			job2->header.method = "PRICEUPDATE";
+			job2->header.protocol = "STOCK";
+			job2->header.url = "INTC";
+			job2->data = "25.45";
+			stockEngine.PriceUpdate(job2);
+			::Sleep(5000);
+			stockEngine.AddMessage(job2);
 			::Sleep(15000);
 		}
 	};

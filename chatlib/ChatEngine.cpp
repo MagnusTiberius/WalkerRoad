@@ -167,7 +167,7 @@ DWORD WINAPI ChatEngine::WorkerThread2(LPVOID obj)
 				//printf("Loop counter:===> %d; data=%s; len=%d; sent=%d\n", loopCtr1, nextJob->data, nextJob->len, bRes);
 				if (bRes == SOCKET_ERROR)
 				{
-					printf("SOCKET_ERROR\n");
+					printf("SOCKET_ERROR in ChatEngine::WorkerThread2\n");
 				}
 #endif
 			}

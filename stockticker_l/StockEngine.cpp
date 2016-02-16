@@ -94,6 +94,18 @@ void StockEngine::Subscribe(Structs::LP_JOBREQUEST job)
 	::SetEvent(ghHasMessageEvent2);
 }
 
+void StockEngine::PriceUpdate(Structs::LP_JOBREQUEST job)
+{
+	StockDef::STOCKLISTING &listing = *stockListing;
+
+	char* stockCode = job->header.url;
+	map<string, StockDef::LP_STOCKPRICE> &stockList = *listing.stockList;
+	StockDef::LP_STOCKPRICE lpItem = stockList[stockCode];
+	StockDef::STOCKPRICE &item = *lpItem;
+
+	item.currentPrice = job->data;
+}
+
 void StockEngine::AddMessage(Structs::LP_JOBREQUEST job)
 {
 	::WaitForSingleObject(ghMutex2, INFINITE);
@@ -125,6 +137,10 @@ DWORD WINAPI StockEngine::WorkerThread(LPVOID obj)
 						{
 							instance->Subscribe(job);
 						}
+						if (strcmp(job->header.method, "PRICEUPDATE") == 0)
+						{
+							instance->PriceUpdate(job);
+						}
 					}
 				}
 			}
@@ -147,11 +163,20 @@ DWORD WINAPI StockEngine::PublishWorkerThread(LPVOID obj)
 	StockEngine* instance = (StockEngine*)obj;
 	StockDef::STOCKLISTING &listing = *instance->stockListing;
 
+	struct sSubscriberPack {
+		string name;
+		SOCKET _socket;
+		string data;
+	} SUBSCRIBERPACK, *LP_SUBSCRIBERPACK;
+
+	map<string, sSubscriberPack*>* publishList = new map<string, sSubscriberPack*>();
+	map<string, sSubscriberPack*>::iterator itPublishList;
+
 	while (true)
 	{
 		::WaitForSingleObject(instance->ghHasMessageEvent2, INFINITE);
 		::WaitForSingleObject(instance->ghMutex, INFINITE);
-		if (instance->jobList.size() > 0)
+		if (listing.stockList->size() > 0)
 		{
 			map<string, StockDef::LP_STOCKPRICE> &stockList = *listing.stockList;
 			map<string, StockDef::LP_STOCKPRICE>::iterator it1;
@@ -162,20 +187,77 @@ DWORD WINAPI StockEngine::PublishWorkerThread(LPVOID obj)
 				if (subscriberList.size() > 0)
 				{
 					map<string, StockDef::LP_SUBSCRIBER>::iterator it2;
+					vector<string>::iterator itInvalid;
+					for (itInvalid = instance->disconnectedUsers.begin(); itInvalid != instance->disconnectedUsers.end(); itInvalid++)
+					{
+						string name = *itInvalid;
+						it2 = subscriberList.find(name);
+						if (it2 != subscriberList.end())
+						{
+							StockDef::LP_SUBSCRIBER &item = it2->second;
+							free(item->name);
+							delete item;
+							subscriberList.erase(it2);
+						}
+					}
 					for (it2 = subscriberList.begin(); it2 != subscriberList.end(); it2++)
 					{
+						string name = it2->first;
 						StockDef::SUBSCRIBER &subscriber = *it2->second;
 						char* stockCode = _strdup(item.stock->code);
 						char* stockPrice = _strdup(item.currentPrice.c_str());
 						char hdr[1024 * 16];
 						ZeroMemory(hdr, 1024 * 16);
-						sprintf_s(hdr, "%s=%s\n\n", stockCode, stockPrice);
-						int bRes = send(subscriber._socket, hdr, strlen(hdr), 0);
+						sprintf_s(hdr, "%s=%s;", stockCode, stockPrice);
 						int b = 1;
+
+						itPublishList = publishList->find(name);
+						if (itPublishList != publishList->end())
+						{
+							sSubscriberPack &subsbr = *itPublishList->second;
+							subsbr.data.append(hdr);
+						}
+						else
+						{
+							sSubscriberPack* psubsbr = new sSubscriberPack();
+							psubsbr->name = name;
+							psubsbr->_socket = subscriber._socket;
+							psubsbr->data.assign(hdr);
+							map<string, sSubscriberPack*> &pubList = *publishList;
+							pubList[name] = psubsbr;
+						}
+
 					}
 				}
 			}
-			int a = 1;
+
+
+			;
+			vector<string>::iterator itInvalid;
+			for (itInvalid = instance->disconnectedUsers.begin(); itInvalid != instance->disconnectedUsers.end(); itInvalid++)
+			{
+				string name = *itInvalid;
+				map<string, sSubscriberPack*>::iterator &it2 = publishList->find(name);
+				if (it2 != publishList->end())
+				{
+					sSubscriberPack* item = it2->second;
+					delete item;
+					publishList->erase(it2);
+				}
+			}
+			for (itPublishList = publishList->begin(); itPublishList != publishList->end(); itPublishList++)
+			{
+				sSubscriberPack &subscriber = *itPublishList->second;
+				subscriber.data.append("\n\n");
+				int bRes = send(subscriber._socket, subscriber.data.c_str(), subscriber.data.length(), 0);
+				if (bRes == SOCKET_ERROR)
+				{
+					instance->disconnectedUsers.push_back(subscriber.name);
+					printf("SOCKET_ERROR in PublishWorkerThread\n");
+				}
+				subscriber.data.clear();
+			}
+			::Sleep(3000);
 		}
 
 

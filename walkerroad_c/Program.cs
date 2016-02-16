@@ -100,6 +100,7 @@ namespace walkerroad_c
         public void Start()
         {
             int stepCtr1 = 0;
+            int stepCtr2 = 0;
             string nm = Datagen.GetFirstName();
             string msg = "";
             client = new Scheme3();
@@ -113,16 +114,36 @@ namespace walkerroad_c
             Thread.Sleep(1000);
             string sendmsg = string.Format("LOGIN /lobby CHAT/1.0\nname={0}\ncontent-length:{1}\n\n{2}\n\n", nm, msg.Length, msg);
             client.Send(sendmsg);
+            string sendstockmsg = string.Format("SUBSCRIBE INTC STOCK/1.0\nname={0}\ncontent-length:{1}\n\n{2}\n\n", nm, msg.Length, msg);
+            client.Send(sendstockmsg);
+            
             while (inLoop)
             {
-                Thread.Sleep(1000);
+                Thread.Sleep(5000);
                 msg = Datagen.GetComment();
                 client.Send(string.Format("SAY /lobby CHAT/1.0\nname={0}\ncontent-length:{1}\n\n{2}\n\n", nm, msg.Length ,msg));
                 Thread.Sleep(1000);
                 string msg2 = GameStep(stepCtr1, nm);
                 //Console.WriteLine(string.Format("=========================\nSending===>{0}\n\n", msg2));
                 client.Send(msg2);
+
+                if (stepCtr2 < 3)
+                {
+                    string sendstockmsg3 = string.Format("SUBSCRIBE INTC STOCK/1.0\nname={0}\ncontent-length:{1}\n\n{2}\n\n", nm, msg.Length, msg);
+                    client.Send(sendstockmsg3);
+                    Thread.Sleep(1000);
+                    sendstockmsg3 = string.Format("SUBSCRIBE TSLA STOCK/1.0\nname={0}\ncontent-length:{1}\n\n{2}\n\n", nm, msg.Length, msg);
+                    client.Send(sendstockmsg3);
+                    Thread.Sleep(1000);
+                    sendstockmsg3 = string.Format("SUBSCRIBE MSFT STOCK/1.0\nname={0}\ncontent-length:{1}\n\n{2}\n\n", nm, msg.Length, msg);
+                    client.Send(sendstockmsg3);
+                    Thread.Sleep(1000);
+                    sendstockmsg3 = string.Format("SUBSCRIBE NKE STOCK/1.0\nname={0}\ncontent-length:{1}\n\n{2}\n\n", nm, msg.Length, msg);
+                    client.Send(sendstockmsg3);
+                }
+
                 stepCtr1++;
+                stepCtr2++;
             }
             //t.Join();
         }

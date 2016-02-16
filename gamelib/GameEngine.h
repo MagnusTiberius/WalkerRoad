@@ -41,6 +41,7 @@ private:
 		char* name;
 		SOCKET _socket;
 		map<string, char*>* properties;
+		bool isValid;
 	} PLAYER, *LP_PLAYER;
 
 	typedef struct urlObject{
@@ -54,6 +55,7 @@ private:
 	typedef stack<Structs::LP_JOBREQUEST> CONVERSATION, *LP_CONVERSATION;
 	map<string, URLOBJECT*> levelMapList;
 
-
+	map<string, LP_PLAYER> disconnectedUsers;
+	vector<SOCKET> disconnectedSockets;
 };
 

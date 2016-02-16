@@ -156,18 +156,32 @@ DWORD WINAPI ChatEngine::WorkerThread2(LPVOID obj)
 			vector<SOCKET>::iterator it2;
 			char hdr[1024];
 			ZeroMemory(hdr, 1024);
-			sprintf(hdr, "SAY %s CHAT/1.0\ncontent-length:%d\ncontent-type:text\n\n%s\n\n", item->header.url, strlen(item->data), item->data);
+			sprintf(hdr, "CHAT/1.0 200 OK\ncontent-length:%d\ncontent-type:text\nname:%s\n\n%s\n\n",  strlen(item->data), item->header.name, item->data);
 
 			::WaitForSingleObject(instance->ghMutex5, INFINITE);
 			for (it2 = mbr->begin(); it2 != mbr->end(); it2++)
 			{
-				SOCKET _socket = *it2;
+				SOCKET &_socket = *it2;
+
+				if (_socket == NULL)
+				{
+					continue;
+				}
+
+				vector<SOCKET>::iterator itSocket = find(instance->disconnectedSockets.begin(), instance->disconnectedSockets.end(), _socket);
+				if (itSocket != instance->disconnectedSockets.end())
+				{
+					closesocket(_socket);
+					_socket = NULL;
+					continue;
+				}
 #ifdef PRODUCTION
 				int bRes = send(_socket, hdr, strlen(hdr), 0);
 				//printf("Loop counter:===> %d; data=%s; len=%d; sent=%d\n", loopCtr1, nextJob->data, nextJob->len, bRes);
 				if (bRes == SOCKET_ERROR)
 				{
 					printf("SOCKET_ERROR in ChatEngine::WorkerThread2\n");
+					instance->disconnectedSockets.push_back(_socket);
 				}
 #endif
 			}

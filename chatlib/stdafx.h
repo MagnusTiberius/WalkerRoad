@@ -18,7 +18,7 @@
 #include <stdio.h>
 #include <stack>
 #include <vector>
-
+#include <algorithm>
 #include "structs.h"
 
 #define DEFAULT_BUFLEN 1024

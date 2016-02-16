@@ -46,7 +46,7 @@ private:
 private:
 	typedef stack<Structs::LP_JOBREQUEST> CONVERSATION, *LP_CONVERSATION;
 	map<string, URLOBJECT*> conversationList;
-
+	vector<SOCKET> disconnectedSockets;
 
 };
 

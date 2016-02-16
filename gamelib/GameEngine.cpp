@@ -131,6 +131,7 @@ void GameEngine::SendJobMessage(Structs::LP_JOBREQUEST job)
 	else
 	{
 		player = new PLAYER();
+		player->isValid = true;
 		player->_socket = job->socket;
 		player->name = _strdup(job->header.name);
 		player->properties = new map<string, char*>();
@@ -214,7 +215,20 @@ DWORD WINAPI GameEngine::WorkerThread2(LPVOID obj)
 			map<string, LP_PLAYER>::iterator it;
 			for (it = playerList.begin(); it != playerList.end(); it++)
 			{
-				PLAYER player = *it->second;
+				PLAYER &player = *it->second;
+
+				if (player._socket == NULL)
+				{
+					continue;
+				}
+
+				vector<SOCKET>::iterator itSocket = find(instance->disconnectedSockets.begin(), instance->disconnectedSockets.end(), player._socket);
+				if (itSocket != instance->disconnectedSockets.end())
+				{
+					player.isValid = false;
+					continue;
+				}
+
 				map<string, char*> &prop = *player.properties;
 				map<string, char*>::iterator it2;
 				
@@ -235,20 +249,30 @@ DWORD WINAPI GameEngine::WorkerThread2(LPVOID obj)
 
 			char hdr[1024];
 			ZeroMemory(hdr, 1024);
-			sprintf(hdr, "STATE %s GAME/1.0\ncontent-length:%d\ncontent-type:text\n\n%s\n\n", item->header.url, sout.length(), sout.c_str());
+			sprintf(hdr, "GAME/1.0 200 OK\ncontent-length:%d\ncontent-type:text\nname:%s\n\n%s\n\n", sout.length(), item->header.name, sout.c_str());
 
-			vector<SOCKET> &memberList = *urlObject->memberList;
-			vector<SOCKET>::iterator it3;
-			::Sleep(10);
-			for (it3 = memberList.begin(); it3 != memberList.end(); it3++)
+			for (it = playerList.begin(); it != playerList.end(); it++)
 			{
-				SOCKET _socket = *it3;
+				PLAYER &player = *it->second;
+
+				if (player._socket == NULL)
+				{
+					continue;
+				}
+
+				if (player.isValid == false)
+				{
+					closesocket(player._socket);
+					player._socket = NULL;
+					continue;
+				}
 #ifdef PRODUCTION
-				int bRes = send(_socket, hdr, strlen(hdr), 0);
+				int bRes = send(player._socket, hdr, strlen(hdr), 0);
 				//printf("Loop counter:===> %d; data=%s; len=%d; sent=%d\n", loopCtr1, nextJob->data, nextJob->len, bRes);
 				if (bRes == SOCKET_ERROR)
 				{
-					printf("SOCKET_ERROR in GameEngine::WorkerThread2\n");
+					printf("SOCKET_ERROR in GameEngine::WorkerThread2 \n");
+					instance->disconnectedSockets.push_back(player._socket);
 				}
 #endif
 			}

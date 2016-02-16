@@ -258,11 +258,20 @@ DWORD WINAPI StockEngine::PublishWorkerThread(LPVOID obj)
 			for (itPublishList = publishList->begin(); itPublishList != publishList->end(); itPublishList++)
 			{
 				sSubscriberPack &subscriber = *itPublishList->second;
-				string strSend;
-				strSend.assign(subscriber.name);
-				strSend.append(":");
-				strSend.append(subscriber.data);
-				strSend.append("\n\n");
+
+				string strBody = "";
+				strBody.append(subscriber.name);
+				strBody.append(":");
+				strBody.append(subscriber.data);
+
+
+				char buf[1024 * 16];
+				ZeroMemory(buf, 1024 * 16);
+
+				sprintf_s(buf, "STOCK/1.0 200 OK\ncontent-type:text\ncontent-length:%d\n\n%s\n\n", strBody.length(), strBody.c_str());
+
+				string strSend(buf);
+
 				int bRes = send(subscriber._socket, strSend.c_str(), strSend.length(), 0);
 				if (bRes == SOCKET_ERROR)
 				{
@@ -279,7 +288,7 @@ DWORD WINAPI StockEngine::PublishWorkerThread(LPVOID obj)
 				}
 				subscriber.data.clear();
 			}
-			::Sleep(3000);
+			::Sleep(1500);
 		}
 
 

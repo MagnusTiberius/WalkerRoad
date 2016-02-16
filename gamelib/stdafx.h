@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <stack>
 #include <vector>
+#include <algorithm>
 
 #include "structs.h"
 

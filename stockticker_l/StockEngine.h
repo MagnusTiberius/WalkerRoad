@@ -37,7 +37,7 @@ private:
 	bool enableNextStage;
 
 	StockDef::LP_STOCKLISTING stockListing;
-	vector<string> disconnectedUsers;
+	StockDef::SUBSCRIBERLIST disconnectedUsers;
 
 public:
 	void Subscribe(Structs::LP_JOBREQUEST job);

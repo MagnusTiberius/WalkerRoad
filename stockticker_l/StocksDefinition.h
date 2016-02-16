@@ -20,9 +20,12 @@ public:
 
 	typedef struct Subscriber 
 	{
-		char* name;
+		string name;
 		SOCKET _socket;
+		bool isValid;
 	} SUBSCRIBER, *LP_SUBSCRIBER;
+
+	typedef map<string, LP_SUBSCRIBER> SUBSCRIBERLIST, *LP_SUBSCRIBERLIST;
 
 	typedef struct StockPrice
 	{
@@ -30,6 +33,8 @@ public:
 		string currentPrice;
 		map<string, LP_SUBSCRIBER>* subscriberList;
 	} STOCKPRICE, *LP_STOCKPRICE;
+
+	typedef map<string, LP_STOCKPRICE> STOCKLIST, *LP_STOCKLIST;
 
 	typedef struct StockListing 
 	{

@@ -178,39 +178,45 @@ DWORD WINAPI StockEngine::PublishWorkerThread(LPVOID obj)
 		::WaitForSingleObject(instance->ghMutex, INFINITE);
 		if (listing.stockList->size() > 0)
 		{
-			map<string, StockDef::LP_STOCKPRICE> &stockList = *listing.stockList;
-			map<string, StockDef::LP_STOCKPRICE>::iterator it1;
+			StockDef::STOCKLIST &stockList = *listing.stockList;
+			StockDef::STOCKLIST::iterator it1;
 			for (it1 = stockList.begin(); it1 != stockList.end(); it1++)
 			{
 				StockDef::STOCKPRICE &item = *it1->second;
-				map<string, StockDef::LP_SUBSCRIBER> &subscriberList = *item.subscriberList;
+				StockDef::SUBSCRIBERLIST &subscriberList = *item.subscriberList;
 				if (subscriberList.size() > 0)
 				{
-					map<string, StockDef::LP_SUBSCRIBER>::iterator it2;
-					vector<string>::iterator itInvalid;
+					StockDef::SUBSCRIBERLIST::iterator it2;
+					StockDef::SUBSCRIBERLIST::iterator itInvalid;
 					for (itInvalid = instance->disconnectedUsers.begin(); itInvalid != instance->disconnectedUsers.end(); itInvalid++)
 					{
-						string name = *itInvalid;
-						it2 = subscriberList.find(name);
+						StockDef::SUBSCRIBER &inv = *itInvalid->second;
+						it2 = subscriberList.find(inv.name);
 						if (it2 != subscriberList.end())
 						{
 							StockDef::LP_SUBSCRIBER &item = it2->second;
-							free(item->name);
-							delete item;
-							subscriberList.erase(it2);
+							//free(item->name);
+							//delete item;
+							//subscriberList.erase(it2);
+							if (item->_socket == inv._socket)
+							{
+								item->isValid = false;
+							}
 						}
 					}
 					for (it2 = subscriberList.begin(); it2 != subscriberList.end(); it2++)
 					{
 						string name = it2->first;
 						StockDef::SUBSCRIBER &subscriber = *it2->second;
+						if (!subscriber.isValid)
+						{
+							continue;
+						}
 						char* stockCode = _strdup(item.stock->code);
 						char* stockPrice = _strdup(item.currentPrice.c_str());
 						char hdr[1024 * 16];
 						ZeroMemory(hdr, 1024 * 16);
 						sprintf_s(hdr, "%s=%s;", stockCode, stockPrice);
-						int b = 1;
-
 						itPublishList = publishList->find(name);
 						if (itPublishList != publishList->end())
 						{
@@ -232,28 +238,44 @@ DWORD WINAPI StockEngine::PublishWorkerThread(LPVOID obj)
 			}
 
 
-			;
-			vector<string>::iterator itInvalid;
-			for (itInvalid = instance->disconnectedUsers.begin(); itInvalid != instance->disconnectedUsers.end(); itInvalid++)
-			{
-				string name = *itInvalid;
-				map<string, sSubscriberPack*>::iterator &it2 = publishList->find(name);
-				if (it2 != publishList->end())
-				{
-					sSubscriberPack* item = it2->second;
-					delete item;
-					publishList->erase(it2);
-				}
-			}
+			//if (instance->disconnectedUsers.size() > 0)
+			//{
+			//	vector<StockDef::SUBSCRIBER>::iterator itInvalid;
+			//	for (itInvalid = instance->disconnectedUsers.begin(); itInvalid != instance->disconnectedUsers.end(); itInvalid++)
+			//	{
+			//		StockDef::SUBSCRIBER inv = *itInvalid;
+			//		map<string, sSubscriberPack*>::iterator &it2 = publishList->find(inv.name);
+			//		if (it2 != publishList->end())
+			//		{
+			//			sSubscriberPack* item = it2->second;
+			//			delete item;
+			//			publishList->erase(it2);
+			//			instance->disconnectedUsers.erase(itInvalid);
+			//		}
+			//	}
+			//}
+			//instance->disconnectedUsers.clear();
 			for (itPublishList = publishList->begin(); itPublishList != publishList->end(); itPublishList++)
 			{
 				sSubscriberPack &subscriber = *itPublishList->second;
-				subscriber.data.append("\n\n");
-				int bRes = send(subscriber._socket, subscriber.data.c_str(), subscriber.data.length(), 0);
+				string strSend;
+				strSend.assign(subscriber.name);
+				strSend.append(":");
+				strSend.append(subscriber.data);
+				strSend.append("\n\n");
+				int bRes = send(subscriber._socket, strSend.c_str(), strSend.length(), 0);
 				if (bRes == SOCKET_ERROR)
 				{
-					instance->disconnectedUsers.push_back(subscriber.name);
-					printf("SOCKET_ERROR in PublishWorkerThread\n");
+					StockDef::SUBSCRIBERLIST::iterator itInv;
+					itInv = instance->disconnectedUsers.find(subscriber.name);
+					if (itInv == instance->disconnectedUsers.end())
+					{
+						StockDef::SUBSCRIBER* invsubsc = new StockDef::SUBSCRIBER();
+						invsubsc->name.assign(subscriber.name);
+						invsubsc->_socket = subscriber._socket;
+						instance->disconnectedUsers[subscriber.name] = (invsubsc);
+						printf("SOCKET_ERROR in PublishWorkerThread name=%s, socket=%d\n", subscriber.name.c_str(), subscriber._socket);
+					}
 				}
 				subscriber.data.clear();
 			}

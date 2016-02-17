@@ -175,6 +175,7 @@ DWORD WINAPI ChatEngine::WorkerThread2(LPVOID obj)
 					_socket = NULL;
 					continue;
 				}
+
 #ifdef PRODUCTION
 				int bRes = send(_socket, hdr, strlen(hdr), 0);
 				//printf("Loop counter:===> %d; data=%s; len=%d; sent=%d\n", loopCtr1, nextJob->data, nextJob->len, bRes);

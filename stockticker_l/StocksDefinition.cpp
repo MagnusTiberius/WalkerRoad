@@ -14,8 +14,6 @@ StockDef::~StockDef()
 
 StockDef::LP_STOCKLISTING StockDef::Init()
 {
-	LP_STOCKLISTING listing = new STOCKLISTING();
-
 	LP_STOCK stock = new STOCK();
 	stock->code = "ABT";
 	stock->name = "Abbott Laboratories";

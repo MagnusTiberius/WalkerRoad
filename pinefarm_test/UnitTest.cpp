@@ -6,6 +6,7 @@
 #include "BaseParser.h"
 #include "InputStage.h"
 #include "StockEngine.h"
+#include "StockRepository.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -115,5 +116,15 @@ namespace pinefarm_test
 			stockEngine.AddMessage(job2);
 			::Sleep(15000);
 		}
+
+		TEST_METHOD(TestRepoStock)
+		{
+			StockRepository repo;
+			repo.Start();
+			repo.CreateStock("INTC", "Intel Inc", "50.50");
+
+			StockDef::LP_STOCKLISTING listing = repo.GetListing();
+		}
+
 	};
 }

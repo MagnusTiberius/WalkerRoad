@@ -26,12 +26,13 @@ namespace jacobsenroad
         public string ClientName { get; set; }
         public IPHostEntry ipHostInfo { get; set; }
         public string HostName { get; set; }
+        public int PortNumber { get; set; }
 
         public SynchronousSocketClient()
         {
             double interval;
             interval = 200;
-
+            PortNumber = 0;
             _timer = new System.Timers.Timer(interval);
             _timer.Elapsed += new ElapsedEventHandler(_timer_Elapsed);
             _timer.Enabled = false; // Enable it
@@ -121,7 +122,7 @@ namespace jacobsenroad
             StringBuilder sb = new StringBuilder();
             List<string> msgList = new List<string>();
             int bytesRec;
-
+            IPEndPoint remoteEP;
 
             while (true)
             {
@@ -138,7 +139,14 @@ namespace jacobsenroad
                         ipHostInfo = Dns.Resolve(HostName);
                     }
                     IPAddress ipAddress = ipHostInfo.AddressList[0];
-                    IPEndPoint remoteEP = new IPEndPoint(ipAddress, Settings.PORTNUM);
+                    if (PortNumber == 0)
+                    {
+                        remoteEP = new IPEndPoint(ipAddress, Settings.PORTNUM);
+                    }
+                    else
+                    {
+                        remoteEP = new IPEndPoint(ipAddress, PortNumber);
+                    }
                     _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                     //_socket.ReceiveTimeout = 15000;
                     //_socket.NoDelay = true;

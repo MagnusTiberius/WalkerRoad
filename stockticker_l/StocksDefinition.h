@@ -15,7 +15,6 @@ public:
 	{
 		char* code;
 		char* name;
-		
 	} STOCK, *LP_STOCK;
 
 	typedef struct Subscriber 
@@ -44,4 +43,7 @@ public:
 
 public:
 	static LP_STOCKLISTING Init();
+
+private:
+	LP_STOCKLISTING stockListing;
 };

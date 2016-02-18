@@ -18,36 +18,40 @@ using namespace std;
 
 //#include "stdafx.h"
 
-
-class ScannerA
+namespace SMTPL
 {
-public:
-	ScannerA();
-	~ScannerA();
 
-	void Input(const CHAR* str);
-	bool Accept(CHAR* str);
-	CHAR* AcceptRun(CHAR* str);
-	void Backup();
-	const CHAR* Peek();
-	const CHAR* Next();
-	bool IsNumeric();
-	bool IsAlphabetic();
-	bool IsAlphanumeric();
-	bool IsEmpty();
-	void SkipEmpty();
-	CHAR* AcceptUntil(CHAR *str);
-	bool IsEOS();
-	int GetCurrentPosition();
-	string GetByContentLength(int length);
-protected:
-	const CHAR* m_str;
-	int m_start;
-	int m_end;
-	int m_pos;
-	const CHAR *m_c;
-	CHAR m_token[DEFAULT_BUFLEN];
-};
+	class ScannerA
+	{
+	public:
+		ScannerA();
+		~ScannerA();
+
+		void Input(const CHAR* str);
+		bool Accept(CHAR* str);
+		CHAR* AcceptRun(CHAR* str);
+		void Backup();
+		const CHAR* Peek();
+		const CHAR* Next();
+		bool IsNumeric();
+		bool IsAlphabetic();
+		bool IsAlphanumeric();
+		bool IsEmpty();
+		void SkipEmpty();
+		CHAR* AcceptUntil(CHAR *str);
+		bool IsEOS();
+		int GetCurrentPosition();
+		string GetByContentLength(int length);
+	protected:
+		const CHAR* m_str;
+		int m_start;
+		int m_end;
+		int m_pos;
+		const CHAR *m_c;
+		CHAR m_token[DEFAULT_BUFLEN];
+	};
+
+}
 
 /*
 References:

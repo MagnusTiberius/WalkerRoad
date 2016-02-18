@@ -20,28 +20,32 @@
 
 using namespace std;
 
-class Structs
+namespace SMTPL
 {
-public:
-	typedef struct
-	{
-		char* protocol;
-		char* version;
-		char* method;
-		char* url;
-		char* contentType;
-		char* contentLen;
-		char* name;
-		map<string, char*> *properties;
-	} HEADER, *LP_HEADER;
 
-	typedef struct
+	class Structs
 	{
-		SOCKET socket;
-		HEADER header;
-		char* data;
-		DWORD len;
-		bool sendResponse;
-	} JOBREQUEST, *LP_JOBREQUEST, JOBRESPONSE, *LP_JOBRESPONSE;
+	public:
+		typedef struct
+		{
+			char* protocol;
+			char* version;
+			char* method;
+			char* url;
+			char* contentType;
+			char* contentLen;
+			char* name;
+			map<string, char*> *properties;
+		} HEADER, *LP_HEADER;
 
-};
+		typedef struct
+		{
+			SOCKET socket;
+			HEADER header;
+			char* data;
+			DWORD len;
+			bool sendResponse;
+		} JOBREQUEST, *LP_JOBREQUEST, JOBRESPONSE, *LP_JOBRESPONSE;
+
+	};
+}

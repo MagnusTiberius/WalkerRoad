@@ -22,15 +22,19 @@
 
 using namespace std;
 
-class Parser : public IParser
+namespace SMTPL
 {
-public:
-	Parser();
-	~Parser();
 
-public:
-	virtual void Input(const CHAR* msg);
-	virtual LPVOID Parse(const CHAR* msg);
-	virtual LPVOID Next();
-};
+	class Parser : public IParser
+	{
+	public:
+		Parser();
+		~Parser();
 
+	public:
+		virtual void Input(const CHAR* msg);
+		virtual LPVOID Parse(const CHAR* msg);
+		virtual LPVOID Next();
+	};
+
+}

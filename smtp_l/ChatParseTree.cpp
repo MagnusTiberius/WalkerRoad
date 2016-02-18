@@ -1,12 +1,16 @@
 #include "stdafx.h"
 #include "ChatParseTree.h"
 
-
-ChatParseTree::ChatParseTree()
+namespace SMTPL
 {
-}
+
+	ChatParseTree::ChatParseTree()
+	{
+	}
 
 
-ChatParseTree::~ChatParseTree()
-{
+	ChatParseTree::~ChatParseTree()
+	{
+	}
+
 }

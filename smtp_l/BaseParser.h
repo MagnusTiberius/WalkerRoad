@@ -23,24 +23,27 @@ using namespace std;
 #include "Parser.h"
 #include "structs.h"
 
-
-class BaseParser : public IParser
+namespace SMTPL
 {
-public:
-	BaseParser();
-	~BaseParser();
 
-private:
-	const CHAR* _msg;
+	class BaseParser : public IParser
+	{
+	public:
+		BaseParser();
+		~BaseParser();
 
-	ScannerA scanner;
-	const CHAR*  name;
-	const CHAR* content;
-	const CHAR* method;
-	stack<Structs::LP_JOBREQUEST> jobreqList;
-public:
-	void Input(const CHAR* msg);
-	LPVOID Parse(const CHAR* msg);
-	virtual LPVOID Next();
-};
+	private:
+		const CHAR* _msg;
 
+		ScannerA scanner;
+		const CHAR*  name;
+		const CHAR* content;
+		const CHAR* method;
+		stack<Structs::LP_JOBREQUEST> jobreqList;
+	public:
+		void Input(const CHAR* msg);
+		LPVOID Parse(const CHAR* msg);
+		virtual LPVOID Next();
+	};
+
+}

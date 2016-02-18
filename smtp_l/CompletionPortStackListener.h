@@ -38,31 +38,35 @@
 
 using namespace std;
 
-class CompletionPortStackListener
+namespace SMTPL
 {
-public:
-	CompletionPortStackListener();
-	~CompletionPortStackListener();
-private:
-	stack<Structs::LP_JOBREQUEST> jobList;
-	vector<Protocol*> protocolList;
-	//vector<Protocol*>::iterator itrProtocolList;
-	HANDLE ghHasMessageEvent;
-	int nThreads;
-	HANDLE ghMutex;
-	HANDLE ghMutex2;
-public:
-	void AddJobRequest(SOCKET s, const char* data, DWORD len);
-	void Start();
-	void SetParserHandler(Parser* p);
-	void SetProtocol(Protocol* p);
-	void AddProtocol(Protocol* p);
-private:
-	static DWORD WINAPI WorkerThread(LPVOID obj);
-	HANDLE ThreadHandle;
-	DWORD ThreadID;
-	Parser* _parser;
-	Protocol* _protocol;
-	InputStage* inputStage;
-};
 
+	class CompletionPortStackListener
+	{
+	public:
+		CompletionPortStackListener();
+		~CompletionPortStackListener();
+	private:
+		stack<Structs::LP_JOBREQUEST> jobList;
+		vector<Protocol*> protocolList;
+		//vector<Protocol*>::iterator itrProtocolList;
+		HANDLE ghHasMessageEvent;
+		int nThreads;
+		HANDLE ghMutex;
+		HANDLE ghMutex2;
+	public:
+		void AddJobRequest(SOCKET s, const char* data, DWORD len);
+		void Start();
+		void SetParserHandler(Parser* p);
+		void SetProtocol(Protocol* p);
+		void AddProtocol(Protocol* p);
+	private:
+		static DWORD WINAPI WorkerThread(LPVOID obj);
+		HANDLE ThreadHandle;
+		DWORD ThreadID;
+		Parser* _parser;
+		Protocol* _protocol;
+		InputStage* inputStage;
+	};
+
+}

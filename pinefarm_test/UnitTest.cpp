@@ -7,6 +7,8 @@
 #include "InputStage.h"
 #include "StockEngine.h"
 #include "StockRepository.h"
+#include "SmtpAgent.h"
+#include "SmtpParser.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -105,7 +107,6 @@ namespace pinefarm_test
 			job->header.url = "INTC";
 			job->header.name = "SubscriberA";
 			stockEngine.AddMessage(job);
-
 			Structs::LP_JOBREQUEST job2 = new Structs::JOBREQUEST();
 			job2->header.method = "PRICEUPDATE";
 			job2->header.protocol = "STOCK";
@@ -122,9 +123,30 @@ namespace pinefarm_test
 			StockRepository repo;
 			repo.Start();
 			repo.CreateStock("INTC", "Intel Inc", "50.50");
-
 			StockDef::LP_STOCKLISTING listing = repo.GetListing();
 		}
+
+		TEST_METHOD(TestSmtpAgent)
+		{
+			SMTPL::SmtpAgent agent;
+			agent.Start();
+			agent.Connect(512);
+			agent.Connect(200);
+			agent.Connect(300);
+			agent.Data("The following example shows a namespace declaration and three ways that code outside the namespace can access their members.", 512);
+		}
+
+		TEST_METHOD(TestSmtpParser)
+		{
+			SMTPL::SmtpParser parser;
+			parser.Parse("HELO relay.example.org\nMAIL FROM:<bob@example.org>\nRCPT TO:<alice@example.com>\nRCPT TO:<theboss@example.com>\nDATA\nFrom: \"Bob Example\" <bob@example.org>\nTo: \"Alice Example\" <alice@example.com>\nCc: theboss@example.com\nDate: Tue, 15 January 2008 16:02:43 -0500\nSubject: Test message\n\nHello Alice.\nThis is a test message with 5 header fields and 4 lines in the message body.\nYour friend,\nBob\n.\nQUIT\n");
+			SMTPL::SmtpParser::LP_COMMANDSET cmd = (SMTPL::SmtpParser::LP_COMMANDSET)parser.Next();
+			while (strcmp(cmd->opcode, "QUIT") != 0)
+			{
+				cmd = (SMTPL::SmtpParser::LP_COMMANDSET)parser.Next();
+			}
+		}
+
 
 	};
 }

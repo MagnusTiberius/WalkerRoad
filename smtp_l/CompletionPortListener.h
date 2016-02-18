@@ -33,52 +33,57 @@
 //#include "ProtocolGame.h"
 //#include "ProtocolBase.h"
 
-class CompletionPortListener
+namespace SMTPL
 {
-public:
-	CompletionPortListener();
-	~CompletionPortListener();
 
-public:
-	typedef struct
+	class CompletionPortListener
 	{
-		OVERLAPPED Overlapped;
-		WSABUF DataBuf;
-		CHAR Buffer[DATA_BUFSIZE];
-		DWORD BytesSEND;
-		DWORD BytesRECV;
-		INT stepCtr;
-	} PER_IO_OPERATION_DATA, *LPPER_IO_OPERATION_DATA;
+	public:
+		CompletionPortListener();
+		~CompletionPortListener();
 
-	// Structure definition
-	typedef struct
-	{
-		SOCKET Socket;
-	} PER_HANDLE_DATA, *LPPER_HANDLE_DATA;
+	public:
+		typedef struct
+		{
+			OVERLAPPED Overlapped;
+			WSABUF DataBuf;
+			CHAR Buffer[DATA_BUFSIZE];
+			DWORD BytesSEND;
+			DWORD BytesRECV;
+			INT stepCtr;
+		} PER_IO_OPERATION_DATA, *LPPER_IO_OPERATION_DATA;
 
-	static DWORD WINAPI ServerWorkerThread(LPVOID obj);
-	HANDLE CompletionPort;
+		// Structure definition
+		typedef struct
+		{
+			SOCKET Socket;
+		} PER_HANDLE_DATA, *LPPER_HANDLE_DATA;
 
-private:
-	SOCKADDR_IN InternetAddr;
-	SOCKET Listen;
-	HANDLE ThreadHandle;
-	SOCKET Accept;
-	SYSTEM_INFO SystemInfo;
-	LPPER_HANDLE_DATA PerHandleData;
-	LPPER_IO_OPERATION_DATA PerIoData;
-	int i;
-	DWORD RecvBytes;
-	DWORD Flags;
-	DWORD ThreadID;
-	WSADATA wsaData;
-	DWORD Ret;
+		static DWORD WINAPI ServerWorkerThread(LPVOID obj);
+		HANDLE CompletionPort;
 
-	CompletionPortStackListener completionPortStackListener;
+	private:
+		SOCKADDR_IN InternetAddr;
+		SOCKET Listen;
+		HANDLE ThreadHandle;
+		SOCKET Accept;
+		SYSTEM_INFO SystemInfo;
+		LPPER_HANDLE_DATA PerHandleData;
+		LPPER_IO_OPERATION_DATA PerIoData;
+		int i;
+		DWORD RecvBytes;
+		DWORD Flags;
+		DWORD ThreadID;
+		WSADATA wsaData;
+		DWORD Ret;
 
-public:
-	int Start();
-};
+		CompletionPortStackListener completionPortStackListener;
+
+	public:
+		int Start();
+	};
+
+}
 
 //References:
 //http://www.winsocketdotnetworkprogramming.com/winsock2programming/winsock2advancediomethod5i.html

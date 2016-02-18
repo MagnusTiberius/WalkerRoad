@@ -1,12 +1,16 @@
 #include "stdafx.h"
 #include "IProtocol.h"
 
-
-IProtocol::IProtocol()
+namespace SMTPL
 {
-}
+
+	IProtocol::IProtocol()
+	{
+	}
 
 
-IProtocol::~IProtocol()
-{
+	IProtocol::~IProtocol()
+	{
+	}
+
 }

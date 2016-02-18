@@ -18,19 +18,23 @@
 
 using namespace std;
 
-class Protocol : public IProtocol
+namespace SMTPL
 {
-public:
-	Protocol();
-	~Protocol();
 
-public:
-	virtual void Connect();
-	virtual LPVOID Evaluate(LPVOID refdata);
-	virtual LPVOID Parse();
-	virtual void AddMessage(const CHAR* msg);
-	virtual int Send(SOCKET socket);
-	virtual void SetSocket(SOCKET socket);
-	virtual LPVOID Next();
-};
+	class Protocol : public IProtocol
+	{
+	public:
+		Protocol();
+		~Protocol();
 
+	public:
+		virtual void Connect();
+		virtual LPVOID Evaluate(LPVOID refdata);
+		virtual LPVOID Parse();
+		virtual void AddMessage(const CHAR* msg);
+		virtual int Send(SOCKET socket);
+		virtual void SetSocket(SOCKET socket);
+		virtual LPVOID Next();
+	};
+
+}

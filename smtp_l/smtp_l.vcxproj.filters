@@ -60,6 +60,12 @@
     <ClInclude Include="ScannerA.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SmtpAgent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SmtpParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -96,6 +102,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ScannerA.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SmtpAgent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SmtpParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

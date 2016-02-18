@@ -17,16 +17,19 @@
 
 using namespace std;
 
-
-class ChatParseTree
+namespace SMTPL
 {
-public:
-	ChatParseTree();
-	~ChatParseTree();
 
-public:
-	const CHAR* name;
-	const CHAR* content;
-	const CHAR* method;
-};
+	class ChatParseTree
+	{
+	public:
+		ChatParseTree();
+		~ChatParseTree();
 
+	public:
+		const CHAR* name;
+		const CHAR* content;
+		const CHAR* method;
+	};
+
+}

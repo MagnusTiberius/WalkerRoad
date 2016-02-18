@@ -23,27 +23,31 @@ using namespace std;
 #include "BaseParser.h"
 #include "Protocol.h"
 
-class ProtocolBase : public IProtocol
+namespace SMTPL
 {
-public:
-	ProtocolBase();
-	~ProtocolBase();
 
-public:
-	virtual void Connect();
+	class ProtocolBase : public IProtocol
+	{
+	public:
+		ProtocolBase();
+		~ProtocolBase();
 
-	void AddMessage(const CHAR* msg);
-	virtual LPVOID Evaluate(LPVOID refdata);
-	virtual LPVOID Parse();
-	virtual int Send(SOCKET socket);
-	virtual void SetSocket(SOCKET socket);
-	virtual LPVOID Next();
-private:
-	stack<const CHAR*> messageList;
-	string inputData;
-	Parser* protocolChatParser;
-	SOCKET _socket;
-	stack<Structs::LP_JOBREQUEST> jobreqList;
-	HANDLE ghMutex;
-};
+	public:
+		virtual void Connect();
 
+		void AddMessage(const CHAR* msg);
+		virtual LPVOID Evaluate(LPVOID refdata);
+		virtual LPVOID Parse();
+		virtual int Send(SOCKET socket);
+		virtual void SetSocket(SOCKET socket);
+		virtual LPVOID Next();
+	private:
+		stack<const CHAR*> messageList;
+		string inputData;
+		Parser* protocolChatParser;
+		SOCKET _socket;
+		stack<Structs::LP_JOBREQUEST> jobreqList;
+		HANDLE ghMutex;
+	};
+
+}

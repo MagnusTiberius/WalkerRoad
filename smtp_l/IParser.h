@@ -20,15 +20,19 @@
 
 using namespace std;
 
-class IParser
+namespace SMTPL
 {
-public:
-	IParser();
-	~IParser();
 
-public:
-	virtual void Input(const CHAR* msg) = 0;
-	virtual LPVOID Parse(const CHAR* msg) = 0;
-	virtual LPVOID Next() = 0;
-};
+	class IParser
+	{
+	public:
+		IParser();
+		~IParser();
 
+	public:
+		virtual void Input(const CHAR* msg) = 0;
+		virtual LPVOID Parse(const CHAR* msg) = 0;
+		virtual LPVOID Next() = 0;
+	};
+
+}

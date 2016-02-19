@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "SmtpAgent.h"
 
-namespace SMTPL
+namespace POP3L
 {
 
 	SmtpAgent::SmtpAgent()
@@ -86,7 +86,7 @@ namespace SMTPL
 		{
 			SmtpAgent::LP_SOCKETCLIENT c = NewSocketClient();
 			c->_socket = s;
-			c->parser = new SMTPL::SmtpParser();
+			c->parser = new POP3L::SmtpParser();
 			c->commandListPtr = 0;
 			c->isDataMode = false;
 			clientList->push_back(c);
@@ -126,11 +126,11 @@ namespace SMTPL
 
 				if (dataMode == 0)
 				{
-					SMTPL::SmtpParser::LP_COMMANDSET cmd = (SMTPL::SmtpParser::LP_COMMANDSET)client->parser->Next();
+					POP3L::SmtpParser::LP_COMMANDSET cmd = (POP3L::SmtpParser::LP_COMMANDSET)client->parser->Next();
 					while (cmd != NULL)
 					{
 						client->commandList.push_back(cmd);
-						cmd = (SMTPL::SmtpParser::LP_COMMANDSET)client->parser->Next();
+						cmd = (POP3L::SmtpParser::LP_COMMANDSET)client->parser->Next();
 					}
 				}
 				return rv;
@@ -140,7 +140,7 @@ namespace SMTPL
 		return rv;
 	}
 
-	SMTPL::SmtpParser::LP_COMMANDSET SmtpAgent::NextCommand(SOCKET s)
+	POP3L::SmtpParser::LP_COMMANDSET SmtpAgent::NextCommand(SOCKET s)
 	{
 		bool found = false;
 		SmtpAgent::CLIENTLIST::iterator it;
@@ -149,14 +149,14 @@ namespace SMTPL
 			SmtpAgent::LP_SOCKETCLIENT &client = *it;
 			if (client->_socket == s)
 			{
-				SMTPL::SmtpParser::LP_COMMANDSET ret = client->commandList[client->commandListPtr];
+				POP3L::SmtpParser::LP_COMMANDSET ret = client->commandList[client->commandListPtr];
 				return ret;
 			}
 		}
 		return NULL;
 	}
 
-	void SmtpAgent::AddCommand(SOCKET s, SMTPL::SmtpParser::LP_COMMANDSET cmd)
+	void SmtpAgent::AddCommand(SOCKET s, POP3L::SmtpParser::LP_COMMANDSET cmd)
 	{
 		bool found = false;
 		SmtpAgent::CLIENTLIST::iterator it;

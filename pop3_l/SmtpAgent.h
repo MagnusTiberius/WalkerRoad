@@ -3,7 +3,7 @@
 #include "SmtpParser.h"
 
 
-namespace SMTPL
+namespace POP3L
 {
 
 	class SmtpAgent
@@ -32,7 +32,7 @@ namespace SMTPL
 			LP_MAILITEMLIST mailList;
 			bool isConnected;
 			LP_MAILITEM currentMail;
-			vector<SMTPL::SmtpParser::LP_COMMANDSET> commandList;
+			vector<POP3L::SmtpParser::LP_COMMANDSET> commandList;
 			int commandListPtr;
 			bool isDataMode;
 		} SOCKETCLIENT, *LP_SOCKETCLIENT;
@@ -51,10 +51,10 @@ namespace SMTPL
 		void Connect(SOCKET s);
 		char* SendCommand(SOCKET s, char* command);
 		SmtpAgent::LP_SOCKETCLIENT GetClient(SOCKET s);
-		SMTPL::SmtpParser::LP_COMMANDSET NextCommand(SOCKET s);
+		POP3L::SmtpParser::LP_COMMANDSET NextCommand(SOCKET s);
 	private:
 		//SmtpParser parser;
-		void AddCommand(SOCKET s, SMTPL::SmtpParser::LP_COMMANDSET cmd);
+		void AddCommand(SOCKET s, POP3L::SmtpParser::LP_COMMANDSET cmd);
 	};
 
 }

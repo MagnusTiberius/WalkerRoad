@@ -1,7 +1,7 @@
 #pragma once
 #include "stdafx.h"
 
-namespace SMTPL
+namespace POP3L
 {
 
 	class SmtpParser

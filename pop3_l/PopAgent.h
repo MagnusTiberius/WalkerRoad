@@ -1,16 +1,13 @@
 #pragma once
 #include "stdafx.h"
-#include "SmtpParser.h"
 
-
-namespace SMTPL
+namespace POP3L
 {
-
-	class SmtpAgent
+	class PopAgent
 	{
 	public:
-		SmtpAgent();
-		~SmtpAgent();
+		PopAgent();
+		~PopAgent();
 
 	public:
 		typedef struct MailItem {
@@ -24,17 +21,19 @@ namespace SMTPL
 			bool dataEndFlag;
 		} MAILITEM, *LP_MAILITEM;
 
-		typedef vector<SmtpAgent::LP_MAILITEM> MAILITEMLIST, *LP_MAILITEMLIST;
+		typedef vector<PopAgent::LP_MAILITEM> MAILITEMLIST, *LP_MAILITEMLIST;
 
 		typedef struct SocketClient {
 			SOCKET _socket;
-			SmtpParser* parser;
+			POP3L::Pop3Parser* parser;
 			LP_MAILITEMLIST mailList;
 			bool isConnected;
 			LP_MAILITEM currentMail;
-			vector<SMTPL::SmtpParser::LP_COMMANDSET> commandList;
+			vector<POP3L::Pop3Parser::LP_COMMANDSET> commandList;
 			int commandListPtr;
 			bool isDataMode;
+			char* user;
+			char* passwd;
 		} SOCKETCLIENT, *LP_SOCKETCLIENT;
 
 		typedef vector<LP_SOCKETCLIENT> CLIENTLIST, *LP_CLIENTLIST;
@@ -50,11 +49,12 @@ namespace SMTPL
 		char* Data(char* value, SOCKET s);
 		void Connect(SOCKET s);
 		char* SendCommand(SOCKET s, char* command);
-		SmtpAgent::LP_SOCKETCLIENT GetClient(SOCKET s);
-		SMTPL::SmtpParser::LP_COMMANDSET NextCommand(SOCKET s);
+		PopAgent::LP_SOCKETCLIENT GetClient(SOCKET s);
+		POP3L::Pop3Parser::LP_COMMANDSET NextCommand(SOCKET s);
 	private:
 		//SmtpParser parser;
-		void AddCommand(SOCKET s, SMTPL::SmtpParser::LP_COMMANDSET cmd);
+		void AddCommand(SOCKET s, POP3L::Pop3Parser::LP_COMMANDSET cmd);
+
 	};
 
 }

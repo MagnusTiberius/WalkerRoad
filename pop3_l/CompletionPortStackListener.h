@@ -28,18 +28,20 @@
 #include "structs.h"
 #include "InputStage.h"
 #include "SmtpAgent.h"
+#include "PopParser.h"
+#include "PopAgent.h"
 
 #define DEFAULT_BUFLEN 1024
-#define DEFAULT_PORT "2626"
-#define DEFAULT_PORT_INT 2626
-#define DEFAULT_PORT "2626"
-#define DEFAULT_PORT_INT 2626
+#define DEFAULT_PORT "9110"
+#define DEFAULT_PORT_INT 9110
+#define DEFAULT_PORT "9110"
+#define DEFAULT_PORT_INT 9110
 #define DATA_BUFSIZE 8192
 #define THREAD_COUNT 5
 
 using namespace std;
 
-namespace SMTPL
+namespace POP3L
 {
 
 	class CompletionPortStackListener
@@ -56,7 +58,7 @@ namespace SMTPL
 		HANDLE ghMutex;
 		HANDLE ghMutex2;
 	public:
-		SmtpAgent smtpAgent;
+		PopAgent popAgent;
 
 		void AddJobRequest(SOCKET s, const char* data, DWORD len);
 		void Start();

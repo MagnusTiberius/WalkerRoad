@@ -9,7 +9,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Text.RegularExpressions;
 
-namespace smtp_c
+namespace pop3_c
 {
     public class SmtpClient :  SynchronousSocketClient
     {

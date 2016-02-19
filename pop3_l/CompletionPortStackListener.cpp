@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "CompletionPortStackListener.h"
 
-namespace SMTPL
+namespace POP3L
 {
 
 	CompletionPortStackListener::CompletionPortStackListener()
@@ -28,7 +28,7 @@ namespace SMTPL
 		inputStage = new InputStage();
 		inputStage->Start();
 
-		smtpAgent.Start();
+		popAgent.Start();
 
 		for (int i = 0; i < nThreads; i++)
 		{
@@ -57,26 +57,8 @@ namespace SMTPL
 		job->len = dataLen;
 		job->socket = s;
 		::WaitForSingleObject(ghMutex2, INFINITE);
-		smtpAgent.SendCommand(s, _strdup(d));
-		auto client = smtpAgent.GetClient(s);
-		if (client->parser->dataMode == 2)
-		{
-			string msg = "354 End data with <CR><LF>.<CR><LF>\n";
-			job->data = _strdup(msg.c_str());
-			job->len = msg.length();
-		}
-		if (client->parser->dataMode == 3)
-		{
-			string msg = "...\n";
-			job->data = _strdup(msg.c_str());
-			job->len = msg.length();
-		}
-		if (client->parser->dataMode == 99)
-		{
-			string msg = "250 Ok: queued as 12345\n";
-			job->data = _strdup(msg.c_str());
-			job->len = msg.length();
-		}
+		popAgent.SendCommand(s, _strdup(d));
+		auto client = popAgent.GetClient(s);
 		jobList.push(job);
 		::ReleaseMutex(ghMutex2);
 
@@ -115,75 +97,62 @@ namespace SMTPL
 				{
 					try
 					{
-
-						SmtpAgent::LP_SOCKETCLIENT  client = instance->smtpAgent.GetClient(job->socket);
+						PopAgent::LP_SOCKETCLIENT  client = instance->popAgent.GetClient(job->socket);
 						if (client != NULL)
 						{
-							if (client->parser->dataMode == 2)
-							{
-								send(client->_socket, job->data, job->len, NULL);
-								client->parser->dataMode = 3;
-								continue;
-							}
-
-							if (client->parser->dataMode == 3)
-							{
-								send(client->_socket, job->data, job->len, NULL);
-								continue;
-							}
-
-							if (client->parser->dataMode == 99)
-							{
-								send(client->_socket, job->data, job->len, NULL);
-								client->parser->dataMode = 0;
-								continue;
-							}
 
 							if (client->commandList.size() > 0)
 							{
-								SMTPL::SmtpParser::LP_COMMANDSET &cmd = client->commandList[client->commandListPtr];
-								if (strcmp(cmd->opcode, "HELO") == 0)
+								POP3L::Pop3Parser::LP_COMMANDSET &cmd = client->commandList[client->commandListPtr];
+								if (strcmp(cmd->opcode, "USER") == 0)
 								{
 									char buf[1024];
 									ZeroMemory(buf, 1024);
 									auto s = cmd->params[0];
-									sprintf_s(buf, "250 Hello %s", s[0]);
+									sprintf_s(buf, "+OK User accepted");
 									string msg;
 									msg.assign(buf);
 									send(client->_socket, msg.c_str(), msg.length(), NULL);
-									int b = 1;
 									client->commandListPtr++;
 								}
-								if (strcmp(cmd->opcode, "RCPTTO") == 0)
+								if (strcmp(cmd->opcode, "PASS") == 0)
 								{
 									char buf[1024];
 									ZeroMemory(buf, 1024);
-									sprintf_s(buf, "250 Ok");
+									sprintf_s(buf, "+Ok Pass accepted");
 									string msg;
 									msg.assign(buf);
 									send(client->_socket, msg.c_str(), msg.length(), NULL);
 									client->commandListPtr++;
 								}
 								
-								if (strcmp(cmd->opcode, "MAILFROM") == 0)
+								if (strcmp(cmd->opcode, "LIST") == 0)
 								{
+									int n = client->mailList->size();
+
 									char buf[1024];
 									ZeroMemory(buf, 1024);
-									sprintf_s(buf, "250 Ok");
+									sprintf_s(buf, "+Ok %d messages", n);
 									string msg;
 									msg.assign(buf);
 									send(client->_socket, msg.c_str(), msg.length(), NULL);
 									client->commandListPtr++;
 								}
 
-								if (strcmp(cmd->opcode, "DATA") == 0)
+								if (strcmp(cmd->opcode, "RETR") == 0)
 								{
+									auto p = cmd->params[0];
+									char* item = p[0];
+									int i = atoi(item);
+									PopAgent::MAILITEMLIST &ml = *client->mailList;
+									PopAgent::LP_MAILITEM mi = ml[i];
+
 									char buf[1024];
 									ZeroMemory(buf, 1024);
-									sprintf_s(buf, "250 Ok: vvvv ooo xxxx");
+									sprintf_s(buf, "+Ok xxx octets");
 									string msg;
 									msg.assign(buf);
-									send(client->_socket, msg.c_str(), msg.length(), NULL);
+									send(client->_socket, mi->data, strlen(mi->data), NULL);
 								}
 							}
 

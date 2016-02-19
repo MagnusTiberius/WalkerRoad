@@ -1,14 +1,14 @@
 #pragma once
 #include "stdafx.h"
 
-namespace SMTPL
+namespace POP3L
 {
 
-	class SmtpParser
+	class Pop3Parser
 	{
 	public:
-		SmtpParser();
-		~SmtpParser();
+		Pop3Parser();
+		~Pop3Parser();
 
 	private:
 		const CHAR* _msg;
@@ -29,7 +29,7 @@ namespace SMTPL
 		} COMMANDSET, *LP_COMMANDSET;
 
 	private:
-		vector<SmtpParser::COMMANDSET> commandRequestList;
+		vector<Pop3Parser::COMMANDSET> commandRequestList;
 		LP_COMMANDSET cmd;
 		int index;
 	};

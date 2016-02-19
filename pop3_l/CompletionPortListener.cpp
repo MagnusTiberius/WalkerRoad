@@ -2,7 +2,7 @@
 #include "CompletionPortListener.h"
 
 
-namespace SMTPL
+namespace POP3L
 {
 
 	CompletionPortListener::CompletionPortListener()
@@ -130,13 +130,13 @@ namespace SMTPL
 			PerIoData->DataBuf.len = DATA_BUFSIZE;
 			PerIoData->DataBuf.buf = PerIoData->Buffer;
 
-			string msg = "220 smtp.localmachine.com ESMTP Postfix";
+			string msg = "+OK POP3 server ready <pop3.walkerroad.net>";
 			PerIoData->DataBuf.len = msg.length();
 			PerIoData->DataBuf.buf = _strdup(msg.c_str());
 
 			Flags = 0;
 
-			completionPortStackListener.smtpAgent.Connect(Accept);
+			completionPortStackListener.popAgent.Connect(Accept);
 
 			if (WSASend(Accept, &(PerIoData->DataBuf), 1, NULL, NULL, &(PerIoData->Overlapped), NULL) == SOCKET_ERROR)
 			{

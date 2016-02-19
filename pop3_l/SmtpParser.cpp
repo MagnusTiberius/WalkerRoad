@@ -2,7 +2,7 @@
 #include "SmtpParser.h"
 
 
-namespace SMTPL
+namespace POP3L
 {
 
 	SmtpParser::SmtpParser()

@@ -6,7 +6,7 @@
 #include "Application.h"
 
 
-using namespace SMTPL;
+using namespace POP3L;
 
 int _tmain(int argc, _TCHAR* argv[])
 {

@@ -133,16 +133,45 @@ namespace pinefarm_test
 			agent.Connect(512);
 			agent.Connect(200);
 			agent.Connect(300);
-			agent.Data("The following example shows a namespace declaration and three ways that code outside the namespace can access their members.", 512);
+			//agent.Data("The following example shows a namespace declaration and three ways that code outside the namespace can access their members.", 512);
+			agent.SendCommand(512, "HELO relay1.example.org\n");
+			agent.SendCommand(200, "HELO relay2.example.org\n");
+			agent.SendCommand(300, "HELO relay3.example.org\n");
+			agent.SendCommand(512, "MAIL FROM:<bob@example.org>\n");
+			agent.SendCommand(512, "RCPT TO:<alice@example.com>\n");
 		}
 
 		TEST_METHOD(TestSmtpParser)
 		{
+			vector<SMTPL::SmtpParser::COMMANDSET> commandList;
+
 			SMTPL::SmtpParser parser;
-			parser.Parse("HELO relay.example.org\nMAIL FROM:<bob@example.org>\nRCPT TO:<alice@example.com>\nRCPT TO:<theboss@example.com>\nDATA\nFrom: \"Bob Example\" <bob@example.org>\nTo: \"Alice Example\" <alice@example.com>\nCc: theboss@example.com\nDate: Tue, 15 January 2008 16:02:43 -0500\nSubject: Test message\n\nHello Alice.\nThis is a test message with 5 header fields and 4 lines in the message body.\nYour friend,\nBob\n.\nQUIT\n");
+			parser.Parse("HELO relay.example.org\nMAIL FROM:<bob@example.org>\n");
 			SMTPL::SmtpParser::LP_COMMANDSET cmd = (SMTPL::SmtpParser::LP_COMMANDSET)parser.Next();
-			while (strcmp(cmd->opcode, "QUIT") != 0)
+			while (cmd != NULL)
 			{
+				commandList.push_back(*cmd);
+				cmd = (SMTPL::SmtpParser::LP_COMMANDSET)parser.Next();
+			}
+			parser.Parse("RCPT TO:<alice@example.com>\n");
+			cmd = (SMTPL::SmtpParser::LP_COMMANDSET)parser.Next();
+			while (cmd != NULL)
+			{
+				commandList.push_back(*cmd);
+				cmd = (SMTPL::SmtpParser::LP_COMMANDSET)parser.Next();
+			}
+			parser.Parse("RCPT TO:<theboss@example.com>\nDATA\nFrom: \"Bob Example\" <bob@example.org>\nTo: \"Alice Example\" <alice@example.com>\n");
+			cmd = (SMTPL::SmtpParser::LP_COMMANDSET)parser.Next();
+			while (cmd != NULL)
+			{
+				commandList.push_back(*cmd);
+				cmd = (SMTPL::SmtpParser::LP_COMMANDSET)parser.Next();
+			}
+			parser.Parse("Cc: theboss@example.com\nDate: Tue, 15 January 2008 16:02:43 -0500\nSubject: Test message\n\nHello Alice.\nThis is a test message with 5 header fields and 4 lines in the message body.\nYour friend,\nBob\n.\nQUIT\n");
+			cmd = (SMTPL::SmtpParser::LP_COMMANDSET)parser.Next();
+			while (cmd != NULL)
+			{
+				commandList.push_back(*cmd);
 				cmd = (SMTPL::SmtpParser::LP_COMMANDSET)parser.Next();
 			}
 		}

@@ -8,7 +8,7 @@ using System.Net.Sockets;
 using System.Threading;
 using jacobsenroad;
 
-namespace smtp_c
+namespace pop3_c
 {
     class Program
     {
@@ -20,7 +20,7 @@ namespace smtp_c
             client.HostName = "127.0.0.1";
             client.EnableDataGenerator = false;
             client.TimerInterval = 200;
-            client.PortNumber = 2626;
+            client.PortNumber = 9110;
             Thread t = new Thread(new ThreadStart(client.StartClient));
             t.Start();
             string line = Console.ReadLine();

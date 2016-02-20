@@ -93,13 +93,13 @@ namespace POP3L
 			c->mailList = new vector<PopAgent::LP_MAILITEM>();
 
 			PopAgent::LP_MAILITEM mail = NewMailItem();
-			mail->data = "POP supports simple download-and-delete requirements for access to remote mailboxes (termed maildrop in the POP RFC's).[2] Although most POP clients have an option to leave mail on server after download, e-mail clients using POP generally connect, retrieve all messages, store them on the user's PC as new messages, delete them from the server, and then disconnect. Other protocols, notably IMAP, (Internet Message Access Protocol) provide more complete and complex remote access to typical mailbox operations. In the late 1990s and early 2000s, fewer Internet Service Providers (ISPs) supported IMAP due to the storage space that was required on the ISP's hardware. Contemporary e-mail clients supported POP, then over time popular mail client software added IMAP support.";
+			mail->data = _strdup(mailFormat1);
 			mail->fromList.push_back("<ben@test.org>");
 			c->mailList->push_back(mail);
 
 			mail = NewMailItem();
-			mail->data = "Available messages to the client are fixed when a POP session opens the maildrop, and are identified by message-number local to that session or, optionally, by a unique identifier assigned to the message by the POP server. This unique identifier is permanent and unique to the maildrop and allows a client to access the same message in different POP sessions. Mail is retrieved and marked for deletion by message-number. When the client exits the session, the mail marked for deletion is removed from the maildrop.";
-			mail->fromList.push_back("<dick@test.org>");
+			mail->data = _strdup(mailFormat2);
+			mail->fromList.push_back("<jack@test.org>");
 			c->mailList->push_back(mail);
 
 			clientList->push_back(c);

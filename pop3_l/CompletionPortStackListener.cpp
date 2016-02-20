@@ -94,20 +94,20 @@ namespace POP3L
 				}
 				_socket = job->socket;
 
+				char buf[1024];
+				ZeroMemory(buf, 1024);
+
 				{
 					try
 					{
 						PopAgent::LP_SOCKETCLIENT  client = instance->popAgent.GetClient(job->socket);
 						if (client != NULL)
 						{
-
-							if (client->commandList.size() > 0)
+							if (client->commandList.size() > 0 && client->commandListPtr < client->commandList.size())
 							{
 								POP3L::Pop3Parser::LP_COMMANDSET &cmd = client->commandList[client->commandListPtr];
 								if (strcmp(cmd->opcode, "USER") == 0)
 								{
-									char buf[1024];
-									ZeroMemory(buf, 1024);
 									auto s = cmd->params[0];
 									sprintf_s(buf, "+OK User accepted");
 									string msg;
@@ -115,49 +115,96 @@ namespace POP3L
 									send(client->_socket, msg.c_str(), msg.length(), NULL);
 									client->commandListPtr++;
 								}
-								if (strcmp(cmd->opcode, "PASS") == 0)
+								else if (strcmp(cmd->opcode, "QUIT") == 0)
 								{
-									char buf[1024];
-									ZeroMemory(buf, 1024);
+									sprintf_s(buf, "+Ok POP3 server signing off.");
+									string msg;
+									msg.assign(buf);
+									send(client->_socket, msg.c_str(), msg.length(), NULL);
+									closesocket(client->_socket);
+									client->commandListPtr++;
+								}
+								else if (strcmp(cmd->opcode, "PASS") == 0)
+								{
 									sprintf_s(buf, "+Ok Pass accepted");
 									string msg;
 									msg.assign(buf);
 									send(client->_socket, msg.c_str(), msg.length(), NULL);
 									client->commandListPtr++;
 								}
-								
-								if (strcmp(cmd->opcode, "LIST") == 0)
+								else if (strcmp(cmd->opcode, "LIST") == 0)
 								{
 									int n = client->mailList->size();
-
-									char buf[1024];
-									ZeroMemory(buf, 1024);
 									sprintf_s(buf, "+Ok %d messages", n);
 									string msg;
 									msg.assign(buf);
 									send(client->_socket, msg.c_str(), msg.length(), NULL);
 									client->commandListPtr++;
 								}
-
-								if (strcmp(cmd->opcode, "RETR") == 0)
+								else if (strcmp(cmd->opcode, "RETR") == 0)
 								{
 									auto p = cmd->params[0];
 									char* item = p[0];
 									int i = atoi(item);
+									i = i - 1;
 									PopAgent::MAILITEMLIST &ml = *client->mailList;
-									PopAgent::LP_MAILITEM mi = ml[i];
-
-									char buf[1024];
-									ZeroMemory(buf, 1024);
-									sprintf_s(buf, "+Ok xxx octets");
+									if (ml.size() > i && i >= 0)
+									{
+										PopAgent::LP_MAILITEM mi = ml[i];
+										sprintf_s(buf, "+Ok xxx octets");
+										string msg;
+										msg.assign(buf);
+										send(client->_socket, mi->data, strlen(mi->data), NULL);
+									}
+									else
+									{
+										sprintf_s(buf, "-ERR");
+										string msg;
+										msg.assign(buf);
+										send(client->_socket, buf, strlen(buf), NULL);
+									}
+									client->commandListPtr++;
+								}
+								else if (strcmp(cmd->opcode, "DELE") == 0)
+								{
+									auto p = cmd->params[0];
+									char* item = p[0];
+									int i = atoi(item);
+									i = i - 1;
+									PopAgent::MAILITEMLIST &ml = *client->mailList;
+									if (ml.size() > i && i >= 0)
+									{
+										PopAgent::LP_MAILITEM mi = ml[i];
+										sprintf_s(buf, "+Ok mail deleted.");
+										string msg;
+										msg.assign(buf);
+										send(client->_socket, buf, strlen(buf), NULL);
+									}
+									else
+									{
+										sprintf_s(buf, "-ERR");
+										string msg;
+										msg.assign(buf);
+										send(client->_socket, buf, strlen(buf), NULL);
+									}
+									client->commandListPtr++;
+								}
+								else
+								{
+									sprintf_s(buf, "-ERR");
 									string msg;
 									msg.assign(buf);
-									send(client->_socket, mi->data, strlen(mi->data), NULL);
+									send(client->_socket, buf, strlen(buf), NULL);
+									client->commandListPtr++;
 								}
 							}
-
-							int b = 1;
-
+							else
+							{
+								//sprintf_s(buf, "-ERR");
+								//string msg;
+								//msg.assign(buf);
+								//send(client->_socket, buf, strlen(buf), NULL);
+							}
 						}
 					}
 					catch (...)

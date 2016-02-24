@@ -27,6 +27,7 @@ namespace jacobsenroad
         public IPHostEntry ipHostInfo { get; set; }
         public string HostName { get; set; }
         public int PortNumber { get; set; }
+        public bool IsConnected { get; set; }
 
         public SynchronousSocketClient()
         {

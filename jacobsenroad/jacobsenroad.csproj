@@ -48,7 +48,11 @@
     <Compile Include="ListenerHandler.cs" />
     <Compile Include="ListenerHandlerController.cs" />
     <Compile Include="ListenerHandlerPool.cs" />
+    <Compile Include="PopClientController.cs" />
+    <Compile Include="PopClientThread.cs" />
+    <Compile Include="Scanner.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="SmtpClient.cs" />
     <Compile Include="SynchronousSocketClient.cs" />
     <Compile Include="SynchronousSocketListener.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -97,6 +97,7 @@ namespace POP3L
 				cmd->params->push_back(_strdup(token));
 				token = scanner.AcceptRun("\n");
 				commandRequestList.push_back(*cmd);
+				continue;
 			}
 
 			if (strcmp(token, "DELE") == 0)
@@ -109,6 +110,7 @@ namespace POP3L
 				cmd->params->push_back(_strdup(token));
 				token = scanner.AcceptRun("\n");
 				commandRequestList.push_back(*cmd);
+				continue;
 			}
 
 			if (strcmp(token, "USER") == 0)
@@ -121,6 +123,7 @@ namespace POP3L
 				cmd->params->push_back(_strdup(token));
 				token = scanner.AcceptRun("\n");
 				commandRequestList.push_back(*cmd);
+				continue;
 			}
 
 			if (strcmp(token, "PASS") == 0)
@@ -133,6 +136,7 @@ namespace POP3L
 				cmd->params->push_back(_strdup(token));
 				token = scanner.AcceptRun("\n");
 				commandRequestList.push_back(*cmd);
+				continue;
 			}
 
 

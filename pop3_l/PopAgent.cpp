@@ -54,6 +54,29 @@ namespace POP3L
 	}
 
 
+	void PopAgent::PurgeMailList(SOCKET s)
+	{
+		PopAgent::LP_SOCKETCLIENT lpclient = GetClient(s);
+		PopAgent::SOCKETCLIENT &client = *lpclient;
+
+		vector<PopAgent::LP_MAILITEM>* lpmailList = new vector<PopAgent::LP_MAILITEM>();
+		vector<PopAgent::LP_MAILITEM> &mailList = *lpmailList;
+
+		vector<PopAgent::LP_MAILITEM>::iterator it1;
+
+		for (it1 = client.mailList->begin(); it1 != client.mailList->end(); it1++)
+		{
+			PopAgent::LP_MAILITEM lpmi = *it1;
+			PopAgent::MAILITEM &mi = *lpmi;
+			if (mi.isDeletedFlag == false)
+			{
+				mailList.push_back(lpmi);
+			}
+		}
+		client.mailList = &mailList;
+
+	}
+
 	char* PopAgent::MailFrom(char* value, SOCKET s)
 	{
 		bool found = false;
@@ -95,11 +118,13 @@ namespace POP3L
 			PopAgent::LP_MAILITEM mail = NewMailItem();
 			mail->data = _strdup(mailFormat1);
 			mail->fromList.push_back("<ben@test.org>");
+			mail->isDeletedFlag = false;
 			c->mailList->push_back(mail);
 
 			mail = NewMailItem();
 			mail->data = _strdup(mailFormat2);
 			mail->fromList.push_back("<jack@test.org>");
+			mail->isDeletedFlag = false;
 			c->mailList->push_back(mail);
 
 			clientList->push_back(c);

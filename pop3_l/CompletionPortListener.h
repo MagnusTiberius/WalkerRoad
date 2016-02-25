@@ -76,7 +76,6 @@ namespace POP3L
 		DWORD ThreadID;
 		WSADATA wsaData;
 		DWORD Ret;
-
 		CompletionPortStackListener completionPortStackListener;
 
 	public:

@@ -175,6 +175,7 @@ namespace POP3L
 									if (ml.size() > i && i >= 0)
 									{
 										PopAgent::LP_MAILITEM mi = ml[i];
+										mi->isDeletedFlag = true;
 										sprintf_s(buf, "+Ok mail deleted.");
 										string msg;
 										msg.assign(buf);
@@ -188,6 +189,7 @@ namespace POP3L
 										send(client->_socket, buf, strlen(buf), NULL);
 									}
 									client->commandListPtr++;
+									instance->popAgent.PurgeMailList(job->socket);
 								}
 								else
 								{

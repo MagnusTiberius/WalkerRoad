@@ -8,7 +8,6 @@ namespace jacobsenroad
 {
     public class Scanner
     {
-
         private byte[] strInput;
         private int m_pos = 0;
 
@@ -25,7 +24,7 @@ namespace jacobsenroad
         public List<byte> AcceptUntil(byte[] str)
         {
             List<byte> list = new List<byte>();
-            while (!Accept(str) && m_pos <= strInput.Length)
+            while (!Accept(str) && m_pos < strInput.Length)
             {
                 byte b = strInput[m_pos];
                 list.Add(b);
@@ -37,7 +36,7 @@ namespace jacobsenroad
         public List<byte> AcceptRun(byte[] str)
         {
             List<byte> list = new List<byte>();
-            while(Accept(str) && m_pos <= strInput.Length)
+            while (Accept(str) && m_pos <= strInput.Length)
             {
                 byte b = strInput[m_pos];
                 list.Add(b);
@@ -48,12 +47,15 @@ namespace jacobsenroad
 
         bool Accept(byte[] str)
         {
-            byte b = strInput[m_pos];
-            for (int i = 0; i < str.Length; i++)
+            if (m_pos < strInput.Length)
             {
-                if(b.Equals(str[i]))
+                byte b = strInput[m_pos];
+                for (int i = 0; i < str.Length; i++)
                 {
-                    return true;
+                    if (b.Equals(str[i]))
+                    {
+                        return true;
+                    }
                 }
             }
             return false;
@@ -87,7 +89,7 @@ namespace jacobsenroad
 
         public void SkipEmpty()
         {
-            while(IsEmpty())
+            while (IsEmpty())
             {
                 m_pos++;
             }
@@ -98,13 +100,12 @@ namespace jacobsenroad
             if (m_pos < strInput.Length)
             {
                 byte b = strInput[m_pos];
-                if (b.Equals('\t') || b.Equals('\r') || b.Equals('\0') || b.Equals(' '))
+                if (b.Equals('\t') || b.Equals('\r') || b.Equals('\0') || b.Equals(' ') || b.Equals('\n') || b == 13 || b == 10 || b == 0 || b == 32)
                 {
                     return true;
                 }
             }
             return false;
         }
-
     }
 }

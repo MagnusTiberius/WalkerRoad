@@ -89,8 +89,9 @@ namespace jacobsenroad
             }
         }
 
-        public void Send(string msg)
+        public int Send(string msg)
         {
+            int res = 0;
             string sendMsg = msg;
             if (OnSendData != null)
             {
@@ -100,9 +101,10 @@ namespace jacobsenroad
             {
                 if (_socket.Connected)
                 {
-                    _socket.Send(Encoding.ASCII.GetBytes(sendMsg));
+                    res = _socket.Send(Encoding.ASCII.GetBytes(sendMsg));
                 }
             }
+            return res;
         }
 
         private void ClientLoop()

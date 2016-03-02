@@ -36,6 +36,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -45,6 +46,7 @@
   <ItemGroup>
     <Compile Include="DataGameGen.cs" />
     <Compile Include="Datagen.cs" />
+    <Compile Include="EventLog.cs" />
     <Compile Include="ListenerHandler.cs" />
     <Compile Include="ListenerHandlerController.cs" />
     <Compile Include="ListenerHandlerPool.cs" />

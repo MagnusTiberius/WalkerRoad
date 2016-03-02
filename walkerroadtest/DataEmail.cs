@@ -35,8 +35,8 @@ ________________________________________
 
         public const string email2 = @"hqsmail2.company.com (10.33.140.22) with Microsoft SMTP Server (TLS) id
  15.0.1076.9 via Mailbox Transport; Tue, 1 Mar 2016 10:36:50 -0800
-Received: from hqsmail2.company.com (10.33.140.22) by
- hqsmail1.company.com (10.33.140.21) with Microsoft SMTP Server (TLS) id
+Received: from hqsmail2.company.com (11.56.89.56) by
+ hqsmail1.company.com (10.45.67.21) with Microsoft SMTP Server (TLS) id
  15.0.1076.9; Tue, 1 Mar 2016 10:36:50 -0800
 Received: from hqsmail2.company.com ([fe80::99e:ec93:2797:faf0]) by
  hqsmail2.company.com ([fe80::99e:ec93:2797:faf0%12]) with mapi id

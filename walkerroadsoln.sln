@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "walkerroadlib", "walkerroadlib\walkerroadlib.csproj", "{BC627F8A-57E5-40C6-B30C-7E29BEEA063B}"
 EndProject
@@ -60,6 +60,19 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pop3_d", "pop3_d\pop3_d.vcx
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pop3_c", "pop3_c\pop3_c.csproj", "{51427634-757F-47C2-94FE-15921ADCA582}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "database_l", "database_l\database_l.vcxproj", "{112387A1-6378-4C10-90EA-F7735577C2A5}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "database_test", "database_test\database_test.vcxproj", "{ED300E94-1C5C-43B1-99E7-154D6F6C8C92}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B59EB318-70BF-410B-8457-EB0FB9693BCF} = {B59EB318-70BF-410B-8457-EB0FB9693BCF}
+		{112387A1-6378-4C10-90EA-F7735577C2A5} = {112387A1-6378-4C10-90EA-F7735577C2A5}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "database_demo_l", "database_demo_l\database_demo_l.vcxproj", "{B59EB318-70BF-410B-8457-EB0FB9693BCF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{112387A1-6378-4C10-90EA-F7735577C2A5} = {112387A1-6378-4C10-90EA-F7735577C2A5}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -251,6 +264,36 @@ Global
 		{51427634-757F-47C2-94FE-15921ADCA582}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{51427634-757F-47C2-94FE-15921ADCA582}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{51427634-757F-47C2-94FE-15921ADCA582}.Release|Win32.ActiveCfg = Release|Any CPU
+		{112387A1-6378-4C10-90EA-F7735577C2A5}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{112387A1-6378-4C10-90EA-F7735577C2A5}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{112387A1-6378-4C10-90EA-F7735577C2A5}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{112387A1-6378-4C10-90EA-F7735577C2A5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{112387A1-6378-4C10-90EA-F7735577C2A5}.Debug|Win32.Build.0 = Debug|Win32
+		{112387A1-6378-4C10-90EA-F7735577C2A5}.Release|Any CPU.ActiveCfg = Release|Win32
+		{112387A1-6378-4C10-90EA-F7735577C2A5}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{112387A1-6378-4C10-90EA-F7735577C2A5}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{112387A1-6378-4C10-90EA-F7735577C2A5}.Release|Win32.ActiveCfg = Release|Win32
+		{112387A1-6378-4C10-90EA-F7735577C2A5}.Release|Win32.Build.0 = Release|Win32
+		{ED300E94-1C5C-43B1-99E7-154D6F6C8C92}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{ED300E94-1C5C-43B1-99E7-154D6F6C8C92}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{ED300E94-1C5C-43B1-99E7-154D6F6C8C92}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{ED300E94-1C5C-43B1-99E7-154D6F6C8C92}.Debug|Win32.ActiveCfg = Debug|Win32
+		{ED300E94-1C5C-43B1-99E7-154D6F6C8C92}.Debug|Win32.Build.0 = Debug|Win32
+		{ED300E94-1C5C-43B1-99E7-154D6F6C8C92}.Release|Any CPU.ActiveCfg = Release|Win32
+		{ED300E94-1C5C-43B1-99E7-154D6F6C8C92}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{ED300E94-1C5C-43B1-99E7-154D6F6C8C92}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{ED300E94-1C5C-43B1-99E7-154D6F6C8C92}.Release|Win32.ActiveCfg = Release|Win32
+		{ED300E94-1C5C-43B1-99E7-154D6F6C8C92}.Release|Win32.Build.0 = Release|Win32
+		{B59EB318-70BF-410B-8457-EB0FB9693BCF}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{B59EB318-70BF-410B-8457-EB0FB9693BCF}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{B59EB318-70BF-410B-8457-EB0FB9693BCF}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{B59EB318-70BF-410B-8457-EB0FB9693BCF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B59EB318-70BF-410B-8457-EB0FB9693BCF}.Debug|Win32.Build.0 = Debug|Win32
+		{B59EB318-70BF-410B-8457-EB0FB9693BCF}.Release|Any CPU.ActiveCfg = Release|Win32
+		{B59EB318-70BF-410B-8457-EB0FB9693BCF}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{B59EB318-70BF-410B-8457-EB0FB9693BCF}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{B59EB318-70BF-410B-8457-EB0FB9693BCF}.Release|Win32.ActiveCfg = Release|Win32
+		{B59EB318-70BF-410B-8457-EB0FB9693BCF}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
